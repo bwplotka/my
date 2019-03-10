@@ -1,7 +1,7 @@
-baseURL = "http://example.org/"
+baseURL = "http://bwplotka.dev/"
 languageCode = "en"
 defaultContentLanguage = "en"
-title = "Bartek"
+title = "@bwplotka"
 theme = "KeepIt"
 
 paginate = 12
@@ -23,50 +23,48 @@ googleAnalytics = ""
  posts = "/:year/:filename/"
 
 [menu]
-  [[menu.main]]
-    name = "Blog"
-    url = "/posts/" # https://github.com/Fastbyte01/KeepIt/blob/master/exampleSite/content/posts/hugoisforlovers.md
-    weight = 1
+#  [[menu.main]]
+#    name = "Blog"
+#    url = "/posts/" # https://github.com/Fastbyte01/KeepIt/blob/master/exampleSite/content/posts/hugoisforlovers.md
+#    weight = 1
 
-  [[menu.main]]
-    name = "Categories"
-    url = "/categories/"
-    weight = 3
-
-  [[menu.main]]
-    name = "About"
-    url = "/about"
-    weight = 4
+#  [[menu.main]]
+#    name = "CV"
+#    url = "/cv"
+#    weight = 2
+#
+#  [[menu.main]]
+#    name = "CV"
+#    url = "/cv"
+#    weight = 2
 
 [params]
     since = 2019
-    author = "Bartek"               # Author's name
-    avatar = "/images/me/avatar.jpeg"           # Author's avatar
-    subtitle = "A Hugo theme"       # Subtitle
+    author = "bwplotka"
+    avatar = "/images/profile.jpg"
+    subtitle = "Bartłomiej Płotka"
     cdn_url = ""           # Base CDN URL
-    home_mode = "" # post or other
-
     google_verification = ""
 
-    description = "description" # site description
-    keywords = "" # site keywords
+    description = "Personal page" # site description
+    keywords = "bwplotka" # site keywords
 
     license= 'Released under <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
 
 [params.social]
-    GitHub = "https://github.com/bwplotka"
-    Linkedin = "https://www.linkedin.com/in/bwplotka"
-    Twitter = "https://twitter.com/bwplotka"
+    GitHub = "bwplotka"
+    Linkedin = "bwplotka"
+    Twitter = "bwplotka"
     Email   = "bwplotka@gmail.com"
 
 # Used only for Seo schema
 copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License."
 
 [author]
-  name = "Fastbyte01"
+  name = "bwplotka"
 
   [params.publisher]
-    name = "Fastbyte01"
+    name = "bwplotka"
 
     [params.publisher.logo]
       url = "logo.png"

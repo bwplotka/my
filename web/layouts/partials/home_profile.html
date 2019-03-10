@@ -3,7 +3,7 @@
     {{ with .Site.Params.avatar}}
     {{ $avatar := .}}
     <div class="avatar">
-        <a href="/posts/"> <img src="{{ (printf "%s%s" $cdn_url $avatar)}}"> </a>
+        <a href="https://github.com/bwplotka"> <img src="{{ (printf "%s%s" $cdn_url $avatar)}}"> </a>
     </div>
     {{ end }}
     {{ with .Site.Params.subtitle}}
@@ -12,7 +12,6 @@
     </h2>
     {{ end }}
     <div class="social-links">
-        LOLOLOL
       {{ partial "social.html" . }}
     </div>
 </div>
