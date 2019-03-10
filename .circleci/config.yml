@@ -2,7 +2,7 @@ version: 2
 jobs:
   website:
     docker:
-      # TODO(bwplotka): We should definitely
+      # TODO(bwplotka): Just create image with git as well.
       - image: cibuilds/hugo:v0.54.0
     working_directory: ~/website
     steps:
@@ -11,15 +11,12 @@ jobs:
       - run:
           name: Deploy to GitHub Pages
           command: |
-            cd website
-            hugo -v
-            cd public
             git init
-            git config --global user.email "adrien-f@users.noreply.github.com"
-            git config --global user.name "AdrienF"
-            git add .
-            git commit -m "Deploy from CI"
-            git push --force --quiet "https://${GITHUB_TOKEN}@github.com/adrien-f/thanos.git" master:gh-pages
+            git config --global user.email "bwplotka@users.noreply.github.com"
+            git config --global user.name "Bartek"
+            git remote add origin "https://${GITHUB_TOKEN}@github.com/bwplotka/my.git"
+            make web-deploy
+
 workflows:
   version: 2
   thanos:
