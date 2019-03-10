@@ -31,6 +31,11 @@ web: $(HUGO)
 	# TODO(bwplotka): Make it --gc
 	@cd $(WEB_DIR) && HUGO_ENV=production $(HUGO) --minify -v
 
+.PHONY: web-dbg
+web-dbg: $(HUGO)
+	@echo ">> building documentation website"
+	@cd $(WEB_DIR) && $(HUGO) -v
+
 .PHONY: web-serve
 web-serve: $(HUGO)
 	@echo ">> serving documentation website"

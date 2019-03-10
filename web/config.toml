@@ -61,23 +61,23 @@ canonifyURLs = true
 # Used only for Seo schema
 copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License."
 
-[author]
-  name = "bwplotka"
-
-  [params.publisher]
-    name = "bwplotka"
-
-    [params.publisher.logo]
-      url = "logo.png"
-      width = 127
-      height = 40
-
-  [params.logo]
-    url = "logo.png"
-    width = 127
-    height = 40
-
-  [params.image]
-    url = "cover.png"
-    width = 800
-    height = 600
+#[author]
+#  name = "bwplotka"
+#
+#  [params.publisher]
+#    name = "bwplotka"
+#
+#    [params.publisher.logo]
+#      url = "logo.png"
+#      width = 127
+#      height = 40
+#
+#  [params.logo]
+#    url = "logo.png"
+#    width = 127
+#    height = 40
+#
+#  [params.image]
+#    url = "cover.png"
+#    width = 800
+#    height = 600
