@@ -1,6 +1,5 @@
 baseURL = "http://bwplotka.dev/"
-languageCode = "en"
-defaultContentLanguage = "en"
+languageCode = "en-us"
 title = "@bwplotka"
 theme = "KeepIt"
 
@@ -8,6 +7,7 @@ paginate = 12
 enableEmoji = true
 enableRobotsTXT = true
 googleAnalytics = ""
+publishDir = "../public"
 
 [sitemap]
   changefreq = "monthly"

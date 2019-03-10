@@ -1,2 +1,5 @@
-.idea/*
-web/resources/_gen/*
+.idea
+bin
+public
+web/public
+web/resources/_gen
