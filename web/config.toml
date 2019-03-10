@@ -43,7 +43,7 @@ canonifyURLs = true
     cdn_url = ""           # Base CDN URL
     google_verification = ""
 
-    description = "Personal page" # site description
+    description = "💪💻🏐"
     keywords = "bwplotka" # site keywords
 
     license= 'Released under <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
