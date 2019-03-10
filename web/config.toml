@@ -1,4 +1,4 @@
-baseURL = "http://bwplotka.dev/"
+baseURL = "https://bwplotka.github.io/my/"
 languageCode = "en-us"
 title = "@bwplotka"
 theme = "KeepIt"
@@ -8,6 +8,7 @@ enableEmoji = true
 enableRobotsTXT = true
 googleAnalytics = ""
 publishDir = "../public"
+canonifyURLs = true
 
 [sitemap]
   changefreq = "monthly"
