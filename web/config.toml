@@ -1,4 +1,4 @@
-baseURL = "https://www.bwplotka.dev"
+baseURL = "https://bwplotka.dev"
 languageCode = "en-us"
 title = "@bwplotka"
 theme = "KeepIt"
