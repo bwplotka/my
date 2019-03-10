@@ -1,6 +1,6 @@
 # my
 
-Source for [bwplotka.dev](http://bwplotka.dev) personal website. (: 
+Source for [bwplotka.dev](https://bwplotka.dev) personal website. (: 
 
 ### Useful Resources
 
