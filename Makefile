@@ -29,7 +29,8 @@ endef
 web: $(HUGO)
 	@echo ">> building documentation website"
 	# TODO(bwplotka): Make it --gc
-	@cd $(WEB_DIR) && HUGO_ENV=production $(HUGO) --minify -v
+	@sed -e 's/${GOOGLE_ANALYTICS_TOKEN}/'${GOOGLE_ANALYTICS_TOKEN}'/' ${WEB_DIR}/config.yaml > ${WEB_DIR}/conifig-generated.yaml
+	@cd $(WEB_DIR) && HUGO_ENV=production $(HUGO) --minify -v --config conifig-generated.yaml
 
 .PHONY: web-dbg
 web-dbg: $(HUGO)
