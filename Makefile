@@ -29,7 +29,7 @@ endef
 web: $(HUGO)
 	@echo ">> building documentation website"
 	# TODO(bwplotka): Make it --gc
-	@sed -e "s/<<GOOGLE_ANALYTICS_TOKEN>>/${GOOGLE_ANALYTICS_TOKEN}/" $(WEB_DIR)/config.yaml > $(WEB_DIR)/conifig-generated.yaml
+	@sed -e "s/<<GOOGLE_ANALYTICS_TOKEN>>/${GOOGLE_ANALYTICS_TOKEN}/" $(WEB_DIR)/config.yaml > $(WEB_DIR)/config-generated.yaml
 	@cd $(WEB_DIR) && HUGO_ENV=production $(HUGO) --minify -v --config config-generated.yaml
 
 .PHONY: web-dbg
