@@ -6,11 +6,9 @@
         <a href="https://github.com/bwplotka"> <img src="{{ (printf "%s%s" $cdn_url $avatar)}}"> </a>
     </div>
     {{ end }}
-    {{ with .Site.Params.subtitle}}
     <h2 class="description">
-       {{ . }}
+        <a href="https://bwplotka.dev">{{ . }}</a>
     </h2>
-    {{ end }}
     <div class="social-links">
       {{ partial "social.html" . }}
     </div>
