@@ -3,3 +3,4 @@ bin
 public
 web/public
 web/resources/_gen
+web/config-generated.yaml

@@ -8,7 +8,7 @@ enableEmoji: true
 enableRobotsTXT: true
 publishDir: "../public"
 canonifyURLs: true
-googleAnalytics: "${GOOGLE_ANALYTICS_TOKEN}"
+googleAnalytics: "<<GOOGLE_ANALYTICS_TOKEN>>"
 
 sitemap:
   changefreq: "monthly"
@@ -21,16 +21,15 @@ blackfriday:
   noreferrerLinks: true
 
 params:
-    since: 2019
-    author: "bwplotka"
-    avatar: "/images/profile.jpg"
-    subtitle: "Bartłomiej Płotka"
-    cdn_url: "" # Base CDN URL
-    description: "💪💻🏐"
-    keywords: "bwplotka"
-    license: 'Released under <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
-
-params.social:
+  since: 2019
+  author: "bwplotka"
+  avatar: "/images/profile.jpg"
+  subtitle: "Bartłomiej Płotka"
+  cdn_url: "" # Base CDN URL
+  description: "💪💻🏐"
+  keywords: "bwplotka"
+  license: 'Released under <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
+  social:
     GitHub: "bwplotka"
     Linkedin: "bwplotka"
     Twitter: "bwplotka"
