@@ -60,6 +60,7 @@ web-deploy-branch:
 	@git worktree add -B $(DEPLOY_BRANCH) $(PUBLIC_DIR) origin/$(DEPLOY_BRANCH)
 	@rm -rf $(PUBLIC_DIR)/*
 	@make web
+	@cp $(WEB_DIR)/netlify.toml $(PUBLIC_DIR)/netlify.toml
 	@cd $(PUBLIC_DIR) && git add --all && git commit -m "Publishing to $(DEPLOY_BRANCH) as $(ME)" && cd ..
 	@git push origin $(DEPLOY_BRANCH)
 
