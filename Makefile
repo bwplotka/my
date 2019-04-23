@@ -42,19 +42,26 @@ web-serve: $(HUGO)
 	@echo ">> serving documentation website"
 	@cd $(WEB_DIR) && $(HUGO) -v server
 
+.PHONY: web-deploy-prod
+web-deploy-prod:
+	$(MAKE) web-deploy-branch DEPLOY_BRANCH=docs-prod
+
 .PHONY: web-deploy
 web-deploy:
+	$(MAKE) web-deploy-branch DEPLOY_BRANCH=docs-preview
+
+web-deploy-branch:
 	$(call require_clean_work_tree,"deploy website")
 	@rm -rf $(PUBLIC_DIR)
 	@mkdir $(PUBLIC_DIR)
 	@git worktree prune
 	@rm -rf .git/worktrees/$(PUBLIC_DIR)/
 	@git fetch origin
-	@git worktree add -B gh-pages $(PUBLIC_DIR) origin/gh-pages
+	@git worktree add -B $(DEPLOY_BRANCH) $(PUBLIC_DIR) origin/$(DEPLOY_BRANCH)
 	@rm -rf $(PUBLIC_DIR)/*
 	@make web
-	@cd $(PUBLIC_DIR) && git add --all && git commit -m "Publishing to gh-pages as $(ME)" && cd ..
-	@git push origin gh-pages
+	@cd $(PUBLIC_DIR) && git add --all && git commit -m "Publishing to $(DEPLOY_BRANCH) as $(ME)" && cd ..
+	@git push origin $(DEPLOY_BRANCH)
 
 # non-phony targets
 
