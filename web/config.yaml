@@ -1,12 +1,10 @@
-languageCode: "en-us"
+languageCode: "en"
+defaultContentLanguage: "en"
 title: "@bwplotka"
 theme: "KeepIt"
-
-paginate: 12
-enableEmoji: true
-enableRobotsTXT: true
 publishDir: "public"
-canonifyURLs: true
+
+enableRobotsTXT: true
 googleAnalytics: "UA-138305173-1"
 
 sitemap:
@@ -14,16 +12,32 @@ sitemap:
   filename: "sitemap.xml"
   priority: 0.5
 
+paginate: 12
+enableEmoji: true
+canonifyURLs: true
 blackfriday:
   hrefTargetBlank: true
   nofollowLinks: true
   noreferrerLinks: true
 
+permalinks:
+  posts: "/:year/:filename/"
+
+menu:
+  main:
+  - name: "Blog"
+    url: "/posts/"
+    weight: 1
+  - name: "About"
+    url: "/about/"
+    weight: 2
+
 params:
   since: 2019
-  author: "bwplotka"
+  author: "Bartek Płotka"
   avatar: "/images/profile.jpg"
-  subtitle: "Bartłomiej Płotka"
+  socialShare: true
+  subtitle: true
   cdn_url: "" # Base CDN URL
   description: "💪💻🏐"
   keywords: "bwplotka"
@@ -33,6 +47,28 @@ params:
     Linkedin: "bwplotka"
     Twitter: "bwplotka"
     Email: "bwplotka@gmail.com"
+  share:
+    Twitter: true
+    Facebook: true
+    Linkedin: true
+
+author:
+  name: "@bwplotka"
+  params:
+    publisher:
+      name: "bwplotka"
+      logo:
+        url: "/images/profile.jpg"
+        width: 127
+        height: 40
+    logo:
+      url: "/images/profile.jpg"
+      width: 127
+      height: 40
+    image:
+      url: "/images/profile.jpg"
+      width: 127
+      height: 40
 
 # Used only for Seo schema.
 copyright: "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License."
