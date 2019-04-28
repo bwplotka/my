@@ -1,4 +1,3 @@
-baseURL: "https://bwplotka.dev"
 languageCode: "en-us"
 title: "@bwplotka"
 theme: "KeepIt"
@@ -6,9 +5,9 @@ theme: "KeepIt"
 paginate: 12
 enableEmoji: true
 enableRobotsTXT: true
-publishDir: "../public"
+publishDir: "public"
 canonifyURLs: true
-googleAnalytics: "<<GOOGLE_ANALYTICS_TOKEN>>"
+googleAnalytics: "UA-138305173-1"
 
 sitemap:
   changefreq: "monthly"

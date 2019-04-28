@@ -1,5 +1,7 @@
 # my
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/02f6ed51-669c-4c11-a81e-8c683774cc3b/deploy-status)](https://app.netlify.com/sites/bwplotka/deploys)
+
 Source for [bwplotka.dev](https://bwplotka.dev) personal website. (: 
 
 ### Useful Resources

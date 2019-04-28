@@ -1,5 +1,7 @@
 WEB_DIR           ?= web
-PUBLIC_DIR		  ?= public
+WEBSITE_BASE_URL  ?= https://bwplotka.dev
+
+# 0.55.3
 HUGO              ?= $(shell which hugo)
 ME				  ?= $(shell whoami)
 
@@ -29,40 +31,11 @@ endef
 web: $(HUGO)
 	@echo ">> building documentation website"
 	# TODO(bwplotka): Make it --gc
-	@sed -e "s/<<GOOGLE_ANALYTICS_TOKEN>>/${GOOGLE_ANALYTICS_TOKEN}/" $(WEB_DIR)/config.yaml > $(WEB_DIR)/config-generated.yaml
-	@cd $(WEB_DIR) && HUGO_ENV=production $(HUGO) --minify -v --config config-generated.yaml
+	@cd $(WEB_DIR) && HUGO_ENV=production $(HUGO) --minify -v --config config.yaml -b $(WEBSITE_BASE_URL)
 
-.PHONY: web-dbg
-web-dbg: $(HUGO)
-	@echo ">> building documentation website"
-	@cd $(WEB_DIR) && $(HUGO) -v
-
-.PHONY: web-serve
 web-serve: $(HUGO)
 	@echo ">> serving documentation website"
-	@cd $(WEB_DIR) && $(HUGO) -v server
-
-.PHONY: web-deploy-prod
-web-deploy-prod:
-	$(MAKE) web-deploy-branch DEPLOY_BRANCH=docs-prod
-
-.PHONY: web-deploy
-web-deploy:
-	$(MAKE) web-deploy-branch DEPLOY_BRANCH=docs-preview
-
-web-deploy-branch:
-	$(call require_clean_work_tree,"deploy website")
-	@rm -rf $(PUBLIC_DIR)
-	@mkdir $(PUBLIC_DIR)
-	@git worktree prune
-	@rm -rf .git/worktrees/$(PUBLIC_DIR)/
-	@git fetch origin
-	@git worktree add -B $(DEPLOY_BRANCH) $(PUBLIC_DIR) origin/$(DEPLOY_BRANCH)
-	@rm -rf $(PUBLIC_DIR)/*
-	@make web
-	@cp $(WEB_DIR)/netlify.toml $(PUBLIC_DIR)/netlify.toml
-	@cd $(PUBLIC_DIR) && git add --all && git commit -m "Publishing to $(DEPLOY_BRANCH) as $(ME)" && cd ..
-	@git push origin $(DEPLOY_BRANCH)
+	@cd $(WEB_DIR) && $(HUGO) --config config.yaml -v server
 
 # non-phony targets
 
