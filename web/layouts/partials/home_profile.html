@@ -6,9 +6,10 @@
         <a href="https://github.com/bwplotka"> <img src="{{ (printf "%s%s" $cdn_url $avatar)}}"> </a>
     </div>
     {{ end }}
-    {{ with .Site.Params.subtitle}}
+    {{ if .Site.Params.subtitle}}
     <h2 class="description">
-        <a href="https://bwplotka.dev">{{ . }}</a>
+        Bartłomiej Płotka (Bartek)
+        <p> Software Engineer | <a href="https://thanos.io">Thanos</a> Co-Founder & Maintainer | Golang enthusiast | <a href="posts/">Blogger</a> | Volleyball player.</p>
     </h2>
     {{ end }}
     <div class="social-links">
