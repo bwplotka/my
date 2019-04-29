@@ -1,6 +1,7 @@
 {{ define "content" -}}
 {{ $cdn_url := .Scratch.Get "cdn_url" }}
-<article class="post-warp">
+{{ $.Scratch.Set "blogPostFileName" (replace (path.Base .File) ".md" "") }}
+<article class="post-warp" id="{{ $.Scratch.Get "blogPostFileName" }}">
     <header class="post-header">
         <h1 class="post-title">{{ .Title }}</h1>
         <div class="post-meta">
@@ -53,11 +54,6 @@
 
           {{ $finalContent }}
     </div>
-
-    <div class="post-comments">
-    {{ partial "comments.html" . }}
-    </div>
-
     <div class="post-tags">
         {{ with .Params.tags }}
             <section>
@@ -84,11 +80,7 @@
     </div>
 
     <div class="post-comment">
-          {{ if ( .Params.showComments | default true ) }}
-                 {{ if ne .Site.DisqusShortname "" }}
-                     {{ template "_internal/disqus.html" . }}
-                 {{ end }}
-          {{ end }}
+        {{ partial "comments.html" . }}
     </div>
 </article>
 {{- end }}

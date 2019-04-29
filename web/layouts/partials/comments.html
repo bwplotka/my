@@ -1,3 +1,17 @@
 <br>
 <br>
-<h2>Comments</h2>
+<div class="post-comments">
+    <h2>Comments</h2>
+    <div class="post-gh-comments"></div>
+    <div class="post-gh-comments-new"><a href="https://github.com/bwplotka/my/issues?q=is%3Aopen+is%3Aissue+label%3Acomment+label%3A{{ $.Scratch.Get "blogPostFileName" }}">Add comment by responding to/creating GitHub issue here</a></div>
+</div>
+
+{{ $jquery := resources.Get "/js/jquery.min.js" }}
+{{ $cdn_url := .Scratch.Get "cdn_url" }}
+{{ $ghcomments := resources.Get "js/gh-comments.js" }}
+{{ $octokit := resources.Get "js/octokit-rest.min.js" }}
+{{ $css := resources.Get "css/comments.css" }}
+
+{{ $main := slice  $jquery $ghcomments $octokit | resources.Concat "/js/vendor_comments.js" | resources.Minify}}
+<script src="{{ printf "%s%s" $cdn_url $main.RelPermalink }}" async=""></script>
+<link rel="stylesheet" href="{{ printf "%s%s" $cdn_url $css.RelPermalink }}">
