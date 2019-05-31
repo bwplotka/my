@@ -1,33 +1,35 @@
 jQuery(function($) {
     const repo = "my";
     const owner = "bwplotka";
+    const commentCharsLimit = 100;
 
     'use strict';
-    var _Blog = window._Blog || {};
+    let _Blog = window._Blog || {};
 
     _Blog.renderComment = function(issue) {
         // TODO(bwplotka): Use some templating instead?
-        var comment = $("<div/>");
+        let comment = $("<div/>");
         comment.addClass("post-gh-comment");
 
         // TODO(bwplotka): Limit number of lines?
-        var body = $("<p/>");
-        body.text(issue.body);
+        let body = $("<a/>");
 
-        var src = $("<a/>");
-        src.text("Source");
+        let text = issue.body.substring(0, commentCharsLimit);
+        if (issue.body.length >= commentCharsLimit) {
+            text += "...";
+        }
+        body.text(text);
         src.attr("href", issue.html_url);
 
-        var author = $("<a/>");
+        let author = $("<a/>");
         author.text(issue.user.login);
         author.attr("href", issue.user.html_url);
 
         comment.append(body);
 
-        var commentFooter = $("<div/>");
+        let commentFooter = $("<div/>");
         commentFooter.addClass("post-gh-comment-footer");
         commentFooter.append("<time datetime=" + issue.updated_at + ">"+issue.updated_at +"</time>");
-        commentFooter.append(" | ", src);
         commentFooter.append(" | <span>Author: ");
         commentFooter.append(author);
         commentFooter.append(" | Responses: ", issue.comments, "</span>");
@@ -48,7 +50,7 @@ jQuery(function($) {
             direction: 'asc'
         }).then(({data, headers, status}) => {
             if (status !== 200) {
-                console.log("failed to load issues:", status, data)
+                console.log("failed to load issues:", status, data);
                 return
             }
             console.log(_Blog.name);
