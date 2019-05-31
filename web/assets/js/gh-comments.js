@@ -1,7 +1,7 @@
 jQuery(function($) {
     const repo = "my";
     const owner = "bwplotka";
-    const commentCharsLimit = 100;
+    const commentCharsLimit = 200;
 
     'use strict';
     let _Blog = window._Blog || {};
@@ -11,15 +11,15 @@ jQuery(function($) {
         let comment = $("<div/>");
         comment.addClass("post-gh-comment");
 
-        // TODO(bwplotka): Limit number of lines?
         let body = $("<a/>");
 
+        // Supporting markdown would be nice, but how to trim then?
         let text = issue.body.substring(0, commentCharsLimit);
         if (issue.body.length >= commentCharsLimit) {
             text += "...";
         }
         body.text(text);
-        src.attr("href", issue.html_url);
+        body.attr("href", issue.html_url);
 
         let author = $("<a/>");
         author.text(issue.user.login);
