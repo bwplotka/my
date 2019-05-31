@@ -13,7 +13,7 @@ Source for [bwplotka.dev](https://bwplotka.dev) personal website including blog 
 ### What open source tools I used to build this?
 
 * [Hugo](https://gohugo.io/overview/introduction/)
-* Theme [KeepIt](https://github.com/Fastbyte01/KeepIt))
+* Theme [KeepIt](https://github.com/Fastbyte01/KeepIt)
 * Improve favs & facebook linking: https://realfavicongenerator.net
 * Netlify :heart: and it's free tier for open source projects!
 * Tiny amount of jquery
