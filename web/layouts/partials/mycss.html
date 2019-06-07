@@ -1,0 +1,3 @@
+  {{ $style := resources.Get "css/override.scss" | resources.ToCSS | resources.Minify}}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+
