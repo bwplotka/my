@@ -1,0 +1,5 @@
+code,
+pre {
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+}

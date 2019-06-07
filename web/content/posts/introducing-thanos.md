@@ -11,7 +11,7 @@ type:
 title: Introducing Thanos - Prometheus at Scale
 readingTime: 15
 weight: 1
-series:
+categories:
 - thanos
 featuredImage: "/images/thanos-header.jpg"
 ---
