@@ -2,9 +2,6 @@
 <html lang="{{ .Site.LanguageCode }}">
   {{ partial "head.html" . }}
   <body class="dark-theme">
-    {{ $cdn_url := .Scratch.Get "cdn_url" }}
-    {{ $ov_css := resources.Get "css/override.css" }}
-    <link rel="stylesheet" href="{{ printf "%s%s" $cdn_url $ov_css.RelPermalink }}">
     <div class="wrapper">
         {{ partial "header" . }}
     	 <main class="main">
