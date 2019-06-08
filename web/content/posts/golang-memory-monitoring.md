@@ -67,14 +67,10 @@ of `madvise` is that Golang process can **cooperate** with Linux kernel closely 
 Well, because programs uses memory dynamically. Sometimes they allocate more, sometimes less. Since asking kernel for free memory pages is sometimes quite expensive, doing that back and forth can take time and resources.
 And why to even do that when It's often the case that other processes in the same machine does not really need that memory currently, but they might need at some point.
 
-Thanks to `madvise` we can mark some memory pages as "not used, but if kernel really needs that memory back it can take it straight away. If not, Golang will reuse it if needed".
+Thanks to `madvise` we can mark some memory pages as "not used, but if kernel really needs that memory back it can take it straight away. If not, Golang will reuse it if needed". 
+I don't think that's the professional name, but let's name it "cached memory pages" for the purpose of this blog.
 
-**This affects the memory occupied counter in kernel. It's because those pages that are "not used, but it's nice to have them just in case" are still technically reserved by Golang process, even though kernel will use it as soon as it needs memory for other processes**
-
-We can compare this to the office with limited number of pens. Let's say one worker is finishing one pen per hour, so it grabs literally all available pens and puts on desk next to him to efficiently continue the work.
-It does not mean that he owns all of those pens. If any other work has to reuse pen it can go to desk and grab some. However if no one needs the pens stays close to the heavy pen user.
-
-### Golang
+**Beeing reluctant to release memory affects the memory occupied counter in kernel. It's because those pages that are "not used, but it's nice to have them just in case" are still technically reserved by Golang process, even though kernel will use it as soon as it needs memory for other processes**
 
 In details `madvise` system call in high level consists of 3 arguments:
 
@@ -96,17 +92,20 @@ To explain Golang 1.12 change, we are interested in those two:
      pages, but the freeing could be delayed until memory pressure
      occurs.  (...)
 
-In the essence Golang 1.11 was based mostly on `MADV_DONTNEED` whereas Golang 1.12 if possible uses `MADV_FREE`.
+In the essence Golang 1.11 was based mostly on `MADV_DONTNEED` whereas Golang 1.12 if possible uses `MADV_FREE`. As you can read in descriptions, the latter 
+tells kernel to not free resources associated with given range until memory pressure occurs (other process or kernel itself has not enough memory in unused pool)
 
+### Golang runtime is reluctant to give memory pages back, so how can I monitor actual usage?
 
-
-
-If you are new to the memory management and you would love to know the details I would recommend reading blog of my friend [@povilasv: "Go memory management"](https://povilasv.me/go-memory-management/)
+Effect:  TBD
 
 ### Conclusions
 
-* Use `go_memstats_alloc_bytes` metric if possible it the most accurate from application perspective.
+* If you depend on `container_memory_usage_bytes` switch to `container_memory_working_set_bytes` metric to closest possible experience. It's not perfect though.
+* Use `go_memstats_alloc_bytes` and others to see actual allocations. Useful when profiling and optimizing your application memory. This helps to filter out the memory that is "cached". And it's the most accurate from application perspective.
 * Do not afraid to update Golang runtime version in your application. But when you do:
   * Read the changelog
   * Change JUST the version (: Change single thing at the time to ensure that if there is something suspicious, you can immediately narrow to Golang runtime upgrade.
   
+If you are new to the memory management and you would love to know even more details I would recommend reading blog of my friend [@povilasv: "Go memory management"](https://povilasv.me/go-memory-management/)
+
