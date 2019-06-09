@@ -11,7 +11,7 @@ type:
 title: Metric monitoring architecture at Improbable using Thanos
 readingTime: 15
 weight: 1
-series:
+categories:
 - thanos
 featuredImage: "/images/thanos-header.jpg"
 ---

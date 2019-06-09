@@ -7,8 +7,8 @@ type:
 title: "Make cross cluster communication simple: kEdge"
 readingTime: 10
 weight: 10
-series:
-- "cross cluster communication"
+categories:
+- infra
 featuredImage: "/images/kedge.webp"
 ---
 

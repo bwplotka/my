@@ -10,7 +10,7 @@
                 {{if $index}} & {{end}}
                 <a href="{{with $author.link}}{{.}}{{else}}{{.Site.BaseURL }}/about{{end}}">{{$author.name}}</a>
             {{end }}
-            {{ else }}<a href="{{.Site.BaseURL }}/about" rel="author">{{ .Site.Params.author }}</a>{{ end }} {{ i18n "with" }} ♥
+            {{ else }}<a href="{{.Site.BaseURL }}/about" rel="author">{{ .Site.Params.author }}</a>{{ end }}
                 <span class="post-time">
                     {{ i18n "on" }} <time datetime={{.Date.Format (.Site.Params.dateFormatToUse | default "2006-01-02") }} >{{ .Date.Format (.Site.Params.dateFormatToUse | default "2 January 2006") }}</time>
                 </span>
