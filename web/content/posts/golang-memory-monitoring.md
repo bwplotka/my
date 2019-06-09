@@ -136,7 +136,7 @@ The only promising metric is `container_memory_working_set_bytes` recommended on
 
 ![container_memory_usage_bytes vs container_memory_working_set_bytes for Prometheus Go 1.12.5 during test](/images/blog/go-memory-monitoring/5.png)
 
-However, keep in mind that it's not perfect. This is because it literally takes our fuzzy, not exact `container_memory_usage_bytes` and subtracts
+However, keep in mind that `container_memory_working_set_bytes` (WSS) is not perfect either. This is because it literally takes the fuzzy, not exact `container_memory_usage_bytes` and subtracts
 the value from `total_inactive_file` counter which is a `number of bytes of file-backed memory on inactive LRU list.`.
 
 ```go
