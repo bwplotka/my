@@ -201,6 +201,7 @@ This post was written as a response to the confusion, the new Go memory manageme
 More and more applications will be released with Go 1.12.5 so be prepared. Open source projects I maintain and help with like [Thanos](https://thanos.io), TSDB and Prometheus use new Go 1.12.5 already in new releases.
 
 So:
+
 * If you depend on `container_memory_usage_bytes` switch to `container_memory_working_set_bytes` metric to closest possible experience. It's not perfect though.
 * Use `go_memstats_alloc_bytes` and others (e.g `go_memstats_.*_inuse_bytes`) to see actual allocations. Useful when profiling and optimizing your application memory. This helps to filter out the memory that is "cached". And it's the most accurate from the application perspective.
 * Avoid `Go 1.12.0-1.12.4` due to memory [allocation slowness bug](https://github.com/kubernetes/kubernetes/issues/75833#issuecomment-487830238) 
