@@ -54,8 +54,8 @@ The change responsible for this effect is roughly explained in [runtime](https:/
 
 > On Linux, the runtime now uses MADV_FREE to release unused memory. This is more efficient but may result in higher reported RSS. The kernel will reclaim the unused data when it is needed. To revert to the Go 1.11 behavior (MADV_DONTNEED), set the environment variable GODEBUG=madvdontneed=1.
 
-As you know Go has quite sophisticated [GC mechanism](https://blog.golang.org/ismmkeynote0) that allow Go dev to not think about freeing allocated memory explicitly
-during development (well, thinking is still useful :smile:). The key part for our issue is that processes can release allocated memory in many different ways. 
+As you know Go has quite sophisticated [GC mechanism](https://blog.golang.org/ismmkeynote0) which is responsible for freeing allocated memory whenever internal data structure is not used.
+ The key part for our issue is that processes can release allocated memory in many different ways. 
 Those ways also depend on OS and kernel versions.  
 Among many options Go runtime in certain cases uses [`madvise`](http://man7.org/linux/man-pages/man2/madvise.2.html) system call. One of the many advantages
 of `madvise` is that Go process can **cooperate** with kernel closely on how to treat certain "pages" of the RAM memory in virtual space in a way that helps both sides.
