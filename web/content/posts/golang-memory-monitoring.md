@@ -13,7 +13,7 @@ categories:
 ---
 
 **TL;DR: Applications build with Go 1.12+ reports higher RSS memory usage on Linux. 
-This does not mean that they `require` more memory, it's just optimization for cases when there is no memory
+This does not mean that they `require` more memory, it's just optimization for cases when there is no other memory
 pressure. This is especially visible inside a container.**
 
 Go has a strict [release timeline](https://github.com/golang/go/wiki/Go-Release-Cycle) to reduce the risk
@@ -55,7 +55,7 @@ The change responsible for this effect is roughly explained in [runtime](https:/
 > On Linux, the runtime now uses MADV_FREE to release unused memory. This is more efficient but may result in higher reported RSS. The kernel will reclaim the unused data when it is needed. To revert to the Go 1.11 behavior (MADV_DONTNEED), set the environment variable GODEBUG=madvdontneed=1.
 
 As you know Go has quite sophisticated [GC mechanism](https://blog.golang.org/ismmkeynote0) which is responsible for freeing allocated memory whenever internal data structure is not used.
- The key part for our issue is that processes can release allocated memory in many different ways. 
+The key part for our issue is that processes can release allocated memory in many different ways. 
 Those ways also depend on OS and kernel versions.  
 Among many options Go runtime in certain cases uses [`madvise`](http://man7.org/linux/man-pages/man2/madvise.2.html) system call. One of the many advantages
 of `madvise` is that Go process can **cooperate** with kernel closely on how to treat certain "pages" of the RAM memory in virtual space in a way that helps both sides.
@@ -95,7 +95,7 @@ In the essence Go 1.11 was based mostly on `MADV_DONTNEED` whereas Go 1.12 if po
 tells the kernel to not free resources associated with given range until memory pressure occurs. Memory pressure means 
 other process or kernel itself has not enough memory in the unused pool.
 
-In my opinion. this change makes a lot of sense, especially in Kubernetes/container environment. When you think about it, the pattern is to use a single process per container. 
+In my opinion, this change makes a lot of sense, especially in Kubernetes/container environment. When you think about it, the pattern is to use a single process per container. 
 Singe the memory limits are per container as well it means that releasing memory immediately by the only process that is running on the container is mostly wasted work.
 
 Having the Go process using exclusively 100% of memory specified in limit can be only beneficial for overall container workload performance. However as you saw, it 
@@ -137,7 +137,7 @@ The only promising metric is `container_memory_working_set_bytes` recommended on
 ![container_memory_usage_bytes vs container_memory_working_set_bytes for Prometheus Go 1.12.5 during test](/images/blog/go-memory-monitoring/5.png)
 
 However, keep in mind that it's not perfect. This is because it literally takes our fuzzy, not exact `container_memory_usage_bytes` and subtracts
-value from `total_inactive_file` counter which is some magic `number of bytes of file-backed memory on inactive LRU list.`.
+the value from `total_inactive_file` counter which is a `number of bytes of file-backed memory on inactive LRU list.`.
 
 ```go
 	workingSet := ret.Memory.Usage
@@ -197,12 +197,15 @@ To sum up, this experiment confirms that most of the bytes reported by RSS / mem
 
 Go 1.12.5 works well, but makes it a bit more difficult to monitor saturation, as any additional complex optimizations with the kernel.
 
+This post was written as a response to the confusion, the new Go memory management caused. I have seen many questions around this on [Thanos](https://thanos.io) slack channel and while talking with people at KubeCon Eu 2019.
+More and more applications will be released with Go 1.12.5 so be prepared. Open source projects I maintain and help with like [Thanos](https://thanos.io), TSDB and Prometheus use new Go 1.12.5 already in new releases.
+
+So:
 * If you depend on `container_memory_usage_bytes` switch to `container_memory_working_set_bytes` metric to closest possible experience. It's not perfect though.
 * Use `go_memstats_alloc_bytes` and others (e.g `go_memstats_.*_inuse_bytes`) to see actual allocations. Useful when profiling and optimizing your application memory. This helps to filter out the memory that is "cached". And it's the most accurate from the application perspective.
 * Avoid `Go 1.12.0-1.12.4` due to memory [allocation slowness bug](https://github.com/kubernetes/kubernetes/issues/75833#issuecomment-487830238) 
 * Do not afraid to update Go runtime version in your application. But when you do:
   * Read the changelog
   * Change JUST the version (: Change single thing at the time to ensure that if there is something suspicious, you can immediately narrow to Go runtime upgrade.  
-  
-BTW you are new to the memory management and you would love to know even more details I would recommend reading the blog post of my friend [@povilasv: "Go memory management"](https://povilasv.me/go-memory-management/)
 
+BTW if you are new to the memory management and you would love to know even more details I would recommend reading the blog post of my friend [@povilasv: "Go memory management"](https://povilasv.me/go-memory-management/)
