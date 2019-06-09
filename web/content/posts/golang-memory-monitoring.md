@@ -162,22 +162,9 @@ Note that cadvisor `container_memory_working_set_bytes` and other metrics can ha
 `go_memstats_alloc_bytes`. So don't be surprised seeing higher allocations spikes than `container_memory_working_set_bytes` itself for a short time as 
 observed [here](https://github.com/google/cadvisor/issues/2242)
 
-### Conclusions
+### Bonus experiment; what happens on memory pressure?
 
-Go 1.12.5 works well, but makes it a bit more difficult to monitor saturation, as any additional complex optimizations with the kernel.
-
-* If you depend on `container_memory_usage_bytes` switch to `container_memory_working_set_bytes` metric to closest possible experience. It's not perfect though.
-* Use `go_memstats_alloc_bytes` and others (e.g `go_memstats_.*_inuse_bytes`) to see actual allocations. Useful when profiling and optimizing your application memory. This helps to filter out the memory that is "cached". And it's the most accurate from the application perspective.
-* Avoid `Go 1.12.0-1.12.4` due to memory [allocation slowness bug](https://github.com/kubernetes/kubernetes/issues/75833#issuecomment-487830238) 
-* Do not afraid to update Go runtime version in your application. But when you do:
-  * Read the changelog
-  * Change JUST the version (: Change single thing at the time to ensure that if there is something suspicious, you can immediately narrow to Go runtime upgrade.  
-  
-BTW you are new to the memory management and you would love to know even more details I would recommend reading the blog post of my friend [@povilasv: "Go memory management"](https://povilasv.me/go-memory-management/)
-
-### Extra experiment, what happens on memory pressure?
-
-`container_memory_usage_bytes` went high during my test. Since no memory pressure was on the system it was almost to the limit of my container as defined by
+`container_memory_usage_bytes` went high during my test. Since no memory pressure was on the system it was kept near the memory limit of my container as defined by
 
 ```go
 corev1.ResourceRequirements{
@@ -192,8 +179,8 @@ corev1.ResourceRequirements{
 },
 ``` 
 
-I was curious, if that's true, then if I would run a memory intensive process in the same container as Prometheus, 
-would it be able to run despite high RSS of Prometheus?
+I was curious. If the above explanation of high RSS is true, then if I would run a memory intensive process in the same container as Prometheus, 
+would it be able to run despite high RSS from "cached" pages?
 
 So I exec-ed into the container and ran `yes | tr \\n x | head -c $BYTES | grep n` with 4GB value. I know that there are nice tools like 
 [stress](https://people.seas.harvard.edu/~apw/stress/), but I was lazy and Prometheus container is built with `busybox` and as `NOBODY` user,
@@ -201,7 +188,21 @@ so I could not install anything, that's why I used `grep` to allocate 4GB memory
 
 ![RSS and WSS for Prometheus Go 1.12.5 after test + memory preassure](/images/blog/go-memory-monitoring/9.png)
 
-Since usage states 8GB and limit being 10GB, the kernel on memory pressure was using as much as he can, but then he had to memory pages from 
-Prometheus "cached pages". The resulted ~6.8 GB value for container memory usage at the end confirms that logic.
+Since usage states 8GB and limit being 10GB, the kernel on memory pressure was using as much as it can, but then he had to use ~2GB of "cached" memory pages from 
+Prometheus. The resulted, lower value for container memory usage at the end confirms that logic.
 
 To sum up, this experiment confirms that most of the bytes reported by RSS / memory usage are reusable, so be careful.
+
+### Conclusions
+
+Go 1.12.5 works well, but makes it a bit more difficult to monitor saturation, as any additional complex optimizations with the kernel.
+
+* If you depend on `container_memory_usage_bytes` switch to `container_memory_working_set_bytes` metric to closest possible experience. It's not perfect though.
+* Use `go_memstats_alloc_bytes` and others (e.g `go_memstats_.*_inuse_bytes`) to see actual allocations. Useful when profiling and optimizing your application memory. This helps to filter out the memory that is "cached". And it's the most accurate from the application perspective.
+* Avoid `Go 1.12.0-1.12.4` due to memory [allocation slowness bug](https://github.com/kubernetes/kubernetes/issues/75833#issuecomment-487830238) 
+* Do not afraid to update Go runtime version in your application. But when you do:
+  * Read the changelog
+  * Change JUST the version (: Change single thing at the time to ensure that if there is something suspicious, you can immediately narrow to Go runtime upgrade.  
+  
+BTW you are new to the memory management and you would love to know even more details I would recommend reading the blog post of my friend [@povilasv: "Go memory management"](https://povilasv.me/go-memory-management/)
+
