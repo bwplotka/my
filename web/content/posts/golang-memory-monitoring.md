@@ -44,7 +44,7 @@ As far as I can tell this makes sense from my understanding of the current imple
 Compared to the result with Go 1.11 you need to admit that the first impression for Go 1.12.5 is quite negative, right? Memory usage is increasing without ever coming down. 
 Initially, this might look like a leak or some bug in memory allocation. Even worse it looks like the container is just about to run out of memory (OOM).
 
-When taking a close look, all those assumptions are actually proven wrong. In my case, the container is not even close to OOM, and it is actually more performant ([in theory](https://github.com/golang/go/issues/23687#issuecomment-496705293)). 
+When taking a closer look, all those assumptions are actually proven wrong. In my case, the container is not even close to OOM, and it is actually more performant ([in theory](https://github.com/golang/go/issues/23687#issuecomment-496705293)). 
 
 ### Go 1.12 memory optimizations affect the reported memory usage / RSS in certain cases. What changed and why?
 
@@ -52,16 +52,17 @@ The change responsible for this effect is roughly explained in the release notes
 
 > On Linux, the runtime now uses MADV_FREE to release unused memory. This is more efficient but may result in higher reported RSS. The kernel will reclaim the unused data when it is needed. To revert to the Go 1.11 behavior (MADV_DONTNEED), set the environment variable GODEBUG=madvdontneed=1.
 
-As you probably know Go has quite sophisticated [GC mechanisms](https://blog.golang.org/ismmkeynote0) which are responsible for freeing allocated memory whenever a piece of data is no longer references by your code.
+As you probably know Go has quite sophisticated [GC mechanisms](https://blog.golang.org/ismmkeynote0) which are 
+responsible for freeing allocated memory whenever a piece of data is no longer referenced by your code.
 The key part for our issue is that processes can release allocated memory in many different ways. 
-Those ways also vary per OS and kernel versions.  
+Those ways also vary per OS and kernel version.  
 Among many options the Go runtime in certain cases uses [`madvise`](http://man7.org/linux/man-pages/man2/madvise.2.html) system call. One of the many advantages
 of `madvise` is that Go processes can closely **cooperate** with the kernel on how to treat certain "pages" of RAM memory in virtual space in a way that helps both sides.
 
 This cooperation is mutually beneficial, as programs generally use memory in a highly dynamic way. Sometimes they allocate more, sometimes less. 
 Since asking the kernel for free memory pages is sometimes quite expensive, doing that back and forth can take time and resources.
 On the other hand, we cannot just keep the memory reserved, as it can lead to the machine OOMing (kernel panic) or swapping to disk (extremely slow)
-if suddenly other process require more memory. Memory is a non-compressible resource so we need something in the middle: releasing by advising.
+if suddenly other processes require more memory. Memory is a non-compressible resource so we need something in the middle: releasing by advising.
 
 Thanks to `madvise` we can mark some memory pages as "not used, but might be needed soon". 
 I don't think that it is the professional name for this approach, but let's call it "cached memory pages" for the purpose of this blog.
@@ -69,14 +70,14 @@ I don't think that it is the professional name for this approach, but let's call
 **This approach affects the amount of memory occupied by a process as registered by the  kernel. Those "cached" pages are still technically reserved for the Go process, 
 even though the kernel can use them as soon as it needs memory for other processes**
 
-From high-level the `madvise` system call consists of 3 arguments:
+From a high-level perspective the `madvise` system call consists of 3 arguments:
 
 * `address` and `length` that define what memory range this call refers to.
 * `advice` that says what to advice for those memory pages.
 
 `advice` can have many different values depending on the specific OS and kernel version used by the system on which the Go process is running.
 
-To explain the Go 1.12 change, we are interested in following two values:
+To explain the Go 1.12 change, we are interested in two specific values:
 
 * `MADV_DONTNEED`
 
@@ -91,10 +92,10 @@ To explain the Go 1.12 change, we are interested in following two values:
 
 In essence Go 1.11 was mostly using `MADV_DONTNEED` whereas Go 1.12 where possible uses `MADV_FREE`. As you can read in the descriptions above, the latter
 tells the kernel to not free resources associated with the given range until memory pressure occurs. Memory pressure means 
-that other processes or the kernel itself does not have enough memory in the unused pool to satisfy their needs.
+that other processes or the kernel itself do not have enough memory in the unused pool to satisfy their needs.
 
 In my opinion, this change makes a lot of sense, especially in a Kubernetes/container environment, where the general pattern is to use a single process per container. 
-Since memory limits are enforced on a per container basic, releasing memory immediately from the only process that is running inside of it is mostly wasted work.
+Since memory limits are enforced on a per container basis, releasing memory immediately for the only process that is running inside of it is mostly wasted work.
 
 Having the Go process using exclusively 100% of memory specified in the limits can be beneficial for overall container workload performance. However as you've seen, it 
 makes monitoring a bit more difficult.
@@ -109,7 +110,7 @@ Here we are quite lucky as Go gives a handful of metrics. With the Prometheus cl
 
 ![in-use memory of Prometheus from the Go runtime's perspective during test](/images/blog/go-memory-monitoring/3.png)
 
-All those metrics are 1:1 fetched from [runtime.MemStats](https://golang.org/pkg/runtime/#MemStats)
+All those metrics are fetched without alterations from [runtime.MemStats](https://golang.org/pkg/runtime/#MemStats)
 
 NOTE: The in-use memory does NOT include `mmap` files and memory allocated by CGO.
 
@@ -119,7 +120,7 @@ This is more tricky. Let's focus on the container here. Cadvisor exposes a conta
 ([code](https://sourcegraph.com/github.com/google/cadvisor@cc445b9cc7e20e12062cc40ac0aa2b88c40dc487/-/blob/container/libcontainer/handler.go#L533))
 
 As you remember `container_memory_usage_bytes` was not very useful. Essentially you never know if memory is saturated or just cached.
-Even worse, the `usage_in_bytes` cgroup counter is quite fuzzy and non-exact. From the [cgroup docs](https://www.kernel.org/doc/Documentation/cgroup-v1/memory.txt):
+Even worse, the `usage_in_bytes` cgroup counter is quite approximative. From the [cgroup docs](https://www.kernel.org/doc/Documentation/cgroup-v1/memory.txt):
 
 > For efficiency, as other kernel components, memory cgroup uses some optimization
   to avoid unnecessary cacheline false sharing. usage_in_bytes is affected by the
@@ -130,7 +131,7 @@ Even worse, the `usage_in_bytes` cgroup counter is quite fuzzy and non-exact. Fr
   
 There is `container_memory_rss` but it behaves similarly due to `MADV_FREE` behavior.
 
-The only promising metric is `container_memory_working_set_bytes` recommended by various sources. It generally behaves similarly to `container_memory_usage_bytes`:
+The only promising metric is `container_memory_working_set_bytes` recommended in various comments. It generally behaves similarly to `container_memory_usage_bytes`:
 
 ![container_memory_usage_bytes vs container_memory_working_set_bytes for Prometheus Go 1.12.5 during test](/images/blog/go-memory-monitoring/5.png)
 
@@ -206,6 +207,6 @@ So:
 * Avoid `Go 1.12.0-1.12.4` due to a memory [allocation slowness bug](https://github.com/kubernetes/kubernetes/issues/75833#issuecomment-487830238) 
 * Do not be afraid to update the Go runtime version in your application. But when you do:
   * Read the changelog
-  * Change JUST the version (: Change a single thing at a time to ensure that if there is something suspicious, you can immediately narrow down on the Go runtime upgrade.  
+  * Change JUST the version (: Change a single thing at a time to ensure that if there is something suspicious, you can immediately narrow down to the Go runtime upgrade.  
 
 BTW if you are new to memory management and you would love to know even more details I would recommend reading the blog post of my friend [@povilasv: "Go memory management"](https://povilasv.me/go-memory-management/)
