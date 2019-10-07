@@ -25,6 +25,19 @@
         pre {
             word-break: keep-all;
             word-wrap: normal;
+
+            code:not([class]) {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+
+            code:not([class]) {
+                .dark-theme &:not([class]) {
+                    border: none;
+                    box-shadow: none;
+                }
+            }
         }
 
         code:not([class]) {
