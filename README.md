@@ -4,11 +4,16 @@
 
 Source for [bwplotka.dev](https://bwplotka.dev) personal website including blog posts.
 
+Once cloned, make sure to run `git submodule update --init --recursive`
+
 ### What it includes?
 
-* Overview
-* Blog posts
+* Overview page
+* Blog posts framework
   * YOLO comments reusing Github Issues (yes ^^)
+
+git submodule update --init --recursive
+
 
 ### What open source tools I used to build this?
 
@@ -38,4 +43,4 @@ Limitations:
 
 ### Can I copy the code for my own website?
 
-Of course, all except (blog content) is licensed with Apache 2 license.
+Of course, all except blog content is licensed with Apache 2 license.
