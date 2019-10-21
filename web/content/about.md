@@ -35,13 +35,16 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 
 ### My Talks
 
-* [*Thanos - Transforming Prometheus to a Global Scale in Seven Simple Steps*](https://youtu.be/Iuo1EjCN5i4); GrafanaCon2019; LA; 02.2019
-* [*Thanos - Transforming Prometheus to a Global Scale in Seven Simple Steps*](https://skillsmatter.com/skillscasts/12104-thanos-prometheus-at-scale); FOSDEM; Brussels; 02.2019
-* [*Brief Intro to Prometheus*](https://www.youtube.com/watch?v=6QzzKDTVGnU); Prometheus Meetup; London; 11.2018
-* [*Thanos - High Availability and Long Term Storage for Prometheus Metrics*](https://osseu18.sched.com/bartlomiejplotka); OSSummit; Edinburgh; 10.2018
-* [*Thanos - Prometheus at Scale*](https://skillsmatter.com/skillscasts/12104-thanos-prometheus-at-scale); CloudNative; London; 09.2018
-* [*Thanos - Prometheus at Scale*](https://youtu.be/Fb_lYX01IX4); [PromCon2018](https://promcon.io/2018-munich/talks/thanos-prometheus-at-scale/); Munich; 08.2018
-* [*Thanos - Prometheus at Scale*](https://www.youtube.com/watch?v=l8syWgJ98sk); Prometheus Meetup; London; 01.2018
+* [*Thanos - Transforming Prometheus Monitoring to a Global Scale in Seven Simple Steps](http://cloudnativewarsaw.com/talksspeakers/#rec119475061); CloudNative PL; Warsaw,PL; 09.2019; [slides](https://docs.google.com/presentation/d/1cKpbJY3jIAtr03M-zcNujwBA38_LDj7NqE4LjNfvglE)
+* [*Thanos - Transforming Prometheus to a Global Scale in Seven Simple Steps*](https://youtu.be/Iuo1EjCN5i4); GrafanaCon2019; LA, USA; 02.2019
+  * [Demo materials](https://github.com/thanos-io/thanos/pull/866)
+* [*Thanos - Transforming Prometheus to a Global Scale in Seven Simple Steps*](https://fosdem.org/2019/schedule/event/thanos_transforming_prometheus_to_a_global_scale_in_a_seven_simple_steps/); FOSDEM; Brussels, Belgium; 02.2019
+  * [Demo materials](https://github.com/thanos-io/thanos/pull/801)
+* [*Brief Intro to Prometheus*](https://www.youtube.com/watch?v=6QzzKDTVGnU); Prometheus Meetup; London, UK; 11.2018; [slides](https://docs.google.com/presentation/d/1BDJsu7MH5aE2rjSwZKvwg5RxDQnzTE1oztES9KPCYqI) 
+* [*Thanos - High Availability and Long Term Storage for Prometheus Metrics*](https://osseu18.sched.com/bartlomiejplotka); OSSummit; Edinburgh, Scotland; 10.2018; [slides](https://docs.google.com/presentation/d/19YjNgaZsl-emOdtyzPIdco5UCSFnT5mP14axaQqOFC8/edit?usp=sharing)
+* [*Thanos - Prometheus at Scale*](https://skillsmatter.com/skillscasts/12104-thanos-prometheus-at-scale); CloudNative; London, UK; 09.2018; [slides](https://docs.google.com/presentation/d/1_oLFEnyj-0XejPTQsXsHWqC867PsmnMgkBjHuf5L9LE)
+* [*Thanos - Prometheus at Scale*](https://youtu.be/Fb_lYX01IX4); [PromCon 2018](https://promcon.io/2018-munich/talks/thanos-prometheus-at-scale/); Munich, Germany; 08.2018; [slides](https://docs.google.com/presentation/d/1dwEw5AsgRfvMiXk71oeXxxWEyGio7baax7WlFs92Jf0)
+* [*Thanos - Prometheus at Scale*](https://www.youtube.com/watch?v=l8syWgJ98sk); Prometheus Meetup 2018; London, UK; 01.2018; [slides](https://docs.google.com/presentation/d/1L7Edsv9V0iNmuq7LBTei2ANgyyR0D-XU3B3bbiMPX5I)
 
 ### Open Source Projects
 
