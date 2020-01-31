@@ -20,22 +20,26 @@ I might have lots of (maybe) unique opinions about engineering I will love to bl
 
 * Define your infra in code. Not in terraform/yaml/jsonnet. (:
 * Why true programmer should be language agnostic. 
-* Use proper tool for a job. However golang is proper for most of those. ;>
+* Use proper tools for the job. However golang is proper for most of those. ;>
 * ...
 
-I am always looking forward to hearing feedback (: I you feel angry that what I say is totally wrong, I would love to hear that. This way we all learn (:
+I am always looking forward to hearing feedback (: If you feel angry that what I say is totally wrong, I would love to hear that. This way we all learn (:
 
-Currently I live London and I am really grateful to work on daily basis with the best engineers in the world in both [Improbable](https://improbable.io) and during my open source
-work in [Prometheus](https://prometheus.io) ecosystem. 
+I used to work at [Improbable](https://improbable.io): Amazing Gaming UK Startup. With global scale Kubernetes infrastructure,
+we were using and developing technically impressive unique systems. At some point, a couple of years ago, with Fabian Reinartz,
+we created [Thanos](https://thanos.io) project, which got some popularity as a kind of default choice for scaling Prometheus. 
+That started a shift to work fully on open source around the Prometheus ecosystem.
 
-Recently, with Fabian Reinartz, we created [Thanos](https://thanos.io) project, which got some popularity as the default choice for scaling Prometheus. That's why most
-of the content of my talks and blog posts are about Thanos.
+Currently, I live in London and I am really grateful to work on a daily basis with one of the best engineers in the world
+in both [Red Hat](https://redhat.com) and during my open source work in [Prometheus](https://prometheus.io) ecosystem. 
 
 Rest of my time is reserved by my beloved wife & family, volleyball and sometimes cars (:
 
 ### My Talks
 
-* [*Thanos - Transforming Prometheus Monitoring to a Global Scale in Seven Simple Steps](http://cloudnativewarsaw.com/talksspeakers/#rec119475061); CloudNative PL; Warsaw,PL; 09.2019; [slides](https://docs.google.com/presentation/d/1cKpbJY3jIAtr03M-zcNujwBA38_LDj7NqE4LjNfvglE)
+* [*Thanos Deep Dive: Inside a Distributed Monitoring System*](https://kccncna19.sched.com/event/UagR/thanos-deep-dive-inside-a-distributed-monitoring-system-bartlomiej-plotka-frederic-branczyk-red-hat); KubeCon EU 2019; San Diego, USA; 01.2019; [slides](https://static.sched.com/hosted_files/kccncna19/82/Thanos%20Deep%20Dive_%20Inside%20a%20Distributed%20Monitoring%20System%20.pdf); [video](https://www.youtube.com/watch?v=qQN0N14HXPM)
+* [*Two Households, Both Alike in Dignity: Cortex and Thanos*](https://promcon.io/2019-munich/talks/two-households-both-alike-in-dignity-cortex-and-thanos/); PromCon EU 2019; Munich, DE; 11.2019; [slides](https://promcon.io/2019-munich/slides/two-households-both-alike-in-dignity-cortex-and-thanos.pdf); [video](https://youtu.be/KmJnmd3K3Ws)
+* [*Thanos - Transforming Prometheus Monitoring to a Global Scale in Seven Simple Steps*](http://cloudnativewarsaw.com/talksspeakers/#rec119475061); CloudNative PL; Warsaw,PL; 09.2019; [slides](https://docs.google.com/presentation/d/1cKpbJY3jIAtr03M-zcNujwBA38_LDj7NqE4LjNfvglE); [video](https://www.youtube.com/watch?v=5H03plg_htg))
 * [*Thanos - Transforming Prometheus to a Global Scale in Seven Simple Steps*](https://youtu.be/Iuo1EjCN5i4); GrafanaCon2019; LA, USA; 02.2019
   * [Demo materials](https://github.com/thanos-io/thanos/pull/866)
 * [*Thanos - Transforming Prometheus to a Global Scale in Seven Simple Steps*](https://fosdem.org/2019/schedule/event/thanos_transforming_prometheus_to_a_global_scale_in_a_seven_simple_steps/); FOSDEM; Brussels, Belgium; 02.2019
@@ -48,7 +52,28 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 
 ### Open Source Projects
 
-Oh my.. this will be long list - in progress (:
+#### Actively Maintaining
+
+* [Thanos](https://thanos.io)
+* [Prometheus](https://prometheus.io/)
+* [prometheus-operator](https://github.com/coreos/prometheus-operator)
+* [CVO](https://github.com/openshift/cluster-monitoring-operator)
+* [jiralert](https://github.com/free/jiralert)
+* [my](https://github.com/bwplotka/my)
+* [mimic](https://github.com/bwplotka/mimic)
+* [oidc](https://github.com/bwplotka/oidc)
+* [go-jwt](https://github.com/bwplotka/go-jwt)
+* [go-tokenauth](https://github.com/bwplotka/go-tokenauth)
+
+#### Used to maintain
+
+* [kEdge]()
+* [go-k8sresolver](https://github.com/bwplotka/go-k8sresolver)
+* [promeval](https://github.com/bwplotka/promeval)
+* [go-httplog](https://github.com/bwplotka/go-httplog)
+* [go-httpt](https://github.com/bwplotka/go-httpt)
+* [Serenity](https://github.com/mesosphere/serenity)
+* [Mesos](https://github.com/apache/mesos)
 
 ### CV
 
