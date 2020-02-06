@@ -2,11 +2,11 @@
 authors:
 - name: "Bartek Płotka"
 date: 2020-02-06
-linktitle: "How to Become an OSS Project Maintainer, Survive, And Have Fun on The Way!"
+linktitle: "How to Become an Amazing OSS Project Maintainer, Survive, And Have Fun on The Way!"
 type:
 - post 
 - posts
-title: "How to Become an OSS Project Maintainer, Survive, And Have Fun on The Way!"
+title: "How to Become an Amazing OSS Project Maintainer, Survive, And Have Fun on The Way!"
 weight: 1
 categories:
 - opensource
@@ -40,8 +40,10 @@ your chances. Chances that someone will trust you to do solid project maintenanc
 
 ### I am far from being perfect, but I try to follow those rules. 
 
-All of those I learned by practice while maintaining [Thanos](https://thanos.io), [Prometheus](https://prometheus.io) and other projects.
-However mainly **I found those by *observing* amazing examples of good maintainer behavior**, as well as seeing anti-patterns.
+My first [open source contribution was 2015 to Apache Mesos](https://github.com/apache/mesos/commits?author=bwplotka).
+Since then I fall in love in open source work and started to learn the things I am sharing in this post by *observing*
+examples of good maintainers behaviour, as well as seeing some anti-patterns. 
+On top of this I learned a lot by practice while co-maintaining [Thanos](https://thanos.io), [Prometheus](https://prometheus.io) and other projects.
 
 **Don't get me wrong: I am personally far from being perfect, but I try to improve every day.** Last but not least the following practices are
 purely related to **soft skills**. I won't touch in this post how you should design your system or write your code. **If you did not already notice,
@@ -49,9 +51,10 @@ probably most of your work as the maintainer will be communication with the peop
 
 ## Be Polite and Friendly.
 
-I hope I don't need to say this, but no one will never consider you as a good maintainer if you are not: *inclusive, approachable and polite.*
+I hope I don't need to say this, but no one will ever consider you as a good maintainer if you are not: *inclusive, approachable and polite.*
 No one says you have to talk to everyone, always smile and like everyone. No. But you have to be professional.
-**Never swear.** Be tolerant. Use "her" instead of "his" more often (or "their"). Never make offensive jokes. Accept that everyone makes mistakes.
+**Never swear.** Be tolerant. Use gender-neutral pronouns (e.g "they"), don't assume anyone's gender if it's not necessary.
+Never make offensive jokes. Accept that everyone makes mistakes.
 
 ### Either respond politely or don't respond at all. 
 
@@ -370,7 +373,7 @@ be innovative and focused on what is now!
 ## Stay Healthy; Have Fun!
 
 This is the last one but also the most important rule you will read here. **Don't overwork.** If you are tired or maintaining
-does not make you happy anymore, then first try to est (no computer allowed!), then just quit and find another thing to focus on.
+does not make you happy anymore, then first try to rest (no computer allowed!), then just quit and find another thing to focus on.
 **Open source is the opportunity to find best friends, have lots of fun and amazing job, however, it is also the place of endless requests, bug reports, and questions.**
 
 * There will be users which want help NOW, HERE because something they misconfigured is on fire.
