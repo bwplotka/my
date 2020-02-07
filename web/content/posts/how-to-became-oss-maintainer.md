@@ -98,7 +98,7 @@ This is maybe obvious, but when you review dozens PRs a day, you can lose patien
 For example instead of saying: 
 
 ```
-`"Lol, that's wrong, it should be ThisNiceName() not ThatWrongName()"
+"Lol, that's wrong, it should be ThisNiceName() not ThatWrongName()"
 ```
 
 Maybe you could say:
@@ -125,17 +125,6 @@ It's ok to say the truth and be honest about the problem, as long as it is deliv
 
 **Overall:** be nice where you can e.g in communication in issues, PRs, slack or Twitter.
 This also includes private communication, because nothing leaves the internet these days. (:  
-
-### Have fun!
-
-Open Source is fun place. If you spent some of your work or free time at forums, GitHub Issues and working with the community, it's
-always worth to fill this place with positive energy! Laugh, jokes, funny situations, memes, emojis. Everything is allowed!
-It helps to maintain a healthy atmosphere and break some ice on the way! Your slack forum or Github Issues don't need to be
-always just a sad place full of reported OOMs or race conditions! (: 
-
-As an example, I recently was amused by contributors from Russia that clearly where having some extra *%%%* help while
-making [this PR](https://github.com/thanos-io/thanos/pull/1789#issuecomment-559025685). Met them at the [FOSDEM](https://fosdem.org/)
-the other day and they are nice people in real life as well. (: 
 
 ## Improve Your English.
 
@@ -222,8 +211,8 @@ Only a few are capable to review such an amount of code in detail. Additionally,
 continuous focus to review that properly. All end with delayed reviews, merging not fully reviewed code and increasing chances of
 unnecessary complexity or bugs. 
 
-One exception: replace-like (e.g `sed`) changes across many packages are fine, as long as the author also presents the script/command that was used to perform rename.
-Just make sure you don't mix changes made by the script with manual ones! 
+One exception: replace-like (e.g `sed`, `go mod vendor`, `goimports`) changes across many packages are fine, as long as the author also presents the script/command that was used to perform rename.
+**Just make sure you don't mix changes made by the script with manual ones!**
 
 ### Strict vs Fast.
 
@@ -236,7 +225,7 @@ first** vs quick MVP. We do that while maintaining both Thanos and Prometheus pr
 best practice for long term projects like that. (: 
 
 Remember: Some contributors will not like you because you are strict on details and refuse to add the feature they
-implemented. **But more people will hate you if the project will be causing incidents, because of YOLO code,
+implemented. **But more people will hate you if the project will be causing incidents, because of [YOLO code](https://jaxenter.com/yolo-driven-development-methodology-113469.html),
 unnecessary complexity or unmaintainable features. (:**
 
 ### Don't go to extremes.
@@ -291,7 +280,8 @@ Of course, it escalated a bit...
 
 ## Want more help? Give back, help others.
 
-This is again, in my opinion very important rule: **How to build community? By helping the community out!**
+There is an old Chinese saying: `The rose's in her hand,the flavor in mine` (I learnt this thanks to Chinese Thanos contributor ♥️).
+This is again, in my opinion very important and maybe surprising truth: **How to build community? By helping the community out!**
 
 You can't be selfish. First of all, you created / maintain the project in the open source in the first place, so you are already helping out the people.
 But at some point you feel stressed, exhausted, alone or helpless. This is where the community helps enormously. You want more users, because (tiny)
@@ -364,7 +354,7 @@ help to maintain independence in terms of decision making. They help with operat
 ### Stay organized
 
 One way to get more productive is to start from your own personal organization skills. For that I really recommend the book 
-[Getting Things Done by David Allen (available in the audiobook read by the author)](https://www.audible.co.uk/pd/Getting-Things-Done-Audiobook/B01B6WT3JY).
+[Getting Things Done by David Allen](https://www.audible.co.uk/pd/Getting-Things-Done-Audiobook/B01B6WT3JY).
  
 Spoiler alert! Focus on clearing your mind. If you have quick <3min task, just do it. For longer one try to note what's the next step
 and save it in some trusted place (Google Keep, notebook). Visit this place everyday morning. This will allow your mind to relax,
@@ -420,6 +410,17 @@ A rested and clear mind will solve problems 100x quicker. Don't sacrifice weeken
 
 **Depression and burnout are pretty serious stuff. At the moment of writing, I'm 27 years old and I already burnt out twice in my
 career.** I definitely don't recommend this! All of this because of my too high expectations towards myself, overworking, ambitions, etc.   
+
+### Have fun!
+
+Open Source is fun place. If you spent some of your work or free time at forums, GitHub Issues and working with the community, it's
+always worth to fill this place with positive energy! Laugh, jokes, funny situations, memes, emojis. Everything is allowed!
+It helps to maintain a healthy atmosphere and break some ice on the way! Your slack forum or Github Issues don't need to be
+always just a sad place full of reported OOMs or race conditions! (: 
+
+As an example, I recently was amused by contributors from Russia that clearly where having some extra *%%%* help while
+making [this PR](https://github.com/thanos-io/thanos/pull/1789#issuecomment-559025685). Met them at the [FOSDEM](https://fosdem.org/)
+the other day and they are nice people in real life as well. (: 
 
 ## Summary 
 
