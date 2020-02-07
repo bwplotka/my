@@ -54,7 +54,7 @@ probably most of your work as the maintainer will be communication with the peop
 I hope I don't need to say this, but no one will ever consider you as a good maintainer if you are not: *inclusive, approachable and polite.*
 No one says you have to talk to everyone, always smile and like everyone. No. But you have to be professional.
 **Never swear.** Be tolerant. Use gender-neutral pronouns (e.g "they"), don't assume anyone's gender if it's not necessary.
-Never make offensive jokes. Accept that everyone makes mistakes.
+Never make offensive jokes. **Accept that everyone makes mistakes.**
 
 ### Either respond politely or don't respond at all. 
 
@@ -209,7 +209,7 @@ to fix places around the areas they are contributing to unless it'a difficult or
 
 Only a few are capable to review such an amount of code in detail. Additionally, it's really difficult to find 3h of the
 continuous focus to review that properly. All end with delayed reviews, merging not fully reviewed code and increasing chances of
-unnecessary complexity or bugs. 
+unnecessary complexity or bugs. Avoid big PRs by splitting and chaining smaller ones or maintain functional commits (but notify reviewers about it!). 
 
 One exception: replace-like (e.g `sed`, `go mod vendor`, `goimports`) changes across many packages are fine, as long as the author also presents the script/command that was used to perform rename.
 **Just make sure you don't mix changes made by the script with manual ones!**
@@ -230,7 +230,11 @@ unnecessary complexity or unmaintainable features. (:**
 
 ### Don't go to extremes.
  
-It's probably fine if some variable name is not perfect or if some comment is missing, but I think you get my point. (: 
+It's probably fine if some variable name is not perfect or if some comment is missing. Nothing will be perfect. 
+It is even  sometimes fine to put a `// TODO(@author)` or GitHub Issue to fix it later. "Strict" also does not mean the PR has
+be strictly along how you would implement it. Be open minded and happy for professional discussion. People think in different way
+and as long it works, is readable and meet style guide. It does not mean you have to be always right! (: **Do your work with their hands,
+find the balance.**
 
 ## Be Proactive and Intelligently Lazy.
 
@@ -249,9 +253,9 @@ than just slow comment by comment conversation on Github Issue or PR that takes 
 **users and contributors gain more trust in the project.** At some point you will find that community helps each other to answer questions and last but not
 least: you can find new friends! (:     
 
-### If some process takes more than 1 minute and you repeat it more than 3 times: Automate. 
+### Repetitive work? Automate. 
 
-You would be surprised at how innovative people are in order to *avoid work*. All those small repetitions can add up to weeks of time
+You would be surprised at how innovative people are in order to *avoid work*. All those small repetitions can add up to [weeks of time](https://xkcd.com/1205/))
 during your whole lifetime, so they matter. In Thanos project we try to apply it to everything:
 
 * We were spending too much time during a review process to ensure proper commentaries. (Started with capital letters and finished with a period). We
@@ -277,6 +281,22 @@ the number of repeated questions or other contributors will be able to respond t
 In fact, I wrote this blog post because someone asked for feedback on how he can become a maintainer! (: 
 
 Of course, it escalated a bit...
+
+### Do you want users to give feedback? Make the project accessible.
+
+Having extensive documentation is the key. But there are more ways to encourage your users to grab latest without fear and
+deploy your code early! One way of doing it, is [building docker image on each merge to master](https://github.com/thanos-io/thanos/blob/master/.circleci/config.yml#L59)) (e.g with tag `master-<date>-<sha>`)
+
+### Admit your mistakes and fix them.
+
+We all makes mistakes. Maintainers do them as well e.g with project's design decision. Always be open for improvements, even if it means
+saying sorry, and **removing a powerful feature** that is causing problems e.g confusion. For example [we had to remove gossip
+functionality to simplify Thanos](https://thanos.io/proposals/201809_gossip-removal.md/) 
+
+Another example or our initial mistake was pushing our docker images as `latest`. [**Never use or push `latest` tag**](https://vsupalov.com/docker-latest-tag/). Period.
+It's confusing and magic. Avoid magic.
+
+Overall, be open for changes, even though it means to admit that you were wrong. That is fine, because now you might know more!
 
 ## Want more help? Give back, help others.
 
@@ -447,9 +467,14 @@ Always question processes. Are they good enough? If this repetitive thing can be
 just because we were frustrated that we waste time. **Try to optimize for quality and time saving.** This will give you more time to
 have time for pleasures (: 
 
-And... that's it! I hope you will find this helpful.
+### Last message...
 
-PS: It's my first non-coding, non-system design blog post so... please give me feedback! If you don't agree with something or I missed important detail,
-let me know! (: 
+Starting a new project and becoming a maintainer will not guarantee you the community from day 1. It is a very long journey and hard work.
+Usually, not a single person work. What I would suggest is to join another project first. Grow and learn. Chose your passion and go!
+Check `good first item`, or `help wanted` labels for GitHub Issues, join community calls, slacks. 
+
+And... that's it! I hope you will find all of this helpful.
 
 **And I wish you a pleasant project maintenance ♥️.**
+
+PS: *It's my first non-coding, non-system design blog post so... please give me feedback! If you don't agree with something or I missed important detail, let me know! (:* 
