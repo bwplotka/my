@@ -124,7 +124,7 @@ and you can fully explain why and what, etc. Sometimes people just don't know th
 It's ok to say the truth and be honest about the problem, as long as it is delivered in a nice, positive way (!).
 
 **Overall:** be nice where you can e.g in communication in issues, PRs, slack or Twitter.
-This also includes private communication, because nothing leaves the internet these days. (:  
+
 
 ## Improve Your English.
 
@@ -252,6 +252,13 @@ Additionally, if you want to resolve a problem, quickly discuss some matter or d
 than just slow comment by comment conversation on Github Issue or PR that takes weeks. With such, more direct communication
 **users and contributors gain more trust in the project.** At some point you will find that community helps each other to answer questions and last but not
 least: you can find new friends! (:     
+
+### Keep discussions open and inclusive.
+
+All non-sensitive, non-security related communication can be made in public. In my opinion it even *should* because **"open source" contains the word "open" for a reason**. The reason is that openness is extremely powerful. When you move all, even your Maintainer Team discussions to public, everyone can learn, get context, get easily involved, motivated, and up to date. Last but not least, you can avoid confusions like [this.](https://github.com/prometheus/prometheus/pull/6760#issuecomment-583733400) **At the end: everyone saves tons of time!**
+
+Additionally, anything you put on the internet, even privately, can accidentally leak anyway so always be kind and prepared to defend/support your past words ((:
+
 
 ### Repetitive work? Automate. 
 
