@@ -37,7 +37,10 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 
 ### My Talks
 
-* [*Thanos Deep Dive: Inside a Distributed Monitoring System*](https://kccncna19.sched.com/event/UagR/thanos-deep-dive-inside-a-distributed-monitoring-system-bartlomiej-plotka-frederic-branczyk-red-hat); KubeCon EU 2019; San Diego, USA; 01.2019; [slides](https://static.sched.com/hosted_files/kccncna19/82/Thanos%20Deep%20Dive_%20Inside%20a%20Distributed%20Monitoring%20System%20.pdf); [video](https://www.youtube.com/watch?v=qQN0N14HXPM)
+* [*Are You Testing Your Observability? Patterns for Instrumenting Your Services*](https://fosdem.org/2020/schedule/event/testing_observability/); FOSDEM 2020; Brussels, Belgium; 02.2020;
+* [*Thanos: Prometheus at Scale!*](https://devconfcz2020a.sched.com/event/YOuT/thanos-prometheus-at-scale); DevConf.cz 2020; Brno, CZ; 01.2020; [slides](https://docs.google.com/presentation/d/1oHaHWr01JeeUgBrF0F-Yu2UWDfV9z-6RxlCjikky2X8/edit?usp=sharing0)
+* [*Are You Testing Your Observability? Patterns for Instrumenting Your Go Services*](https://www.godays.io/); GoDays Berlin 2020; Berlin, DE; 01.2020; [video](https://youtu.be/LU6D5cNeHks?list=PLUXT7uzX81byVuvjGmF-OopGKZo_wxcmq)
+* [*Thanos Deep Dive: Inside a Distributed Monitoring System*](https://kccncna19.sched.com/event/UagR/thanos-deep-dive-inside-a-distributed-monitoring-system-bartlomiej-plotka-frederic-branczyk-red-hat); KubeCon EU 2019; San Diego, USA; 11.2019; [slides](https://static.sched.com/hosted_files/kccncna19/82/Thanos%20Deep%20Dive_%20Inside%20a%20Distributed%20Monitoring%20System%20.pdf); [video](https://www.youtube.com/watch?v=qQN0N14HXPM)
 * [*Two Households, Both Alike in Dignity: Cortex and Thanos*](https://promcon.io/2019-munich/talks/two-households-both-alike-in-dignity-cortex-and-thanos/); PromCon EU 2019; Munich, DE; 11.2019; [slides](https://promcon.io/2019-munich/slides/two-households-both-alike-in-dignity-cortex-and-thanos.pdf); [video](https://youtu.be/KmJnmd3K3Ws)
 * [*Thanos - Transforming Prometheus Monitoring to a Global Scale in Seven Simple Steps*](http://cloudnativewarsaw.com/talksspeakers/#rec119475061); CloudNative PL; Warsaw,PL; 09.2019; [slides](https://docs.google.com/presentation/d/1cKpbJY3jIAtr03M-zcNujwBA38_LDj7NqE4LjNfvglE); [video](https://www.youtube.com/watch?v=5H03plg_htg))
 * [*Thanos - Transforming Prometheus to a Global Scale in Seven Simple Steps*](https://youtu.be/Iuo1EjCN5i4); GrafanaCon2019; LA, USA; 02.2019
@@ -56,6 +59,7 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 
 * [Thanos](https://thanos.io)
 * [Prometheus](https://prometheus.io/)
+* [Demo Navigator](https://github.com/bwplotka/demo-nav)
 * [prometheus-operator](https://github.com/coreos/prometheus-operator)
 * [CVO](https://github.com/openshift/cluster-monitoring-operator)
 * [jiralert](https://github.com/free/jiralert)
@@ -67,7 +71,7 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 
 #### Used to maintain
 
-* [kEdge]()
+* [kEdge](https://github.com/improbable-eng/kedge)
 * [go-k8sresolver](https://github.com/bwplotka/go-k8sresolver)
 * [promeval](https://github.com/bwplotka/promeval)
 * [go-httplog](https://github.com/bwplotka/go-httplog)

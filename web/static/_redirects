@@ -1,0 +1,2 @@
+# Redirect default Netlify subdomain to primary domain
+https://bwplotka.netlify.com/* https://bwplotka.dev/:splat 301!
