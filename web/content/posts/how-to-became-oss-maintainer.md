@@ -1,7 +1,7 @@
 ---
 authors:
 - name: "Bartek Płotka"
-date: 2020-02-09
+date: 2020-02-10
 linktitle: "How to Become an Amazing OSS Project Maintainer, Survive, And Have Fun on The Way!"
 type:
 - post 
@@ -12,7 +12,7 @@ categories:
 - open-source
 ---
 
-In this post, I would like to share what, in my honest opinion, a **"perfect"** maintainer of the open source software should do.
+In this post, I would like to share what, in my honest opinion, a **"perfect"** maintainer of an open source software should do.
 Yes, no one ever will be perfect: we all have limited time, we all make mistakes and have some skills to learn.
 **However, there is nothing bad in defining what we should aim for.** (: 
 
@@ -47,7 +47,7 @@ On top of this, I learned a lot by practice while co-maintaining [Thanos](https:
 and [other projects](../../about/#open-source-projects). And **don't get me wrong: I am personally far from being perfect, but I try to improve every day.**
 
 Last but not least the following practices are purely related to **soft skills**. I won't touch in this post how you should design your system or write your code. **If you did not already notice,
-probably most of your work as the maintainer will be communication with the people.**
+probably most of your work as the maintainer will be communication with humans.**
 
 ## 1. Be Polite and Friendly.
 
@@ -58,7 +58,7 @@ Never make offensive jokes. **Accept that everyone makes mistakes.**
 
 ### Either respond politely or don't respond at all. 
 
-Never go into meaningless debates especially on Twitter (: Report sketchy interactions, escalate but never fight back with
+Never go into meaningless debates especially on Twitter. (: Report sketchy interactions, escalate but never fight back with
 trolls or rude people. 
 
 ### Don't try to sell your open source project too hard, in a pushy way.
@@ -83,17 +83,16 @@ that your contributor can integrate with your project instead! [See example "No"
 
 Users sometimes don't understand your project. Some of them don't see complexities. They miss what maintenance burden means.
 On the other hand, some contributors give amazing ideas and golden improvements so that's a trade-off of having the project in open source. (:
-
 **Important: Never compromise the quality of the project just to be `friendly`!**
 
 ### Always say "thank you".
 
-Show friendliness and gratefulness for all the contributions, even for the code that was not eventually merged. Still,
+Show friendliness and gratefulness for all the contributions, even for the code that ultimately was not merged. Still,
 contributor spent time and effort. Probably they learned on the way, so nothing is a total waste!
 
 ### Try to be nice if you are suggesting changes on a PR. 
 
-This is maybe obvious, but when you review dozens PRs a day, you can lose patience. Still, always try to explain the reasoning, especially if someone is new to the community.
+This is maybe obvious, but when you review dozens of PRs a day, you can lose patience. Still, always try to explain the reasoning, especially if someone is new to the community.
 For example instead of saying: 
 
 ```
@@ -111,12 +110,12 @@ It's really worth it! Contributors will love to contribute because they are **le
 
 ### Be fair and clear. Use direct communication.
 
-You can't escape from awkward situations. Sometimes you can have two contributors yelling each other in the PR that someone
+Awkward situations are unavoidable. Sometimes you can have two contributors yelling at each other in the PR that someone
 has the right to implement a certain feature. Another time you want to quickly fix the issue, while there is already
-PR by some contributor, waiting for a rebase. Or maybe you have the contributor who tries to "triage" issues by just
+a PR by some contributor, waiting for a rebase. Or maybe you have a contributor who tries to "triage" issues by just
 commenting on every issue `ping @bwplotka` several times (like I am not getting notifications in inbox already...).
 
-**Try to consider other people's feelings.** What helps in **ALL** of those cases is to **ask the contributor to join Slack
+**Try to consider other people's feelings.** What helps in **ALL** of those cases is to **ask the contributor to join Slack (or another channel)
 and discuss the matter *directly*.** In 99% of cases, the situation gets resolved because you show that you care. The person feels supported,
 and you can fully explain why and what, etc. Sometimes people just don't know that they are rude or doing something wrong.
  
@@ -129,17 +128,17 @@ the communication. It makes the person you write to (in e.g. issue):
 
 * In the best case: Waste their time trying to understand exactly what you mean, asking follow-up questions, etc.
 * Worse: They will just ignore your message, not respond at all.
-* The worst: They will do opposite action to what you just recommend, waste even more time, and get frustrated.
+* The worst: They will do the opposite of what you have just recommended, waste even more time, and get frustrated.
 
 ### It saves time. 
 
-It's quite funny but to save time overall you have to sometimes spend a bit time in the first place. For example, on your messaging:
+It's quite funny but to save time overall you have to sometimes spend a bit of time in the first place. For example, on your messaging:
 
 * Write full sentences. 
-* Avoid `this` `those` `that` words. 
+* Avoid unclear back references with `this`, `that`, `these`, `those`. 
 * Try to explain as many details as you can. 
 * Link to other communication.
-* Install [Grammarly](https://www.grammarly.com/) web plugin.
+* Install the [Grammarly](https://www.grammarly.com/) web plugin.
 * Look in Google translate if you are unsure about some wording.
 * Avoid abbreviations and shortenings. For example, this sentence makes sense but it's probably a bit cryptic: 
   
@@ -151,20 +150,20 @@ It's quite funny but to save time overall you have to sometimes spend a bit time
 
 This relates to the project public communication (Slack, forums, PRs) but also to documentation, flag descriptions, code comments, etc.
 And I agree that it is brutal and unfair, especially for non-native speakers like me. However, you have to learn some tiny
-details of English to be more effective as the maintainer or, more effective as a contributor who might be maintainer someday.
+details of English to be more effective as the maintainer or more effective as a contributor who might become a maintainer someday.
 
-## 3. Review Issues and Code Carefully; Be Strict.
+## 3. Review Issues and Code Carefully. Be Strict.
 
-We are all busy. However, don't rush out too much, and **read things carefully**.
+We are all busy. However, don't rush too much, and **read things carefully**.
 
-### When reviewing a PR: As maintainers, we need to be extra careful.
+### When reviewing a PR; as maintainers, we need to be extra careful.
  
-Software these days can be complex. [Go language improves readability](https://talks.golang.org/2014/readability.slide) enormously.
-However, still, some software I work on ([Thanos](https://thanos.io)) is at the end a distributed system that involves concurrency,
-tricky optimizations like [mmaping](https://github.com/thanos-io/thanos/blob/56a1fb6c084f11638f6f7b6532adc07dd05824b6/pkg/block/indexheader/binary_reader.go#L457)
+Software these days can be complex. [The Go language encourages readable code.](https://talks.golang.org/2014/readability.slide)
+However, still, some software I work on ([Thanos](https://thanos.io)) is in the end a distributed system that involves concurrency,
+tricky optimizations like [mmap'ing](https://github.com/thanos-io/thanos/blob/56a1fb6c084f11638f6f7b6532adc07dd05824b6/pkg/block/indexheader/binary_reader.go#L457)
 and [bespoke binary formats](https://github.com/thanos-io/thanos/blob/56a1fb6c084f11638f6f7b6532adc07dd05824b6/docs/components/store.md#format-version-1).
 
-This means that every detail might matter. And yes, we are guarded against mistakes with unit/integration/e2e tests, cross-building
+This means that every detail might matter. And yes, we guard against mistakes with unit/integration/e2e tests, cross-building
 tests and [static analysis on each commit](https://github.com/thanos-io/thanos/blob/25f5b0b9290fa1620647f00dd8df954380efc530/Makefile#L292),
 but the coverage is always too low and it's possible to miss stuff.
  
@@ -173,16 +172,16 @@ have a major incident e.g. data loss, unavailability.
 
 ### It is really bad if the maintainer approves the PR with very visible mistakes.
 
-To me it means that they did not even scroll the proposed change until the end. There might be different reasons behind
+To me it means that they did not even scroll through the proposed change. There might be different reasons behind
 such a mistake. Maybe the maintainer was too tired or simply did not see that bug. Maybe they wanted to be nice and not
-block contributions? Maybe the author did amazing PRs before so maintainer trusted the author? Unfortunately, there can
-be sometimes even more *selfish reasoning*: They approved just to show they are active, even though they don't have time
+block contributions? Maybe the author did amazing PRs before so the maintainer trusted the author? Unfortunately,
+sometimes **the reason is more selfish**: they approved just to show they are active, even though they don't have time
 to maintain the project full time. Don't be like this. It is pretty obvious!
 
 ### As the external contributor you can also review pull requests!
 
-In fact e.g. according to our review process policy, a contributor's code review, if done by the contributor whom we trust and
-they know a codebase, can be enough to merge some less impactful PRs. I think this is great because it allows a contributor
+For example, the Thanos review process encourages code reviews by contributors. For a less impactful PR, the review from a
+trusted contributor that knows the codebase can be enough to merge the PR. I think this is great because it allows a contributor
 to do reviews in a safe environment, with other maintainers to guide them and step in if some comment is not particularly
 correct. It's also a very good sign that the contributor is ready to become the maintainer!
 
@@ -191,32 +190,33 @@ correct. It's also a very good sign that the contributor is ready to become the 
 As the maintainer, please:
 
 * Never approve the PR if you are not sure if it makes sense OR if you don't have enough time to review it properly.
-It is totally fine to postpone or review only part of the PR and say that you can't review all right now.
-**That's critical and please take it seriously**: green is green. Approve PR if you would be ok to deploy this in production.
+It is totally fine to postpone or review only a part of the PR and say that you can't review everything right now.
+**That's critical and please take it seriously**: green is green. Only approve a PR if you would be ok to deploy it to production.
 This is at least what we follow in the Thanos project.
-* Don't trust anyone. Everyone does mistakes. Ask questions, challenge the code. Anyone means also yourself! Review your own code.
-* Make use of [the boy scout rule](https://www.oreilly.com/library/view/97-things-every/9780596809515/ch08.html), but carefully. Ask the author
-to fix places around the areas they are contributing to unless it's a difficult or wide change.
+* Don't trust anyone. Everyone makes mistakes. Ask questions, challenge the code. Anyone means also yourself! Don't merge 
+your own PR without review. (:
+* Make use of [the scout rule](https://www.oreilly.com/library/view/97-things-every/9780596809515/ch08.html), but very carefully. Ask the author
+to fix places around the areas they are contributing to unless they are totally new, it's a difficult or invasive change.
 * Follow the suggestions I had in previous sections: be friendly and use proper English.
 
-### Controversial: Literally refuse to review and merge huge (1k+ lines of code) PRs.
+### Controversial: Refuse to review and merge huge (1k+ lines of code) PRs.
 
 Only a few are capable to review such an amount of code in detail. Additionally, it's really difficult to find 3h of the
-continuous focus to review that properly. It all ends with delayed reviews, merging not fully reviewed code and increasing chances of
+continuous focus to review such a huge PR properly. It all ends with delayed reviews, merging not fully reviewed code and increasing chances of
 unnecessary complexity or bugs. **Avoid big PRs by splitting them and chaining into smaller PRs**. Alternative is to maintain functional commits,
 but it tends to be harder and non-obvious to work with for both author and reviewer. 
 
 One exception: replace-like (e.g. `sed`, `go mod vendor`, `goimports`) changes across many packages, as long as the author
 also presents the script/command that was used to perform rename. **Just make sure you don't mix changes made by the script with manual ones!**
 
-### Strict vs Fast.
+### Strict vs fast.
 
-In my opinion, there are two types of maintainers. In one group, maintainers are more happy to merge maybe not yet ready code,
+In my opinion, there are two types of maintainers. In one group, maintainers are happier to merge potentially not yet ready code,
 because you can always improve it later and you can move quickly. MVP is done in no time, the demo is ready. But then what?
 Who will refactor the code? Who will make it consistent? Who will "productionise" it? And when? The answer is: **Probably no one, never** (:
 
 That's why I am more in favor of the other group of people: Those who aim for **quality** vs short term velocity. **Design
-first** vs quick MVP. We aim for second group while maintaining both Thanos and Prometheus projects. I strongly believe that is the
+first** vs quick MVP. We aim for quality and design-first while maintaining both Thanos and Prometheus projects. I strongly believe that is the
 best practice for long term projects like that.
 
 Remember: Some contributors will not like you because you are strict on details and refuse to add the feature they
@@ -226,11 +226,9 @@ unnecessary complexity or unmaintainable features. (:**
 ### Don't go to extremes.
  
 It's probably fine if some variable name is not perfect or if some comment is missing. Nothing will be perfect. 
-It is even sometimes fine to put a `// TODO(@author):` or GitHub Issue to fix it later. *"Strict"* also does not mean the PR has to
-be exactly how you would implement it. Be open-minded and happy for professional discussion. People think in different ways
-and as long it works, it is readable and meets style guide it can be merged. It does not mean you have to be always right! (: 
-
-**Do your work with their hands, find the balance.**
+It is even sometimes fine to defer some work by inserting a `// TODO(@author):` or filling a GitHub issue. *"Strict"* also does not mean the PR has to
+be exactly how you would implement it. Be open-minded and happy for professional discussion. People think in different ways.
+Just make sure the PR works, is readable and meets the style guide. It does not mean you have to be always right! (: 
 
 ## 4. Be Proactive and Intelligently Lazy.
 
@@ -238,21 +236,21 @@ There are certain rules that you can stick to if you want to be a more efficient
 
 ### Prefer asynchronous communication but use synchronous as well.
 
-First of all, define the project's means of communication. Keeping GitHub issues for feature requests, bugs reports and feedback makes
+First of all, define the project's means of communication. Keeping GitHub issues for feature requests, bug reports and feedback makes
 sense. It is asynchronous, easily searchable and easy to follow. But these days it might be not enough. First of all,
-potential users are sometimes too shy to put an issue with maybe basic questions due to e.g. missing pieces of the documentation.
-Setting some asynchronous channels like Slack (we use that in Thanos project) or [IRC](https://xkcd.com/1782/) (Prometheus) is exactly for this purpose.
-**This allows building trust and relationships with the community, contributors, and maintainers.**
+potential users are sometimes too shy to file an issue with maybe basic questions due to e.g. a missing piece of the documentation.
+Setting some synchronous channels like Slack (we use that in the Thanos project) or [IRC](https://xkcd.com/1782/) (Prometheus) is exactly for this purpose.
+**The mix of synchronous and asynchronous communications helps to build trust and good relationships within the community and between contributors and maintainers.**
 
 Additionally, if you want to resolve a problem, quickly discuss some matter or design, it is much better to schedule some discussion on Slack,
-than just slow comment by comment conversation on GitHub issue or PR that takes weeks. With such more direct communication
+than having just a slow comment-by-comment conversation on a GitHub issue or on a PR, which might take weeks. With such more direct communication
 **users and contributors gain more trust in the project.** At some point, you will find that the community helps each other
 to answer questions and last but not least: you can find new friends! (:     
 
 ### Keep discussions open and inclusive.
 
 All non-sensitive, non-security related communication can be made in public. In my opinion, it even *should* because **"open source" contains the word "open" for a reason**.
-The reason is that openness is extremely powerful. When you move all, even your Maintainer Team discussions to the public,
+The reason is that openness is extremely powerful. When you have all discussions, even those of the maintainer team, in public,
 everyone can learn, get the context, get easily involved, motivated, and up to date. Last but not least, you can avoid
 confusions like [this.](https://github.com/prometheus/prometheus/pull/6760#issuecomment-583733400) 
 **At the end: everyone saves tons of time!**
@@ -262,19 +260,20 @@ Additionally, anything you put on the internet, even privately, can accidentally
 ### Repetitive work? Automate. 
 
 You would be surprised at how innovative people are in order to *avoid work*. All those small repetitions can add up to [weeks of time](https://xkcd.com/1205/)
-during your whole lifetime, so they matter. In Thanos project we try to apply it to everything:
+during your whole lifetime, so they matter. In the Thanos project we try to apply it to everything:
 
 * We were spending too much time during a review process to ensure proper commentaries e.g. sentence started with capital letters and finished with a period. We
 were super strict about it. But sometimes instead of focusing on the essence of the PR, I was spending time commenting wrong comments. That's why we created
-[CI script](https://github.com/thanos-io/thanos/blob/55cb8ca38b3539381dc6a781e637df15c694e50a/scripts/build-check-comments.sh#L85) that verifies this for us on the CI.
+[CI script](https://github.com/thanos-io/thanos/blob/55cb8ca38b3539381dc6a781e637df15c694e50a/scripts/build-check-comments.sh#L85)
+that verifies this for us in the CI pipeline.
 Similar with: [wrong whitespaces detection](https://github.com/thanos-io/thanos/blob/25f5b0b9290fa1620647f00dd8df954380efc530/Makefile#L176),
-[Copyright file headers detection](https://github.com/thanos-io/thanos/blob/55cb8ca38b3539381dc6a781e637df15c694e50a/scripts/copyright/copyright.go#L23)
+[copyright file headers detection](https://github.com/thanos-io/thanos/blob/55cb8ca38b3539381dc6a781e637df15c694e50a/scripts/copyright/copyright.go#L23)
 and [linting](https://github.com/thanos-io/thanos/blob/25f5b0b9290fa1620647f00dd8df954380efc530/Makefile#L292) our code heavily.
 **All of this to make sure maintainers do not have to!**
 * We autogenerate our documentation from flags and [configuration](https://github.com/thanos-io/thanos/blob/55cb8ca38b3539381dc6a781e637df15c694e50a/scripts/cfggen/main.go#L41).
-This saves the effort of maintaining documentation, it is harder for it to get obsolete. We check if links work with amazing [liche tool.](https://github.com/thanos-io/thanos/blob/25f5b0b9290fa1620647f00dd8df954380efc530/Makefile#L185)
-* Every commit triggers a build of website hosted in the same repository and results in handy preview thanks to [netlify.](https://www.netlify.com/)
-* We wrote Go `testing` package extension that [allows to run benchmarks as tests](https://github.com/thanos-io/thanos/blob/master/pkg/testutil/testorbench.go#L26).
+This saves the effort of maintaining documentation, it is harder for it to get obsolete. We check if links work with the amazing [liche tool.](https://github.com/thanos-io/thanos/blob/25f5b0b9290fa1620647f00dd8df954380efc530/Makefile#L185)
+* Every commit triggers a build of our website hosted in the same repository, including preparing a handy preview thanks to [netlify.](https://www.netlify.com/)
+* We wrote a Go `testing` package extension that [allows to run benchmarks as tests](https://github.com/thanos-io/thanos/blob/master/pkg/testutil/testorbench.go#L26).
 * We use [leaktest](https://github.com/thanos-io/thanos/blob/56a1fb6c084f11638f6f7b6532adc07dd05824b6/pkg/query/api/v1_test.go#L51) to make sure we don't leak go routines.
 
 Does some repetition frustrate you? Handle it with automation! Here is one such [recent frustration.](https://github.com/thanos-io/thanos/issues/2102)
@@ -284,7 +283,7 @@ Does some repetition frustrate you? Handle it with automation! Here is one such 
 This is easy to say, but not as easy to incorporate. However, you will notice that if you follow this, it will either reduce
 the number of repeated questions or other contributors will be able to respond to each other in e.g. Slack channel.
 
-In fact, I wrote this blog post because someone asked for feedback on how he can become a maintainer! (: 
+In fact, I wrote this blog post because someone asked for feedback on how they can become a maintainer! (: 
 
 Of course, it escalated a bit...
 
@@ -300,70 +299,71 @@ mention the status. If the bug is not affecting the majority of users and there 
 
 Having extensive documentation is key. But there are more ways to encourage your users to grab the latest build without fear and
 deploy your code early! One way of doing it is [building a docker image on each merge to master](https://github.com/thanos-io/thanos/blob/master/.circleci/config.yml#L59)
-(e.g. with tag `master-<date>-<sha>`).
+(e.g. with tag `master-<date>-<sha>`).  had this one in mind: https://ctr.run/
 
 ### Admit your mistakes and fix them.
 
-We all make mistakes. Maintainers do them as well e.g. with the project's design decisions. Always be open for improvements, even if it means
+We all make mistakes. Maintainers do them as well e.g. with project's design decisions. Always be open for improvements, even if it means
 saying sorry, and **removing a powerful feature** that is causing problems and confusion. For example [we decided to remove gossip
 functionality to simplify Thanos.](https://thanos.io/proposals/201809_gossip-removal.md/) 
 
-Another example or our initial mistake was pushing our docker images as `latest` tag. [**Never use or push `latest` tag**](https://vsupalov.com/docker-latest-tag/). Period.
+Another example for one of our initial mistakes was pushing our docker images as `latest` tag. [**Never use or push the `latest` tag**](https://vsupalov.com/docker-latest-tag/). Period.
 It's confusing and magic. Avoid magic.
 
 **Overall**: be open to changes, even though it means to admit that you were wrong. That is fine because you learned!
 
 ## 5. Want more help? Give back, help others.
 
-There is an old Chinese saying: `The rose's in her hand, the flavor in mine` (I learned this thanks to a Chinese contributor ♥️).
-This is again, in my opinion very important and maybe surprising truth: **How to build community? By helping the community out!**
+There is an old Chinese saying: `The rose's in their hand, the flavor in mine` (I learned this thanks to a Chinese contributor ♥️).
+This is again, in my opinion, a very important and maybe surprising truth: **How to build community? By helping the community out!**
 
 You can't be selfish. You created and maintain the open source project in the first place, so you are already helping out the people.
-But at some point, you feel stressed, exhausted, alone or helpless. This is where the community helps enormously. You want more users, because (tiny)
-percentage of those users actually will give back and help out. Some of them will become maintainers next to you **or even friends.**
+But at some point, you feel stressed, exhausted, alone or helpless. This is where the community helps enormously.
+You want more users, because a (tiny) percentage of those users actually will give back and help out. Some of them will
+become maintainers next to you **or even friends.**
 
 So how to achieve that? Just ask around, say that you need help? Well not really...
 
-### Contribute; Reuse.
+### Contribute. Reuse.
 
-The answer is easy: help others. Instead of building a project from the scratch out of nowhere **build it on the shoulders of giants**.
-First of all, make sure someone needs it except you. Thanks to extending the project, you already have data.
+The answer is easy: help others. Instead of building a project from scratch out of nowhere **build it on the shoulders of giants**.
+First of all, make sure someone needs it except you. Thanks to extending another project, you already have data about the main pain points.
 Secondly, you have a helpful community to start with. Thirdly, you can (and you probably should) reuse some pieces of the code from your "mother" project.
 
 Reuse has many potential advantages:
 
 * You [LEARN!](https://twitter.com/bwplotka/status/1216693249055887360)
-* You immediately hook into the ecosystem (e.g. by sharing API). This means you can reuse the same integrations and tools!
-* Multiple parties are maintaining the same components. The piece of code has more users, thus it is more tested and mature. Your project is then safer as a result.
+* You immediately hook into the ecosystem (e.g. by sharing an API). This means you can reuse the same integrations and tools!
+* Multiple parties are maintaining the same components. A reused piece of code has more users, thus it is more tested and mature. Your project is then safer as a result.
 * You help multiple projects, so you will get help from them if needed! (e.g. review something on your project, help with design questions, etc.)
 
-This is what I and [Fabian](https://github.com/fabxc) did with [Thanos](https://thanos.io/) project: we reused exactly
-the same storage format as Prometheus, as well as many other components that we directly import from Prometheus codebase.
+This is what I and [Fabian](https://github.com/fabxc) did with the [Thanos](https://thanos.io/) project: we reused exactly
+the same storage format as Prometheus, as well as many other components that we directly import from the Prometheus codebase.
 At some point, because I was maintaining those dependencies as they were critical to the Thanos project, I became the
 maintainer of Prometheus itself! (: In the end, I am helping with much more than just parts that Thanos relates to.
 **I give out more because, in my opinion, kindness always returns in double!**
 
-### Mentor; Enable others.
+### Mentor. Enable others.
 
-Every one needs experienced, motivated and highly skilled people to work with. People don't get born like this.
-In open source you meet a variety of contributors. Sometimes it will be crazy-ass ex-Googler, ex-Uber who wants to help and
+Everyone needs experienced, motivated and highly skilled people to work with. People don't get born like this.
+In open source you meet a variety of contributors. Sometimes it will be bad-ass ex-Googler, ex-Uber who wants to help and
 gives you some amazing ideas, but sometimes, you will work with people who just started their journey with programming, distributed
 systems or infrastructure.
 
-There will be moments where you would do a change 10x times faster than getting back-and-forth on the same PR with the newbie. You 
-will get angry that you are gaining almost nothing and instead you are free mentor; Git, Linux, Bash, English teacher or Security, Kubernetes guide.
+There will be moments where you would do a change 10x faster than getting back-and-forth on the same PR with the newbie. You 
+will get angry that you are gaining almost nothing and instead you are a free mentor; a Git, Linux, Bash, English teacher or a Security, Kubernetes guide.
 
 **But don't be frustrated, because you actually gain something: Potentially skilled contributor, a happy human that is very likely to start
-amazing contributions and becomes another maintainer someday!**
+amazing contributions and to become another maintainer someday!**
 
 So... be patient and enable others if you can. Additionally, be proactive and participate in programs like [Community Bridge](https://communitybridge.org/)
 or [Google Summer of Code](https://summerofcode.withgoogle.com/). These allow students to quickly ramp up into your
-project (and get paid on the way). This is especially amazing as it allows minorities to be mentored and helped by maintainers
+project (and get paid on the way). This is especially amazing as it allows underrepresented groups to be mentored and helped by maintainers
 and maybe someday improve the diversity of your project's team or at your work.
 
 ### State project expectations from the beginning.
 
-One way to avoid later frustration stress or just fuss is to make sure the project **has explicitly stated the goals.**
+One way to avoid later frustration stress or just fuss is to make sure the project **has explicitly stated its goals.**
 Tell users what to expect from the project. E.g. Prometheus and Thanos are not designed to handle events. That's why it will be
 never optimized for high cardinality data.
 
@@ -372,55 +372,58 @@ You don't want some huge customers to report that they lost millions because som
 legal responsibility, not yours – it's an open source project after all. But you want to make sure that users know what are the best practices and where
 to be careful.
 
-### Consider donating your project to trusted Open Source organization.
+### Consider donating your project to a trusted Open Source organization.
 
 This has many benefits. The most important one is that you are not alone, but also (in theory) the project is independent. 
 At some point when the project will be big enough (think: Prometheus), there will be many parties that want to influence it, because there is money there.
 
-Organizations like [Apache.org](https://www.apache.org/), [Linux Foundation](https://www.linuxfoundation.org/) and [Cloud Native Computing Foundation (CNCF)](https://www.cncf.io/)
+Organizations like [Apache.org](https://www.apache.org/), [the Linux Foundation](https://www.linuxfoundation.org/) and [the Cloud Native Computing Foundation (CNCF)](https://www.cncf.io/)
 help to maintain independence in terms of decision making. They help with operational functions like swag, organizing conferences and meetups,
 3rd party paid resources (e.g. cloud resources for testing), security audits and more. We donated [Thanos to the CNCF](https://improbable.io/blog/improbable-donates-thanos-to-cloud-native-computing-foundation)
 and we are very happy with that decision.
 
 ### Stay organized
 
-One way to get more productive is to start from your own personal organization skills. For that, I really recommend the book 
+One way to get more productive is to start from your own personal organizational skills. For that, I really recommend the book 
 [Getting Things Done by David Allen](https://www.audible.co.uk/pd/Getting-Things-Done-Audiobook/B01B6WT3JY).
  
 Spoiler alert! Focus on clearing your mind. If you have a quick <3min task, just do it. For longer one try to note what's the next step
-and save it in some trusted place (Google Keep, notebook). Visit this place everyday morning. This will allow your mind to relax,
+and save it in some trusted place (Google Keep, notebook). Visit this place every morning. This will allow your mind to relax,
 be innovative and focused on what is now!
 
 ## 6. Stay Healthy; Have Fun!
 
 This is the last one but also the most important rule you will read here. **Don't overwork.** If you are tired or maintaining
-does not make you happy anymore, then first try to rest (no computer allowed!), then just quit and find another thing to focus on.
-**Open source is the opportunity to find best friends, have lots of fun and amazing job, however, it is also the place of endless requests, bug reports, and questions.**
+does not make you happy anymore, then first try to rest (no computer allowed!). If you need a longer break, leave the project gracefully.
+Do a clean handover, rather than just disappearing or pretending to still be a maintainer (just to keep that badge of honor).
+If that does not help, then just quit and find another thing to focus on.
 
-* There will be users which want help NOW, HERE because something they misconfigured is on fire.
-* There will be people from different cultures, spamming you directly on email about their requests.
-* There will be hard decision to make and all of them might be somehow wrong (that's called trade-off...)
+**Open source is an opportunity to find best friends, have lots of fun and an amazing job. However, it is also a place of endless requests, bug reports, and questions.**
 
-And on top of that, you might be just a part-time maintainer like most of us are. Everyone has a job on top of it with less or more
+* There will be users that want help NOW, HERE because something they misconfigured is on fire.
+* There will be people from different cultures, spamming you directly via email about their requests.
+* There will be hard decisions to make and all of them might be somehow wrong (that's called trade-off...)
+
+And on top of that, you might be just a part-time maintainer like most of us are. Everyone has a job on top of it with more or less
 time dedicated to open source. **For example, at [Red Hat](https://redhat.com/) we design, develop and we are even on-call for our internal monitoring platform, where
-we use some of the products we maintain.** Moreover, probably no one knows about that. Everyone thinks it's your only focus and blame you of slow project movement... 
+we use some of the products we maintain.** Moreover, probably no one knows about that. Everyone thinks it's your only focus and blame you for slow project movement... 
 Which comes to another point: 
 
-### Don't be afraid to make mistakes; No one actually blames you personally!
+### Don't be afraid to make mistakes; no one actually blames you personally!
 
-Naturally, your imagination will trick you that if someone puts and bug reports or comments about your code it will definitely mean
+Naturally, your imagination will trick you that if someone files a bug report or comment about your code it will definitely mean
 they *hate you* and *your work*. Everyone has some insecurities, so it's totally fine to have such an impression.
-**What helps? Growing the healthy maintainer's team.** Trust other contributors and give them a chance. What you win is a feeling of shared
+**What helps? Growing a healthy maintainers team.** Trust other contributors and give them a chance. What you win is a feeling of shared
 responsibility.
 
-Additionally, it helps if you would **assume by default that everyone is positive and professional**. 99% of people I met so far in tech open source world
+Additionally, it helps if you would **assume by default that everyone is positive and professional**. 99% of people I met so far in the open source world
 are nice, friendly and positive. They will not blame you for mistakes unless you do something malicious on purpose.
 Everyone makes mistakes so it's normal. So don't be shy and allow yourself to be more open! 
 
 There is one way of learning this: **making mistakes**. What do you think: How many times did I say something on the internet that was stupid?
 How many typos I did? How many English grammar mistakes? `Millions of them`.
 
-One time I said on public, recorded Prometheus Community Meeting that:
+One time I said on a public, recorded Prometheus Community Meeting that:
  
 ```
 "I am Prometheus maintainer and I became just recently a Thanos maintainer"
@@ -429,15 +432,15 @@ One time I said on public, recorded Prometheus Community Meeting that:
 ...and the truth was the opposite: I co-created Thanos, and just joined Prometheus team back then.
 While I felt super shitty and embarrassed about this, my whole team was laughing. When I look at it now... it did not matter (:
 
-I think it's a trade-off again and I can trade my *external perfect image of perfect person*
+I think it's a trade-off again and I can trade my *external perfect image of a perfect person*
 **for extremely meaningful conversations, things I learned on the way, relations I gained, public speaking that made the community more diverse and bigger, etc.**
 In open source, you probably should say `goodbye` to your perfect "external no-mistake image".
 
-If you don't accept this, you might not be happy in maintaining the public project. It might be simply unhealthy, so keep that in mind.
+If you don't accept this, you might not be happy in maintaining a public project. It might be simply unhealthy, so keep that in mind.
 
-### Open Source Project Maintenance is not a sprint, it is a marathon.
+### Open source project maintenance is not a sprint, it is a marathon.
 
-This is what I heard once from one friend when I was overworking, and it is very true. Short periods of extreme programming, deciding about the project,
+This is what I heard once from a friend when I was overworking, and it is very true. Short periods of extreme programming, deciding about the project,
 after-hours issue triaging and working during the weekend might look fine... **but you won't be able to sustain that for a long time.**
 
 Set boundaries and maintain a healthy work-life balance. You don't have to respond to issues immediately. Allow others to
@@ -449,7 +452,7 @@ career.** I definitely don't recommend this! I burnt-out because of too high exp
 
 ### Have fun!
 
-Open Source is a fun place. If you spend some of your work or free time at forums, GitHub Issues and working with the community, **it's
+Open Source is a fun place. If you spend some of your work or free time at forums, GitHub issues and working with the community, **it's
 always worth to fill this place with positive energy!** Laugh, jokes, funny situations, memes, emojis. Everything is allowed!
 It helps to maintain a healthy atmosphere and break some ice on the way! Your Slack forum or GitHub issues don't need to be
 always just a sad place full of reported OOMs or race conditions! (: 
@@ -461,8 +464,8 @@ the other day and they are nice people in real life as well. (:
 ## Summary 
 
 This guide is something I am aiming for when interacting with the community and maintaining open source projects.
-I definitely failed many times to follow these rules, especially around staying healthy part (: But I feel like these items
-can guide you to achieve happiness and improve open source world! We can sum these rules into 3 main points:
+I definitely failed many times to follow these rules, especially around the staying-healthy part (: But I feel like these items
+can guide you **to achieve happiness and improve the open source world!** We can sum these rules into 3 main points:
 
 ### Treat others like you would like to be treated.
 
@@ -470,26 +473,26 @@ Be friendly, because you would like for someone to be friendly to you. Don't sel
 as you also would not like to be spammed on your own project's forum. **Help others, teach them how to program, use Linux, Git or
 make presentations as you probably also had help in the past.**
 
-### Do you want to become maintainer? Behave like maintainer!
+### Do you want to become a maintainer? Behave like a maintainer!
 
-Literally, almost everything maintainer do, you can do. You can respond to Slack questions and GitHub Issues.
-You can review the code. You can guide other users and contributors. You can tweet, speak at conferences about the project.
-Try to mimic the good patterns from other maintainers and do the hard work. **You don't need a write permission to make decision
-and act like maintainer of the project.**
+Literally, almost everything maintainers do, you can do. You can respond to Slack questions and GitHub issues.
+You can review code. You can guide other users and contributors. You can tweet, speak at conferences about the project.
+Try to mimic the good patterns from other maintainers and do the hard work. **You don't need write permissions to make decisions
+and act like a maintainer of the project.**
 
-### Be innovative; Challenge processes; Optimize! 
+### Be innovative; challenge processes; optimize! 
 
 Always question processes. Are they good enough? Can this repetitive task be automated? We had many innovative ideas
-just because we were frustrated that we waste time. **Try to optimize for quality and time saving.** This will give you more time for pleasures (:
+just because we were frustrated that we waste time. **Try to optimize for quality and time saving.** This will give you more time for pleasure (:
 
 ### Last message...
 
-Starting a new project and becoming a maintainer will not guarantee you the community from day 1. It is a very long journey and hard work.
+Starting a new project and becoming a maintainer will not guarantee you a community from day 1. It is a very long journey and hard work.
 Usually not a work of a single person. What I would suggest is to join another project first. Grow and learn. Choose your passion and go!
-Check `good first item`, or `help wanted` labels for GitHub Issues, join community calls, Slack channels.
+Check `good first item`, or `help wanted` labels for GitHub issues, join community calls, Slack channels.
 
 And... that's it! I hope you will find all of this helpful.
 
-### I wish you pleasant project maintenance ♥️.
+### I wish you pleasant and fruitful project maintenance ♥️.
 
 PS: *It's my first non-coding, non-system design blog post so... please give me feedback! If you don't agree with something or I missed an important detail, let me know! (:* 
