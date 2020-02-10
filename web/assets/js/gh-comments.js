@@ -53,8 +53,6 @@ jQuery(function($) {
                 console.log("failed to load issues:", status, data);
                 return
             }
-            console.log(_Blog.name);
-            console.log(data);
             for (let i = 0; i < data.length; i++) {
                 if (data[i].id in _Blog.issues) {
                     continue
