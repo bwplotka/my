@@ -59,10 +59,12 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 
 * [Thanos](https://thanos.io)
 * [Prometheus](https://prometheus.io/)
+* [prometheus/client_golang](https://github.com/prometheus/client_golang)
+* [go-grpc-middleware](https://github.com/grpc-ecosystem/go-grpc-middleware)
 * [Demo Navigator](https://github.com/bwplotka/demo-nav)
 * [prometheus-operator](https://github.com/coreos/prometheus-operator)
 * [CVO](https://github.com/openshift/cluster-monitoring-operator)
-* [jiralert](https://github.com/free/jiralert)
+* [jiralert](https://github.com/prometheus-community/jiralert)
 * [my](https://github.com/bwplotka/my)
 * [mimic](https://github.com/bwplotka/mimic)
 * [oidc](https://github.com/bwplotka/oidc)
@@ -72,6 +74,7 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 #### Used to maintain
 
 * [kEdge](https://github.com/improbable-eng/kedge)
+* [grpc-proxy](https://github.com/mwitkow/grpc-proxy)
 * [go-k8sresolver](https://github.com/bwplotka/go-k8sresolver)
 * [promeval](https://github.com/bwplotka/promeval)
 * [go-httplog](https://github.com/bwplotka/go-httplog)
