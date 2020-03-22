@@ -268,7 +268,8 @@ if _, err := a.Parse(os.Args[1:]); err != nil {
 This is much better, but still not great, particularly:
 
 1. It's not clear what fields from the Go struct are actually set from flags, which are manually set. Especially for
-nested configuration structs.
+nested configuration structs. It's worth to note that overall, as [mentioned by Peter Bourgon](https://twitter.com/peterbourgon/status/1241775377476878337),
+mixing user intent with derived config is a bad design smell. Such mistake is quite hard to detect with flag definition like above. 
 2. It's easy to miss that some configuration variable is not used anymore, but some flag is still defined for it. This is
 because Go will not detect it being used, as it's passed in for example `DurationVar(&cfg.var)`. In fact, during the move
 of Prometheus flags to my library, I found that one config field was exactly like this.
@@ -482,8 +483,10 @@ func allocPtrIfNil(fieldValue reflect.Value) {
 }
 ```
 
-And now the interesting part. How we register the flag for all native types? We have a monster switch for all types we support [here](https://github.com/bwplotka/flagarize/blob/74e3b786966dc060ec75245c2b6d55c5ea131ec0/flagarize.go#L233).
-Let's take one case for it, for example: 
+And now the interesting part. How we register the flag for all the "native" types? We have a monster switch for all types we support
+[here](https://github.com/bwplotka/flagarize/blob/74e3b786966dc060ec75245c2b6d55c5ea131ec0/flagarize.go#L233).
+
+Let's take one case of it, for example: 
 
 ```go
 clause := tag.Flag(r)
@@ -494,8 +497,10 @@ switch fieldValue.Interface().(type) {
 }
 ```
 
-This registers a `kingpin` flag for a certain type. In this case for `float32`. Since the field type is a value, not a pointer, we have to first the pointer
-of the field so `fieldValue.Addr()`. Then we need to ask for `unsafe.Pointer` with `Pointer()`. Only then we can cast this pointer to `(*float32)` which `kingpin's` `Float32Var` expects!
+This registers a `kingpin` flag to be set on our field's address and expects the flag to be our field's type. In this case for `float32`.
+Since the field type is a value, not a pointer, we have to first take the pointer of our field so `fieldValue.Addr()`.
+Then we need to ask for `unsafe.Pointer` using `Pointer()` method. Only then we can convert this pointer to `*float32`
+which is what `kingpin's` `Float32Var` expects!
 
 And that's it! The reflection might be difficult in the beginning, but after all, it's not that complex! (: 
 
