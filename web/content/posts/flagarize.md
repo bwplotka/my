@@ -464,7 +464,6 @@ if _, ok := fieldValue.Addr().Interface().(Flagarizer); ok {
 if _, ok := fieldValue.Interface().(ValueFlagarizer); ok {
     // ...
 }
-
 if _, ok := fieldValue.Addr().Interface().(ValueFlagarizer); ok {
     // ...
 }
@@ -473,7 +472,6 @@ if _, ok := fieldValue.Addr().Interface().(ValueFlagarizer); ok {
 The allocation is interesting as well, you can allocate `nil` field as follows (unless it is a map!).
 
 ```go
-
 func allocPtrIfNil(fieldValue reflect.Value) {
 	if fieldValue.Kind() == reflect.Ptr {
 		if fieldValue.IsNil() {
