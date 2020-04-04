@@ -16,13 +16,6 @@ My first dev job started in 2012 and since then I enjoy delivering *many* challe
 My main focus was always building and running software in web/backend/distributed systems/infrastructure areas. 
 Even though I have on-going experience as a global-scale SRE I love development the most: I love building pragmatic, scalable, high quality solutions.
 
-I might have lots of (maybe) unique opinions about engineering I will love to blog/share about like:
-
-* Define your infra in code. Not in terraform/yaml/jsonnet. (:
-* Why true programmer should be language agnostic. 
-* Use proper tools for the job. However golang is proper for most of those. ;>
-* ...
-
 I am always looking forward to hearing feedback (: If you feel angry that what I say is totally wrong, I would love to hear that. This way we all learn (:
 
 I used to work at [Improbable](https://improbable.io): Amazing Gaming UK Startup. With global scale Kubernetes infrastructure,
@@ -59,6 +52,7 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 
 * [Thanos](https://thanos.io)
 * [Prometheus](https://prometheus.io/)
+* [configuration.fyi](https://configuration.fyi)
 * [prometheus/client_golang](https://github.com/prometheus/client_golang)
 * [flagarize](https://github.com/bwplotka/flagarize)
 * [funcbench](https://github.com/prometheus/test-infra/tree/master/funcbench)
