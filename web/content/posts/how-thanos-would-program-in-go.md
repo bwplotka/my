@@ -11,26 +11,9 @@ weight: 1
 categories:
 - go
 featuredImage: "/images/blog/how-thanos-would-program-in-go/header.jpg"
+images:
+- "/twitter-how-thanos-would-program-in-go.jpg"
 ---
-
-<style>
-table {
-    border: 1px solid;
-    width: 100%;
-    overflow: auto;
-    word-wrap: break-word;
-}
-
-th {
- text-align: center;
-}
-
-th, td {
-    width: 100%;
-    overflow: auto;
-    word-wrap: break-word;
-}
-</style>
 
 **TL;DR: Recently we introduced [extended Go Style Guide](https://thanos.io/contributing/coding-style-guide.md/) for [the Thanos project](http://thanos.io/),
 a high scale open-source distributed metric system where, with our large community, we take extra attention and care for the code quality.**
@@ -67,6 +50,25 @@ This allowed us, with the help of the community, to produce even more readable a
 In this blog post, I will try to quickly go through **more** interesting improvements to the official guides with some rationals (: 
 
 # Thanos Coding Style Guide
+
+<style>
+table {
+    border: 1px solid;
+    width: 100%;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+th {
+ text-align: center;
+}
+
+th, td {
+    width: 100%;
+    overflow: auto;
+    word-wrap: break-word;
+}
+</style>
 
 This is a copy of [our official Thanos Style Guide](https://thanos.io/contributing/coding-style-guide.md/) with small commentaries.
 
@@ -105,7 +107,6 @@ This is a copy of [our official Thanos Style Guide](https://thanos.io/contributi
     + [Commentaries Should we a Full Sentence.](#commentaries-should-we-a-full-sentence)
 
 <small><i>Table of contents generated with <a href='http://ecotrust-canada.github.io/markdown-toc/'>markdown-toc</a></i></small>
-
 
 ## Development / Code Review
 
