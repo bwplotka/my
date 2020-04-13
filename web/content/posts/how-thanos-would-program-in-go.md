@@ -68,6 +68,8 @@ In this blog post, I will try to quickly go through **more** interesting improve
 
 # Thanos Coding Style Guide
 
+This is a copy of [our official Thanos Style Guide](https://thanos.io/contributing/coding-style-guide.md/) with small commentaries.
+
 - [Development / Code Review](#development---code-review)
   * [Reliability](#reliability)
     + [Defers: Don't Forget to Check Returned Errors](#defers--don-t-forget-to-check-returned-errors)
