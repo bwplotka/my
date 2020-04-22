@@ -1055,7 +1055,7 @@ func (s *SomeType) IsExpired(created time.Time) bool {
 {{<highlight go>}}
 func (s *SomeType) IsExpired(created time.Time) bool {
     // s.timeNow is time.Now on production, mocked in tests.
-    return created.Add(s.expiryDuration).After(s.timeNow())
+    return created.Add(s.expiryDuration).Before(s.timeNow())
 }
 {{</highlight>}}
 
