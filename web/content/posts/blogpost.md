@@ -17,4 +17,4 @@ This is the blog post written specially for Uche. He really wanted a blog post f
 
 Thanks for reading!
 
-(This a small lesson to not be excited and to not trust fully everyone (: )
+(This a small lesson to not get excited too fast and to not trust fully everyone immediately 🤗 )
