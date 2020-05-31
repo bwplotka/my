@@ -60,7 +60,7 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 * [prometheus grpc middlewares](https://github.com/grpc-ecosystem/go-grpc-prometheus)
 * [Demo Navigator](https://github.com/bwplotka/demo-nav)
 * [prometheus-operator](https://github.com/coreos/prometheus-operator)
-* [CVO](https://github.com/openshift/cluster-monitoring-operator)
+* [CMO](https://github.com/openshift/cluster-monitoring-operator)
 * [jiralert](https://github.com/prometheus-community/jiralert)
 * [my](https://github.com/bwplotka/my)
 * [mimic](https://github.com/bwplotka/mimic)
