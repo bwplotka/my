@@ -1,12 +1,12 @@
 ---
 authors:
 - name: "Bartek Płotka"
-date: 2020-06-02
-linktitle: Require a Go Tool for Your Project? That's a Bingo! 
+date: 2020-06-04
+linktitle: Need to Version Go Tools for Your Project? That's a Bingo! 
 type:
 - post 
 - posts
-title: Require a Go Tool for Your Project? That's a Bingo! 
+title: Need to Version Go Tools for Your Project? That's a Bingo! 
 weight: 1
 categories:
 - go
@@ -14,12 +14,12 @@ featuredImage: "/images/blog/bingo/demo.gif"
 ---
 _See bigger version of the above demo as .gif [here](https://raw.githubusercontent.com/bwplotka/bingo/master/examples/bingo-demo.gif)_
 
-In this blog post, I would like to introduce [`bingo`](https://github.com/bwplotka/bingo), simple and efficient CLI (Command Line Tool),
+In this blog post, I would like to introduce [`bingo`](https://github.com/bwplotka/bingo), a simple and efficient CLI (Command Line Interface) Tool ,
 I wrote for managing versions of Go binaries that are required for your project development.
 
 **TL;DR: `bingo` is built on top of the native [Go Modules dependency management](https://github.com/golang/go/wiki/Modules) and in my opinion,
-it is a must-have tool for all repositories requiring dev tools written in Go. It's also already integrated into production-grade projects like [Thanos](https://thanos.io).
-Check it out and contribute!🤗**
+it solves the hard problem of flexible versioning developer tools written in Go. It already improves our integration with tools in the 
+production-grade projects like [Thanos](https://thanos.io). Check it out and contribute!🤗**
 
 # Automate all the things!
 
@@ -225,7 +225,8 @@ It's also improving every day and it's fairly easy to extend as you will read la
 
 Adapting Go Modules to pin buildable dependencies as dev tools for your project is something that
 many tried to achieve. One of the major patterns that emerged recently is the [`tools` package with optional separate single Go module.](https://github.com/golang/go/issues/25922#issuecomment-412992431)
-This was initially recommended by [Paul](https://twitter.com/_myitcv) who co-organize popular Go Meetups, here in London, UK.
+This was initially recommended by [Paul](https://twitter.com/_myitcv) who co-organizes popular Go Meetups, here in London, UK. This was also 
+mentioned in [`golang/Wiki`](https://github.com/golang/go/wiki/Modules#how-can-i-track-tool-dependencies-for-a-module).
 
 The idea is to simply maintain a separate Go code file that will import all buildable (main) packages
 the project depends on:
@@ -324,11 +325,11 @@ Alternatively you can use `bingo` itself to install all pinned tools (or one):
 bingo get <tool>
 ```
 
-Also, make sure to check out the `-m` option if your project uses `Makefile` to generate useful helper variables 💖that makes it super easy to install pinned
-binaries without even installing `bingo` (it will use just `go build`).
-
 Overall, `bingo` allows to easily maintain a separate, nested Go Module for each binary. By default, it will keep it `.bingo/<tool>.mod`
-This allows to correctly pin the tool without polluting the main go module or other's tool module.
+This allows to correctly pin the binary without polluting the main go module or other's tool module.
+
+Also, make sure to check out the generated `.bingo/Variables.mk` if your project uses `Makefile`. It has useful helper variables 💖that makes it super easy to install pinned
+binaries without even installing `bingo` (it will use just `go build`!). For `shell` users, you can invoke `source .bingo/variables.env` to source those variables. 
 
 See an extensive and up-to-date description of the `bingo` usage [here](https://github.com/bwplotka/bingo#usage).
 
