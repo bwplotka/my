@@ -377,16 +377,18 @@ Let's show a few examples on popular `goimports` tool (which formats Go code inc
     bingo get
     ```
 
-1. Makefile mode! If you use `Makefile` , bingo allows you to generate a very simple helper with nice variables. Just run the same commands as above, but with 
-`-m` option e.g:
-
-    ```shell
-    bingo get -m goimports
-    ```
-
-    This will produce `.bingo/Variables.mk` and attempt to `include` that in your main `Makefile`.
+1. Bonus: Makefile mode! If you use `Makefile` , `bingo` generates a very simple helper with nice variables. After running any `bingo get` command,
+you will notice`.bingo/Variables.mk` file. Feel free to include this in your Makefile (`include .bingo/Variables.mk` on the top of your Makefile).
     
-    From now on you can use `$(GOIMPORTS)` variable which reliably ensures a correct version is used and installed.
+    From now in your Makefile you can use, e.g. `$(GOIMPORTS)` variable which reliably ensures a correct version is used and installed.
+    
+1. Bonus number 2! Using immutable names might be hard to maintain for your other scripts so `bingo` also produces environment variables you can source to you shell. It's as easy as:
+ 
+    ```shell
+    source .bingo/variables.env
+    ```
+   
+    From now on you can use, e.g. `$(GOIMPORTS)` variable which holds currently pinned binary name of the goimports tool.
 
 ## Summary & Future
 
