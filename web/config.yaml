@@ -26,7 +26,7 @@ permalinks:
 menu:
   main:
   - name: "Blog"
-    url: "/posts/"
+    url: "/blog/"
     weight: 1
   - name: "About"
     url: "/about/"

@@ -2,18 +2,17 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/02f6ed51-669c-4c11-a81e-8c683774cc3b/deploy-status)](https://app.netlify.com/sites/bwplotka/deploys)
 
-Source for [bwplotka.dev](https://bwplotka.dev) personal website including blog posts.
+Source for: [bwplotka.dev](https://bwplotka.dev) personal website, my blog posts and slide decks using https://gitpitch.com/
 
-Once cloned, make sure to run `git submodule update --init --recursive`
+Once cloned, copied or forked, make sure to run `git submodule update --init --recursive`
 
 ### What it includes?
 
-* Overview page
-* Blog posts framework
-  * YOLO comments reusing Github Issues (yes ^^)
-
-git submodule update --init --recursive
-
+* Overview page.
+* Blog posts framework.
+  * +YOLO comments reusing Github Issues (yes ^^)
+* Slide deck framework, embedding https://gitpitch.com/
+* About page.
 
 ### What open source tools I used to build this?
 
@@ -24,7 +23,11 @@ git submodule update --init --recursive
 * Tiny amount of jquery
 * Awesome Github client for JS: https://octokit.github.io/rest.js/
 
-### What YOLO comments means?
+### What paid tools?
+
+* https://gitpitch.com/
+
+### YOLO comments feature
 
 Features:
 
@@ -43,4 +46,4 @@ Limitations:
 
 ### Can I copy the code for my own website?
 
-Of course, all except blog content is licensed with Apache 2 license.
+Of course, all except `/posts` and `/slides` directories, is licensed with Apache 2 license.
