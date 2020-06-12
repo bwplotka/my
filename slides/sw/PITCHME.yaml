@@ -27,13 +27,13 @@ print-footer: true
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
 theme            : template
 theme-background : [ "#1A0420" ]
-background          : /assets/images/tech-background-res.svg
+background          : assets/images/tech-background-res.svg
 background-position : bottom -200px right -300px
 background-size     : 140% 130%
 background-opacity  : 100
-theme-headline   : [ "Ubuntu", "#F2E3A1", "none", "#FFFFFF", "100", "120", "15" ]
+theme-headline   : [ "Ubuntu", "#FFFFFF", "none", "#FFFFFF", "100", "120", "15" ]
 theme-byline     : [ "Ubuntu", "#FFFFFF", "none", "#F2E3A1", "100", "110", "15" ]
-theme-text       : [ "Ubuntu", "#FFFFFF", "none", "#AEC994", "100", "100", "15" ]
+theme-text       : [ "Ubuntu", "#EFE2FC", "none", "#AEC994", "100", "100", "15" ]
 theme-links      : [ "#5289F7", "#5254F7" ]
 theme-code       : [ "Source Code Pro", "100", "120" ]
 highlight        : monokai

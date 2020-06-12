@@ -1,11 +1,10 @@
-#### Bartek Plotka (@bwplotka)
+#### Bartek Plotka
 
 @snap[west]
 ![width=200](https://storage.googleapis.com/gopherizeme.appspot.com/gophers/1a34872cf0ec375b9fc44ce654fc03a5abc42dc4.png)
-
 @snapend
 
-@snap[east span-50]
+@snap[east text-07 span-100]
 Principal Software Engineer @ Red Hat
 OpenShift Monitoring Team
 Prometheus and Thanos Maintainer
