@@ -1,0 +1,43 @@
+# Production readiness control.
+#eager-loading: true # Preload all setting.
+
+#footnote: "<img src='https://raw.githubusercontent.com/kakkoyun/are-you-testing-your-observability/master/static/twitter.png' style='height: 20px; width: 20px;'/><img src='https://raw.githubusercontent.com/kakkoyun/are-you-testing-your-observability/master/static/github.png' style='height: 40px; width: 40px;'/> <a style='text-decoration: none; color: white;' href='https://bwplotka.dev'>@bwplotka</a>"
+
+lang: "en"
+
+# Google Analytics
+#  1. Log into Google Analytics
+#  2. Create a new GA Property
+#  3. For your new GA Property, specify https://gitpitch.com as the property URL
+# gatoken: UA-1111111-1
+
+# Code.
+code-line-numbers: true
+
+# Navigation.
+mousewheel: false
+remote-control: true
+transition: none # none (default) - recommended for snap layouts, slide, fade, convex, concave, zoom
+
+# Print.
+print-fragments: true
+print-notes: false
+print-footer: true
+
+# PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
+theme            : template
+theme-background : [ "#1A0420" ]
+background          : assets/images/Tech-background-#1A0420.png
+background-position : center
+background-size     : 100% 100%
+background-opacity  : 100
+theme-headline   : [ "Raleway", "#F2E3A1", "none", "#FFFFFF", "100", "120", "15" ]
+theme-byline     : [ "Raleway", "#FFFFFF", "none", "#F2E3A1", "100", "110", "15" ]
+theme-text       : [ "Ubuntu", "#FFFFFF", "none", "#AEC994", "100", "100", "15" ]
+theme-links      : [ "#5289F7", "#5254F7" ]
+theme-code       : [ "Source Code Pro", "100", "120" ]
+highlight        : monokai
+theme-controls   : [ "#C0C0C0" ]
+theme-margins    : [ "0", "15px" ]
+layout           : top-left
+# PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-END

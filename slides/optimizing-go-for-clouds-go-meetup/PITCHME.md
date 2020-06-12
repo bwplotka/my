@@ -32,6 +32,8 @@
     Summary:
     Useful tools benchstat, funcbench, leaktest, etc.
     Takeaways.
+    
+    https://github.com/alecthomas/unsafeslice/blob/master/unsafeslice.go
 -->
   
 ---
@@ -50,6 +52,10 @@
 <!--
 Let's quickly look on overview.
 --> 
+
+---
+
+---?include=../common/whoami/PITCHME.md
 
 ---
 

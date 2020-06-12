@@ -1,0 +1,32 @@
+title: "Optimizing Go for Clouds: Practical Intro"
+description : "TBD"
+# thumbnail : assets/img/screenshot.png
+
+
+# Production readiness control.
+published: true # Set to false for dev tools.
+theme-builder: true # Set to false for collab to not change theme accidentally.
+eager-loading: false # Preload all setting.
+
+favicon: ../../web/static/favicon.ico
+footnote: "<a style='text-decoration: none; color: white;' href='https://bwplotka.dev'>@bwplotka</a>"
+lang: "en"
+
+# Google Analytics
+#  1. Log into Google Analytics
+#  2. Create a new GA Property
+#  3. For your new GA Property, specify https://gitpitch.com as the property URL
+# gatoken: UA-1111111-1
+
+# Code.
+code-line-numbers: true
+
+# Navigation.
+mousewheel: false
+remote-control: true
+transition: none # none (default) - recommended for snap layouts, slide, fade, convex, concave, zoom
+
+# Print.
+print-fragments: true
+print-notes: false
+print-footer: true
