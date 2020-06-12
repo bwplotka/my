@@ -2,7 +2,6 @@
 #eager-loading: true # Preload all setting.
 
 footnote: " "
-
 lang: "en"
 
 # Google Analytics
@@ -27,20 +26,20 @@ print-footer: true
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
 theme            : template
 theme-background : [ "#1A0420" ]
-background          : assets/images/tech-background2.png
+background          : assets/images/tech-background3-crop.png
 image-size-limits   : false
-background-position : right -300px bottom -400px
-background-size     : auto 1000px
+background-position : right bottom
+background-size     : auto cover
 background-opacity  : 100
-theme-headline   : [ "Ubuntu", "#F2E3A1", "none", "#FFFFFF", "100", "120", "15" ]
-theme-byline     : [ "Ubuntu", "#FFFFFF", "none", "#F2E3A1", "100", "110", "15" ]
-theme-text       : [ "Ubuntu", "#FFFFFF", "none", "#AEC994", "100", "100", "15" ]
-theme-links      : [ "#5289F7", "#5254F7" ]
-theme-code       : [ "Source Code Pro", "100", "120" ]
-highlight        : monokai
+theme-headline   : [ "Ubuntu", "#F2E3A1", "none"]
+theme-byline     : [ "Ubuntu", "#FFFFFF", "none"]
+theme-text       : [ "Ubuntu", "#FFFFFF", "none"]
+theme-code       : [ "Source Code Pro" ]
+theme-links      : [ "#5289F7", "#5254F7"]
+
+highlight        : monokai # tomorrow
 theme-controls   : [ "#C0C0C0" ]
-theme-margins    : [ "0", "15px" ]
-logo             : /web/static/favicon-32x32.png
-logo-position    : bottom-right
-layout           : top-left
+layout           : center
+theme-override   : assets/css/PITCHME.css
+
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-END

@@ -1,10 +1,24 @@
-#### Bartek Plotka
+@title[Modern Slide Decks]
 
-@snap[west]
+#### Modern Slide Decks for Developers
+# Template
+
+@snap[south span-40 text-05]
+![KEYBOARD](assets/img/keyboard.png)
+Press the F key for Fullscreen Mode
+@snapend
+
+---
+
+@snap[north-west padded span-100 text-08]
+#### Bartek Plotka
+@snapend
+
+@snap[padded west]
 ![width=200](https://storage.googleapis.com/gopherizeme.appspot.com/gophers/1a34872cf0ec375b9fc44ce654fc03a5abc42dc4.png)
 @snapend
 
-@snap[east text-07 span-100]
+@snap[padded east text-07 span-100]
 Principal Software Engineer @ Red Hat
 OpenShift Monitoring Team
 Prometheus and Thanos Maintainer
