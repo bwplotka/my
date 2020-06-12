@@ -27,9 +27,10 @@ print-footer: true
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
 theme            : template
 theme-background : [ "#1A0420" ]
-background          : /assets/images/tech-background-res.svg
-background-position : bottom -200px right -300px
-background-size     : 140% 130%
+background          : assets/images/tech-background2.png
+image-size-limits   : false
+background-position : right -300px bottom -400px
+background-size     : auto 1000px
 background-opacity  : 100
 theme-headline   : [ "Ubuntu", "#F2E3A1", "none", "#FFFFFF", "100", "120", "15" ]
 theme-byline     : [ "Ubuntu", "#FFFFFF", "none", "#F2E3A1", "100", "110", "15" ]
