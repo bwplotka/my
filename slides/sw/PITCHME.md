@@ -34,7 +34,7 @@ This also motivate ppl
 ---
 
 @snap[center midpoint  span-70 ]
-5. Don't afraid of making mistakes
+5. Don't be afraid of making mistakes
 @snapend
 
 ---

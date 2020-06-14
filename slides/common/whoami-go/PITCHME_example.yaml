@@ -23,6 +23,8 @@ print-fragments: true
 print-notes: false
 print-footer: true
 
+theme-override   : assets/css/PITCHME.css
+
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
 theme            : template
 theme-background : [ "#1A0420" ]
@@ -31,15 +33,13 @@ image-size-limits   : false
 background-position : right bottom
 background-size     : auto cover
 background-opacity  : 100
-theme-headline   : [ "Ubuntu", "#F2E3A1", "none"]
-theme-byline     : [ "Ubuntu", "#FFFFFF", "none"]
+theme-headline   : [ "Ubuntu", "#d7c5db", "none"]
+theme-byline     : [ "Ubuntu", "#d7c5db", "none"]
 theme-text       : [ "Ubuntu", "#FFFFFF", "none"]
 theme-code       : [ "Source Code Pro" ]
-theme-links      : [ "#5289F7", "#5254F7"]
+theme-links      : [ "#6D41FF", "#bdbb3e"]
 
 highlight        : monokai # tomorrow
 theme-controls   : [ "#C0C0C0" ]
 layout           : center
-theme-override   : assets/css/PITCHME.css
-
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-END

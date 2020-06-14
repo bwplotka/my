@@ -2,14 +2,13 @@ title: "Optimizing Go for Clouds: Practical Intro"
 description : "TBD"
 # thumbnail : assets/img/screenshot.png
 
-
 # Production readiness control.
-published: true # Set to false for dev tools.
-theme-builder: true # Set to false for collab to not change theme accidentally.
+published: false # Set to false for dev tools.
+theme-builder: false
 eager-loading: false # Preload all setting.
 
-favicon: ../../web/static/favicon.ico
-footnote: "<a style='text-decoration: none; color: white;' href='https://bwplotka.dev'>@bwplotka</a>"
+favicon: web/static/favicon.ico
+footnote: " "
 lang: "en"
 
 # Google Analytics
@@ -30,3 +29,24 @@ transition: none # none (default) - recommended for snap layouts, slide, fade, c
 print-fragments: true
 print-notes: false
 print-footer: true
+
+theme-override   : assets/css/PITCHME.css
+
+# PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
+theme            : template
+theme-background : [ "#1A0420" ]
+background          : assets/images/tech-background3-crop.png
+image-size-limits   : false
+background-position : right bottom
+background-size     : auto cover
+background-opacity  : 100
+theme-headline   : [ "Ubuntu", "#d7c5db", "none"]
+theme-byline     : [ "Ubuntu", "#d7c5db", "none"]
+theme-text       : [ "Ubuntu", "#FFFFFF", "none"]
+theme-code       : [ "Source Code Pro" ]
+theme-links      : [ "#6D41FF", "#bdbb3e"]
+
+highlight        : monokai # tomorrow
+theme-controls   : [ "#C0C0C0" ]
+layout           : center
+# PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-END

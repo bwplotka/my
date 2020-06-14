@@ -1,6 +1,15 @@
-# Optimizing Go for Clouds: Practical Intro
+@snap[north span-100]
+![width=300](assets/images/GopherSpaceCommunity.png)
 
-##### Bartłomiej Płotka, London Gophers Meetup, London, 17.06.2020
+#### Optimizing Go for Clouds (and beyond @emoji[rocket])
+#### _Practical Intro_
+
+@snapend
+
+
+@snap[south-east padded snap-100 text-04 text-italics text-right]
+London,UK, 17.06.2020; [London Gophers Meetup](https://www.meetup.com/LondonGophers/events/270419925/); [Bartłomiej Płotka](https://bwplotka.dev) 
+@snapend
 
 <!--
     https://www.meetup.com/LondonGophers/events/270419925/
@@ -40,43 +49,26 @@
 
 # Agenda
 
+@ol[list-square-bullets list-spaced-bullets font-righteous text-pink](true)
 1. Cloud Native Programming in Go: Do we even care about performant code in "clouds"?
 1. How to approach and when to optimize things?
 1. DDD: Ways to measure code performance.
 1. Basic optimization tricks
-1. Summary
+1. Summary     
+@olend
 
-![](https://raw.githubusercontent.com/ashleymcnamara/gophers/master/GopherSpaceCommunity.png)
+Note:
 
-
-<!--
-Let's quickly look on overview.
---> 
+TBD
 
 ---
 
----?include=../common/whoami/PITCHME.md
+---?include=../common/whoami-go/PITCHME.md
 
 ---
 
-# Two column layout
+@snap[north padded text-left] 
+##### Credits
+@snapend
 
-This is the left column
-
-{.column}
-
-This is the right column
-
-<!--
-Elo
--->
-
----
-
-# Slides can have images
-
-![](https://raw.githubusercontent.com/ashleymcnamara/gophers/6603733fcf9877f166206d2414f75df72d6fd1ea/cncf.png)
-
-<!--
--->
-    
+* [ashleymcnamara gophers!](https://github.com/ashleymcnamara/gophers)
