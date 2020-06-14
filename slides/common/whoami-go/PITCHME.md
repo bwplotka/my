@@ -1,5 +1,6 @@
-@snap[north span-95 text-left]
-#### Bartek Plotka [@bwplotka](https://bwplotka.dev)
+@snap[north span-95 text-left text-07]
+###### Bartek Plotka [@bwplotka](https://bwplotka.dev)
+
 @snapend
 
 @snap[west padded]
@@ -15,7 +16,7 @@
 @size[0.8em](_Team Leader, OpenShift Observability Team_) 
 <br/>
 
-@ul[list-spaced-bullets](false)
+@ul[list-spaced-bullets list-square-bullets](false)
 * Co-founder of Open Source [Thanos](https://thanos.io) project.
 * [CNCF SIG Observability](https://github.com/cncf/sig-observability) Tech Leader.
 * Maintainer of various OSS: [Prometheus](https://prometheus.io), [configuration.fyi](https://configuration.fyi), [prometheus/client_golang](https://github.com/prometheus/client_golang), [bingo](https://github.com/bwplotka/bingo), [go-grpc-middleware](https://github.com/grpc-ecosystem/go-grpc-middleware), [prometheus grpc middlewares](https://github.com/grpc-ecosystem/go-grpc-prometheus), [Demo Navigator](https://github.com/bwplotka/demo-nav) and more... 

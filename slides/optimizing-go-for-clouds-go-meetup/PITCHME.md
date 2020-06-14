@@ -10,8 +10,53 @@ London, UK | 17.06.2020 | [London Gophers Meetup](https://www.meetup.com/LondonG
 @snapend
 
 Note:
+Thanks .., hello everyone! I am super excited to be presenting today, in our local LondonGophers Meetup.
+I was very often joining this meetup as a guest, so I am triple honoured now to share what I know about Go and Performance from practical
+side. I am speaking from the virtual stage and I wish we could meet in reality, but let's focus on benefits: I am sure we have guest from outside of London,
+I know about few Berlin friends, so there is always a bright side of things (: 
 
-https://www.meetup.com/LondonGophers/events/270419925/
+---
+@snap[north span-95 text-center]
+#### Optimizing Go for Clouds (and beyond @emoji[rocket])
+#### _Practical Intro_
+@snapend
+
+@snap[south-east span-60 text-right padding]
+![width=350](assets/images/GopherSpaceMentor.png)
+@snapend
+
+@snap[south span-50 fragment]
+@tweet[https://twitter.com/bwplotka/status/1267029085013843971]
+@snapend
+
+Note:
+
+Anyway, today we will be talking about writing performant Go code.  
+in clouds but also in space!
+ 
+---
+@snap[north span-95 text-center]
+#### Optimizing Go for Clouds (and beyond @emoji[rocket])
+#### _Practical Intro_
+@snapend
+
+@snap[west span-75 text-07 padded]
+@ol[list-fade-fragments](true)
+1. In scale, do we even care about performant code? @note[Something]
+1. How to approach and when to optimize things?
+1. Data Driven Decisions: How to measure performance.
+1. Optimization tricks & pitfalls
+@olend
+<br/><br/><br/>
+@snapend
+
+@snap[south-east span-60 text-right padding]
+![width=350](assets/images/GopherSpaceMentor.png)
+@snapend
+
+Note:
+
+https://www.meetup.com/LondonGophers/events/270419925/ (25m + 5mQ&A)
 Introduction:
 I am PSWE, however SRE, in our job we build services. Parts of bigger systems usually running on K8s.
 There is pressure on scaling but applications themselves have lots of overhead.
@@ -40,25 +85,6 @@ Memory: basic pitfalls, mmap and why it's not really safe.
 Summary:
 Useful tools benchstat, funcbench, leaktest, etc.
 Takeaways.     https://github.com/alecthomas/unsafeslice/blob/master/unsafeslice.go
-  
----
-@snap[north span-95 text-left]
-#### Agenda
-@snapend
-
-@snap[midpoint span-75 text-07 text-bold text-left]
-@ol[list-fade-fragments](true)
-1. In scale, do we even care about performant code? @note[Something]
-1. How to approach and when to optimize things?
-1. Data Driven Decisions: How to measure performance.
-1. Optimization tricks & pitfalls
-@olend
-
-@snapend
-
-Note:
-
-TBD
 
 ---?include=slides/common/whoami-go/PITCHME.md
 
@@ -72,16 +98,37 @@ TBD
 * Amazing [ashleymcnamara gophers](https://github.com/ashleymcnamara/gophers)
 @olend
 
----?include=slides/common/thank-you/PITCHME.md
+---
+@snap[north span-100]
+## Thank You!
+@snapend
+
+@snap[west span-70 text-left text-06 padded]
+@size[1.2em](**Feel free to ask questions @emoji[raising_hand]& discuss:**)
+* _Live:_ on YouTube Stream
+* _Offline:_ on [Gopher Slack `#london`](https://gophers.slack.com) 
+  * My handle: `@bwplotka`
+<br/><br/><br/><br/><br/><br/><br/><br/> 
+@snapend
+
+@snap[east span-40 text-05 text-center]
+![width=200](assets/images/slides/qrcode-optimizing-go-code.png)
+<br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-96 text-center]
+![width=800](assets/images/GoCommunity.png)
+@snapend
 
 ---
 @snap[north span-95 text-left]
 #### Credits
 @snapend
 
-@snap[midpoint span-75 text-07 text-bold text-left]
+@snap[midpoint span-75 text-06 text-bold text-left]
 @ol[](false)
 * Amazing [ashleymcnamara gophers](https://github.com/ashleymcnamara/gophers)
 @olend
+
 
 
