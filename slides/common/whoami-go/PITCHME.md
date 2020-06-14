@@ -1,21 +1,26 @@
-@snap[north span-95 text-08 text-left]
+@snap[north span-95 text-left]
 #### Bartek Plotka [@bwplotka](https://bwplotka.dev)
 @snapend
 
 @snap[west padded]
-![width=300](https://storage.googleapis.com/gopherizeme.appspot.com/gophers/1a34872cf0ec375b9fc44ce654fc03a5abc42dc4.png)
+![width=480, shadow](assets/images/about.compressed.jpg)
 @snapend
 
-@snap[east higher span-65 text-06 text-left]
+@snap[east span-48 text-04 text-left]
 ###### Principal Software Engineer [@ Red Hat](https://http://redhat.com/)
-@size[0.8em](_OpenShift Monitoring Team_) 
+@size[0.8em](_Team Leader, OpenShift Observability Team_) 
 
-@snap[text-06 text-left]
-<br/>
-
-Prometheus and Thanos Maintainer
+* Co-founder of Open Source [Thanos](https://thanos.io) project.
+* [CNCF SIG Observability](https://github.com/cncf/sig-observability) Tech Leader.
+* Maintainer of various OSS: [Prometheus](https://prometheus.io), [configuration.fyi](https://configuration.fyi), [prometheus/client_golang](https://github.com/prometheus/client_golang), [bingo](https://github.com/bwplotka/bingo), [go-grpc-middleware](https://github.com/grpc-ecosystem/go-grpc-middleware), [prometheus grpc middlewares](https://github.com/grpc-ecosystem/go-grpc-prometheus), [Demo Navigator](https://github.com/bwplotka/demo-nav) and more... 
+* Still active as an SRE (on-call fun @emoji[pager] @emoji[bell])
 @snapend
 
+@snap[south span-100 text-05 text-center]
+Passionated about Go; teaching, and pushing boundaries! <img style="width:80px;vertical-align:middle;display:inline;" src="assets/images/gopherme.png"/>
+<br/>
+<br/>
+<br/>
 @snapend
 
 

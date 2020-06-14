@@ -3,10 +3,10 @@
     padding-right: 20px !important;
 }
 
-/*.code-shadow {*/
-/*    box-shadow:0 10px 16px 10px rgba(0,0,0,0.2),*/
-/*    0 6px 20px 10px rgba(0,0,0,0.19) !important;*/
-/*}*/
+.shadow {
+    box-shadow:0 10px 16px 10px rgba(0,0,0,0.20),
+    0 6px 20px 10px rgba(0,0,0,0.45) !important;
+}
 
 .higher {
     top: 40%;

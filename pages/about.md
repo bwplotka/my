@@ -4,7 +4,7 @@ date: "2019-04-09"
 aliases: ["about","bwplotka","author","contact"]
 ---
 
-<img src="/images/about.jpg" class="featured_image">
+<img src="/assets/images/about.compressed.jpg" class="featured_image">
 
 Hi! 
 
@@ -52,14 +52,14 @@ Rest of my time is reserved by my beloved wife & family, volleyball and sometime
 
 * [Thanos](https://thanos.io)
 * [Prometheus](https://prometheus.io/)
+* [bingo](https://github.com/bwplotka/bingo)
 * [configuration.fyi](https://configuration.fyi)
 * [prometheus/client_golang](https://github.com/prometheus/client_golang)
-* [flagarize](https://github.com/bwplotka/flagarize)
-* [funcbench](https://github.com/prometheus/test-infra/tree/master/funcbench)
 * [go-grpc-middleware](https://github.com/grpc-ecosystem/go-grpc-middleware)
 * [prometheus grpc middlewares](https://github.com/grpc-ecosystem/go-grpc-prometheus)
 * [Demo Navigator](https://github.com/bwplotka/demo-nav)
 * [prometheus-operator](https://github.com/coreos/prometheus-operator)
+* [funcbench](https://github.com/prometheus/test-infra/tree/master/funcbench)
 * [CMO](https://github.com/openshift/cluster-monitoring-operator)
 * [jiralert](https://github.com/prometheus-community/jiralert)
 * [my](https://github.com/bwplotka/my)
