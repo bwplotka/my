@@ -30,13 +30,14 @@ print-fragments: true
 print-notes: false
 print-footer: true
 
+
+image-size-limits: true
 theme-override   : assets/css/PITCHME.css
 
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
 theme            : template
 theme-background : [ "#1A0420" ]
-background          : assets/images/tech-background3-crop.png
-image-size-limits   : false
+background          : assets/images/tech-background3-crop.compressed.png
 background-position : right bottom
 background-size     : auto cover
 background-opacity  : 100
