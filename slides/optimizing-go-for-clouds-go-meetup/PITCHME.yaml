@@ -30,7 +30,6 @@ print-fragments: true
 print-notes: false
 print-footer: true
 
-
 image-size-limits: true
 theme-override   : assets/css/PITCHME.css
 
@@ -47,7 +46,6 @@ theme-text       : [ "Ubuntu", "#ebebeb", "none"]
 theme-code       : [ "Source Code Pro" ]
 theme-links      : [ "#6D41FF", "#bdbb3e"]
 
-highlight        : monokai # tomorrow
 theme-controls   : [ "#C0C0C0" ]
 layout           : center
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-END

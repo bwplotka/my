@@ -99,45 +99,8 @@ Awesome! Let's start.
 @css[text-yellow text-italics](...we care about readability, let's not obfuscate our code!)
 @snapend
 
-@snap[south span-95 padded fragment]
-
-```go
-	values := make([]string, 0, len(e.offsets)*r.postingOffsetsInMemSampling)
-
-	d := encoding.NewDecbufAt(r.b, int(r.toc.PostingsOffsetTable), nil)
-	d.Skip(e.offsets[0].tableOff)
-	lastVal := e.offsets[len(e.offsets)-1].value
-
-	skip := 0
-	for d.Err() == nil {
-		if skip == 0 {
-			// These are always the same number of bytes,
-			// and it's faster to skip than parse.
-			skip = d.Len()
-			d.Uvarint()      // Keycount.
-			d.UvarintBytes() // Label name.
-			skip -= d.Len()
-		} else {
-			d.Skip(skip)
-		}
-		s := yoloString(d.UvarintBytes()) // Label value.
-		values = append(values, s)
-		if s == lastVal {
-			break
-		}
-		d.Uvarint64() // Offset.
-	}
-	if d.Err() != nil {
-		return nil, errors.Wrap(d.Err(), "get postings offset entry")
-	}
-	return values, nil
-}
-
-func yoloString(b []byte) string {
-	return *((*string)(unsafe.Pointer(&b)))
-}
-```
-
+@snap[south span-95 text-04 padded]
+@code[golang](slides/optimizing-go-for-clouds-go-meetup/perf.go)
 @snapend
 
 Note:
