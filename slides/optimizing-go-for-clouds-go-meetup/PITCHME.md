@@ -99,7 +99,7 @@ Awesome! Let's start.
 @css[text-yellow text-italics](...we care about readability, let's not obfuscate our code!)
 @snapend
 
-@snap[south span-95 text-04 padded]
+@snap[south span-95 text-04 padded fragment]
 @code[golang](slides/optimizing-go-for-clouds-go-meetup/perf.go)
 @snapend
 
