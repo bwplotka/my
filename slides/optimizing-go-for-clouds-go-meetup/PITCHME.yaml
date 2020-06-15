@@ -37,13 +37,13 @@ theme-override   : assets/css/PITCHME.css
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
 theme            : template
 theme-background : [ "#1A0420" ]
-background          : assets/images/tech-background3-crop.compressed.png
+background          : assets/images/slides/tech-background3-crop.compressed.png
 background-position : right bottom
 background-size     : auto cover
 background-opacity  : 100
 theme-headline   : [ "Ubuntu", "#d7c5db", "none"]
 theme-byline     : [ "Ubuntu", "#d7c5db", "none"]
-theme-text       : [ "Ubuntu", "#FFFFFF", "none"]
+theme-text       : [ "Ubuntu", "#ebebeb", "none"]
 theme-code       : [ "Source Code Pro" ]
 theme-links      : [ "#6D41FF", "#bdbb3e"]
 
