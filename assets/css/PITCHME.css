@@ -8,6 +8,10 @@
     0 6px 20px 10px rgba(0,0,0,0.45) !important;
 }
 
+.opacity-50 {
+    opacity: 0.5;
+}
+
 .higher {
     top: 40%;
 }

@@ -36,7 +36,7 @@ Anyway, today we will be talking about writing performant Go code and optimizati
 This talk will be especially valid for the Go applications running for the Infrastructure, Cloud needs, so something from my area of
 expertise. But, to be honest you can take this knowledge and apply to any Go Program, you know, CLI tools, GUI, or even SPACE!
 
-(click) Because I don't know if you are aware you can use Go to automatically dock to International Space Station. How amazing is that?? 
+[C] Because I don't know if you are aware you can use Go to automatically dock to International Space Station. How amazing is that?? 
  
 ---
 @snap[north span-95 text-center]
@@ -67,12 +67,12 @@ Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back t
 ---
 @snap[north span-95 text-06 text-left padded]
 ##### Does performance matter?
-@quote[ Let's not worry about performance here because...<br/><br/>](Your Tech Lead)
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
 @snapend
 
 @snap[north span-90 text-06 text-right padded fragment]
 </br></br></br></br>
-@css[text-yellow text-italics](...we are just guessing here, this is just an micro-optimization!)
+@css[text-yellow text-italics](...we are just guessing here, this is just a micro-optimization!)
 @snapend
 
 @snap[south-west span-95 padded fragment]
@@ -80,67 +80,140 @@ Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back t
 @snapend
 
 @snap[south-east span-95 padded fragment]
-![width=300, shadow](assets/images/slides/premature_opt3.jpg)
+![width=400, shadow](assets/images/slides/premature_opt3.jpg)
+<br/>
+@snapend
+
+Note:
+
+Awesome! Let's start. Let's imagine we are adding some feature or improvement in the code, and in the PR we have following 
+review: ...
+
+[C] And this might be good advice, there is quite a battle in SW development about microoptimizations might be premature optimizations.
+This means that potentially we would be adding unnecessary complexity to the code that might not needed. It might be
+that it's just not on critical path, so the optimization really does not give much.
+
+[C] So overall in many cases the YAGNI rule kicks in, meaning that we simply might be wasting our time here. 
+
+So from YAGNI code practice, does performance matter? 
+I would say yes, while premature optimizations are evil there are some basic Go patterns you can stick to, in order to avoid basic performance pitfalls
+
+---
+@snap[north span-95 text-06 text-left padded]
+##### Does performance matter?
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
+@snapend
+
+@snap[north span-95 text-06 text-right padded]
+</br></br></br></br>
+@css[text-yellow text-italics](...we mainly care about readability, let's not obfuscate our code!)
+@snapend
+
+@snap[south span-100 text-04 padded fragment]
+@code[golang code-noblend code-max zoom-05](slides/optimizing-go-for-clouds-go-meetup/perf.go?lines=31-51,58-60)
+_[Snippet from latest Thanos code for lookup of label names in memory-maped file](https://github.com/thanos-io/thanos/blob/63ef382fc335969fa2fb3e9c9025eb0511fbc3af/pkg/block/indexheader/binary_reader.go#L841)_ 
+@snapend
+
+@snap[south-east span-95 padded fragment]
+![width=400, shadow](assets/images/slides/readable.jpg)
+<br/><br/><br/>
+@snapend
+
+@[22-24, zoom-20]
+
+Note:
+
+Let's focus on yet another potential misconception here. (...) And there is lots of truth here!
+
+[C] Let's consider this snippet of the code from Thanos project. Thanos is kind of horizontally scalable metric databases
+based on Prometheus and this code is for fetching certain data from file that is memory-mapped on Linux based systems.
+
+[C] We can definitely agree it's some sophisticated code which might be not clear immediately when you look on it. 
+
+[C] Especially if you look on my favorite line here, function yoloString, would you accept this in your production code?
+
+It's overall a very fair point, we chose Go because it's simple, consistent and readable. That's why it is so efficient to write programs in Go.
+So.. does performance really matter if it reduces readability?
+
+I would again advocate yes - performance still matter as there are ways to have performant and still readable Go code. Especially if we 
+consider certain performance patterns, maybe even yoloString, a consistent pattern in our code, it's not longer surprising, thus it
+still might be considered readable.
+
+---
+@snap[north span-95 text-06 text-left padded]
+##### Does performance matter?
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
+@snapend
+
+@snap[north span-90 text-06 text-right padded]
+</br></br></br></br>
+@css[text-yellow text-italics](...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/))
+@snapend
+
+@snap[south-west span-95 padded fragment]
+![width=400, shadow](assets/images/slides/aws-machines.png)
+<br/>
+@snapend
+
+@snap[south-east span-95 padded fragment]
+![width=400, shadow](assets/images/slides/brute-force.jpeg)
 <br/><br/>
 @snapend
 
 Note:
 
-Awesome! Let's start.
+Some times we have cases that we just have computing power needed, so why we should focus on performance. And that's a solid
+statement as well. 
+
+[C] For example AWS has those epic, huge bare metal servers available for you, and there are companies happy 
+to pay for those.
+
+[C] And that gives this impression that we don't need to focus on code performance much, we can just do whatever, it should not matter.
+
+Well, in practice it's not that nice as it looks. Concurrent programming is hard, despite Go having pretty amazing framework for it
+like go routines and channels, you will hit process scalability limitation pretty quickly. Think about cases like resource starvation or 
+garbage collection latency on an enormous heap so shared memory across go routines. Not mentioning other aspects like memory or disk IO bandwidth. 
+At the end you have to optimize code in some way or scale out of the single process.
 
 ---
 @snap[north span-95 text-06 text-left padded]
 ##### Does performance matter?
-@quote[ Let's not worry about performance here because...<br/><br/>](Your Tech Lead)
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
 @snapend
 
 @snap[north span-90 text-06 text-right padded]
 </br></br></br></br>
-@css[text-yellow text-italics](...we care about readability, let's not obfuscate our code!)
-@snapend
-
-@snap[south span-95 text-04 padded fragment]
-@code[golang](slides/optimizing-go-for-clouds-go-meetup/perf.go)
+@css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
 @snapend
 
 Note:
 
-Awesome! Let's start.
+Which brings us to last reason why you would potentially ignore code optimizations, that our code have unlimited horizontal
+scalability, why would I care how much single process use?
 
----
-@snap[north span-95 text-06 text-left padded]
-##### Does performance matter?
-@quote[ Let's not worry about performance here because...<br/><br/>](Your Tech Lead)
-@snapend
-
-@snap[north span-90 text-06 text-right padded fragment]
-</br></br></br></br>
-@css[text-yellow text-italics](...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/))
-@snapend
-
-@snap[south span-95 padded fragment]
-![width=400, shadow](assets/images/slides/brute-force.jpeg)
-@snapend
-
-Note:
-
-Awesome! Let's start.
+This is actually something I see a lot in infrastructure culture. 
 
 ---
 @snap[north span-95 text-05 text-left padded]
 ##### Does performance matter?
-@quote[Let's not worry about performance here because...](Your Tech Lead)
+@quote[We don't need to optimize this program because....](Your Code Reviewer)
 @snapend
 
 @snap[midpoint span-95 text-05 text-right padding]
 @ul[list-spaced-bullets list-fade-fragments](true)
-* ...we are just guessing here, this might be "micro-optimzation".
-* ...we care about readability, let's not obfuscate our code.
+* ...we are just guessing here, this is just a micro-optimization!
+* ...we mainly care about readability, let's not obfuscate our code!
 * ...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/).
-* ...our system scales horizontally. 
+* ...there is no need, our system scales horizontally. 
 @ulend
 <br/>
 @snapend
+
+@snap[south span-95 padded]
+@box[bg-green rounded box-padding](Yes, but there are some basic Go patterns you can stick to, in order to avoid basic performance pitfalls)
+<br/><br/>
+@snapend
+
 
 Note:
 

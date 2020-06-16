@@ -1,8 +1,37 @@
+package example
+
+import (
+	"sort"
+	"unsafe"
+)
+
+func (r BinaryReader) LabelValues(name string) ([]string, error) {
+	if r.indexVersion == index.FormatV1 {
+		e, ok := r.postingsV1[name]
+		if !ok {
+			return nil, nil
+		}
+		values := make([]string, 0, len(e))
+		for k := range e {
+			values = append(values, k)
+		}
+		sort.Strings(values)
+		return values, nil
+
+	}
+	e, ok := r.postings[name]
+	if !ok {
+		return nil, nil
+	}
+	if len(e.offsets) == 0 {
+		return nil, nil
+	}
+	skip := 0
+
+	values := make([]string, 0, len(e.offsets)*r.postingOffsetsInMemSampling)
 	d := encoding.NewDecbufAt(r.b, int(r.toc.PostingsOffsetTable), nil)
 	d.Skip(e.offsets[0].tableOff)
 	lastVal := e.offsets[len(e.offsets)-1].value
-
-	skip := 0
 	for d.Err() == nil {
 		if skip == 0 {
 			skip = d.Len()
@@ -19,6 +48,13 @@
 		}
 		d.Uvarint64() // Offset.
 	}
+	// (...)
+	if d.Err() != nil {
+		return nil, errors.Wrap(d.Err(), "get postings offset entry")
+	}
+	return values, nil
+}
+
 func yoloString(b []byte) string {
 	return *((*string)(unsafe.Pointer(&b)))
 }
