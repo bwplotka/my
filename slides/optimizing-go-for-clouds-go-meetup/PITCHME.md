@@ -22,7 +22,7 @@ For example I am sure we have guest from outside of London, I know about a few B
 @snapend
 
 @snap[south-east span-60 text-right padding]
-![width=350](assets/images/slides/GopherSpaceMentor.png)
+![width=300](assets/images/slides/GopherSpaceMentor.png)
 @snapend
 
 @snap[south span-50 fragment]
@@ -51,7 +51,7 @@ expertise. But, to be honest you can take this knowledge and apply to any Go Pro
 1. Does performance matter? _"Our design is scalable, machines big and code has to be readable, let's not worry about performance"_ @note[First of all, we will touch on the potential system misconception, so why performance for single application is still quite important nowadays and why you don't need to sacrifice readability!]
 1. How to approach and when to optimize things? @note[Then we will discuss how to efficiently approach performance topic, how to start]
 1. Data Driven Decisions: Measuring performance. @note[Particularly we will touch the critical part, which is how to make decisions regarding optimizations]
-1. Optimization tricks & pitfalls @emoji[bomb] @note[Last but not the least I would love to share some tricks and usual patterns that helps improve things! But before that.. short introduction]
+1. Go optimization tricks & pitfalls @emoji[bomb] @note[Last but not the least I would love to share some tricks and usual patterns that helps improve things! But before that.. short introduction]
 @olend
 @snapend
 
@@ -82,6 +82,11 @@ Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back t
 @snap[south-east span-95 padded fragment]
 ![width=400, shadow](assets/images/slides/premature_opt3.jpg)
 <br/>
+@snapend
+
+@snap[north span-95 text-07 text-black text-bold padded fragment]
+<br/><br/><br/><br/><br/>
+@box[bg-gold rounded](Sure, but there are some basic Go patterns to use, and pitfalls to avoid from the start of the project!)
 @snapend
 
 Note:
@@ -120,6 +125,11 @@ _[Snippet from latest Thanos code for lookup of label names in memory-maped file
 @snapend
 
 @[22-24, zoom-20]
+
+@snap[north span-95 text-07 text-black text-bold padded fragment]
+<br/><br/><br/><br/><br/>
+@box[bg-gold rounded](Fair, but with good balance and consistency, code can be still readable)
+@snapend
 
 Note:
 
@@ -160,6 +170,11 @@ still might be considered readable.
 <br/><br/>
 @snapend
 
+@snap[north span-95 text-07 text-black text-bold padded fragment]
+<br/><br/><br/><br/><br/>
+@box[bg-gold rounded](Still there are limitations: Slow garbage collections for huge heaps and multicore architecture fun: IO, network, memory bandwidth etc)
+@snapend
+
 Note:
 
 Some times we have cases that we just have computing power needed, so why we should focus on performance. And that's a solid
@@ -186,42 +201,109 @@ At the end you have to optimize code in some way or scale out of the single proc
 @css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
 @snapend
 
-Note:
-
-Which brings us to last reason why you would potentially ignore code optimizations, that our code have unlimited horizontal
-scalability, why would I care how much single process use?
-
-This is actually something I see a lot in infrastructure culture. 
-
----
-@snap[north span-95 text-05 text-left padded]
-##### Does performance matter?
-@quote[We don't need to optimize this program because....](Your Code Reviewer)
+@snap[south-west span-95 padded fragment]
+![width=400, shadow](assets/images/slides/twitterdesign.png)
 @snapend
 
-@snap[midpoint span-95 text-05 text-right padding]
-@ul[list-spaced-bullets list-fade-fragments](true)
-* ...we are just guessing here, this is just a micro-optimization!
-* ...we mainly care about readability, let's not obfuscate our code!
-* ...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/).
-* ...there is no need, our system scales horizontally. 
-@ulend
+@snap[south-east span-50 padded fragment]
+![width=450, shadow](assets/images/slides/whatsapp.png)
+<br/>
 <br/>
 @snapend
 
-@snap[south span-95 padded]
-@box[bg-green rounded box-padding](Yes, but there are some basic Go patterns you can stick to, in order to avoid basic performance pitfalls)
-<br/><br/>
+@snap[midpoint span-95 padded fragment]
+![width=400, shadow](assets/images/slides/googledocs.png)
+@snapend
+
+Note:
+
+Which brings us to last reason why you would potentially ignore code optimizations. Our code have unlimited horizontal
+scalability, why would we care how much single process use?
+
+This is actually something I see a lot in the infrastructure culture.
+
+Nowadays you want to be a backend engineer on top typical programming and linux questions on interview, you have to show your skills in
+designing scalable systems. [C] You have to either design system like Twitter or Messenger or like Google Docs, you need to go through
+different phases, and explain how it will scale from 100 users to 10 thousands to millions.
+
+---
+@snap[north span-95 text-06 text-left padded]
+##### Does performance matter?
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
+@snapend
+
+@snap[north span-90 text-06 text-right padded]
+</br></br></br></br>
+@css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
+@snapend
+
+
+@snap[south-west span-95 text-08 padded fragment]
+![width=400, shadow](assets/images/slides/scaleup.gif)
+Vertical Scalability
+@snapend
+
+@snap[south-east span-95 text-08 padded fragment]
+![width=400, shadow](assets/images/slides/scaleout.gif)
+Horizontal Scalability
+@snapend
+
+@snap[north span-95 text-07 text-black text-bold padded fragment]
+<br/><br/><br/><br/><br/>
+@box[bg-gold rounded](Performance still matters. Think: complexity of distributed applications, cost, cold start, etc...)
+@snapend
+
+Note:
+
+The key concept that every cloud engineer has to know then is Scalability of the system. It's extremely exciting topic and it essentially
+means how to grow or shrink you backend or service capabilities with the request traffic. So when your application become too slow or require 
+more CPU, Memory than you have available to serve your users... what do you do?
+
+[C] Basic way of doing this is through something called scale up/down procedure, in different words Vertical scalability. You 
+increase capabilities of your service by just giving it more resources, more CPU, RAM, better network, but usually it's just single process, single machine
+
+[C] Now this become very boring recently, and for last 5y the new fashion was to scale out / scale in method. Which means that you can grow your application
+by just replicating it horizontally on different machines. In this model someone can say that optimizing single process is not a priority, because
+you can just add another server or virtual machine or container etc.
+
+[C] The problem is that as you seen horizontal scalability became a buzz word, certain "fashion". And this is actually the true motivation for me for making 
+this presentation. This scale out fashion, because maybe more exciting for engineers caused many people to really sometimes **prematurely** dive into distributing
+their application and using tools like Kubernetes or Mesos, even though they can quickly optimize a couple of critical paths and unnecessary allocation in their code and allow
+single-process Go application to serve thousands of users without issues.    
+
+So I want to reiterate, performance still matters. Horizontal scaling can be extremely expensive and difficult to implement properly. Not mentioning overhead and delay in scaling this way, especially
+if the Go code is not optimized.
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### How to approach and when to optimize Go code?
 @snapend
 
 
 Note:
 
-Awesome! Let's start.
+Overall, we can see that there are always excuses to avoid peformance optimization. At the end it comes to the same conclusion, 
 
 ---
-@snap[north span-95 text-left]
-#### Summary
+@snap[north span-95 text-05 text-left padded]
+##### Data Driven Decisions: Measuring performance.
+@snapend
+
+
+Note:
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### Optimization tricks & pitfalls @emoji[bomb]
+@snapend
+
+
+Note:
+
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### Summary
 @snapend
 
 @snap[midpoint span-75 text-07 text-bold text-left]
