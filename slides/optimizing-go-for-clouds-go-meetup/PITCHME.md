@@ -48,9 +48,8 @@ expertise. But, to be honest you can take this knowledge and apply to any Go Pro
 ###### Agenda:
 
 @ol[list-fade-fragments list-spaced-bullets](true)
-1. Does performance matter? _"Our design is scalable, machines big and code has to be readable, let's not worry about performance"_ @note[First of all, we will touch on the potential system misconception, so why performance for single application is still quite important nowadays and why you don't need to sacrifice readability!]
-1. How to approach and when to optimize things? @note[Then we will discuss how to efficiently approach performance topic, how to start]
-1. Data Driven Decisions: Measuring performance. @note[Particularly we will touch the critical part, which is how to make decisions regarding optimizations]
+1. Should you optimize your code for performance? _"Our design is scalable, machines big and code has to be readable, let's not worry about performance"_ @note[First of all, we will touch on the potential system misconception, so why performance for single application is still quite important nowadays and why you don't need to sacrifice readability!]
+1. How to approach performance optimizations in Go? @note[Then we will discuss how to efficiently approach performance this task, how to start with optimizing]
 1. Go optimization tricks & pitfalls @emoji[bomb] @note[Last but not the least I would love to share some tricks and usual patterns that helps improve things! But before that.. short introduction]
 @olend
 @snapend
@@ -66,7 +65,33 @@ Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back t
 
 ---
 @snap[north span-95 text-06 text-left padded]
-##### Does performance matter?
+##### Code Optimization
+@snapend
+
+@snap[east span-95 padded]
+![width=200](assets/images/slides/SPACEGIRL1.png)
+<br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[midpoint span-95 text-06 text-left padded]
+@quote[Code optimization is any method of code modification to improve code quality and efficiency. A program may be optimized so that it becomes a smaller size, consumes less memory, executes more rapidly, or performs fewer input/output operations.]()
+@snapend
+
+@snap[south span-95 text-05 text-left padded fragment]
+(Soft) Requirement: 
+_An optimized program must have the same output and side effects as its non-optimized version._
+<br/><br/><br/><br/>
+@snapend
+
+Note:
+
+The basic requirements optimization methods should comply with, is that an optimized program must have the same output and
+side effects as its non-optimized version. This requirement, however, may be ignored in the case that the benefit from optimization,
+is estimated to be more important than probable consequences of a change in the program behavior.
+
+---
+@snap[north span-95 text-06 text-left padded]
+##### Should you optimize your code for performance?
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
 @snapend
 
@@ -86,7 +111,7 @@ Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back t
 
 @snap[north span-95 text-07 text-black text-bold padded fragment]
 <br/><br/><br/><br/><br/>
-@box[bg-gold rounded](Sure, but there are some basic Go patterns to use, and pitfalls to avoid from the start of the project!)
+@box[bg-gold rounded](True! But there are some basic Go patterns to use, and pitfalls to avoid from the start of the project!)
 @snapend
 
 Note:
@@ -94,9 +119,10 @@ Note:
 Awesome! Let's start. Let's imagine we are adding some feature or improvement in the code, and in the PR we have following 
 review: ...
 
-[C] And this might be good advice, there is quite a battle in SW development about microoptimizations might be premature optimizations.
-This means that potentially we would be adding unnecessary complexity to the code that might not needed. It might be
-that it's just not on critical path, so the optimization really does not give much.
+[C] And this might be good advice, there is quite a battle in SW development about microoptimizations that might be premature optimizations.
+This means that potentially we would be adding unnecessary complexity and cluttering our code that might not needed. 
+* It might be that the optimization is done not on critical path, so the optimization really does not give much.
+* Or maybe optimization is just not needed overall, so we might want to spent time on something else instead.
 
 [C] So overall in many cases the YAGNI rule kicks in, meaning that we simply might be wasting our time here. 
 
@@ -105,7 +131,7 @@ I would say yes, while premature optimizations are evil there are some basic Go 
 
 ---
 @snap[north span-95 text-06 text-left padded]
-##### Does performance matter?
+##### Should you optimize your code for performance?
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
 @snapend
 
@@ -151,7 +177,7 @@ still might be considered readable.
 
 ---
 @snap[north span-95 text-06 text-left padded]
-##### Does performance matter?
+##### Should you optimize your code for performance?
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
 @snapend
 
@@ -192,7 +218,7 @@ At the end you have to optimize code in some way or scale out of the single proc
 
 ---
 @snap[north span-95 text-06 text-left padded]
-##### Does performance matter?
+##### Should you optimize your code for performance?
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
 @snapend
 
@@ -228,7 +254,7 @@ different phases, and explain how it will scale from 100 users to 10 thousands t
 
 ---
 @snap[north span-95 text-06 text-left padded]
-##### Does performance matter?
+##### Should you optimize your code for performance?
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
 @snapend
 
@@ -271,18 +297,69 @@ this presentation. This scale out fashion, because maybe more exciting for engin
 their application and using tools like Kubernetes or Mesos, even though they can quickly optimize a couple of critical paths and unnecessary allocation in their code and allow
 single-process Go application to serve thousands of users without issues.    
 
-So I want to reiterate, performance still matters. Horizontal scaling can be extremely expensive and difficult to implement properly. Not mentioning overhead and delay in scaling this way, especially
-if the Go code is not optimized.
+So I want to reiterate, performance still matters. Horizontal scaling can be extremely expensive and difficult to implement properly. Not mentioning overhead and delay in scaling this way,
+especially if the Go code is not optimized.
 
 ---
 @snap[north span-95 text-05 text-left padded]
-##### How to approach and when to optimize Go code?
+##### How to approach performance optimizations?
+@snapend
+
+@snap[south-west span-95 padded]
+![width=200](assets/images/slides/SPACEGIRL_GOPHER.png)
+@snapend
+
+@snap[midpoint span-90 text-10 text-bold padded fragment]
+@box[rounded](Step 1: Define the problem, find the bottleneck)
+<br/><br/><br/><br/>
+@snapend
+
+@snap[south span-60 text-06 padded fragment]
+@quote[<br/>1. First rule of Optimization: Don't do it.<br/>2. Second rule of Optimization: Don't do it... yet.<br/>3. Profile before Optimizing](http://wiki.c2.com/?RulesOfOptimization)
+<br/><br/><br/><br/>
 @snapend
 
 
 Note:
 
-Overall, we can see that there are always excuses to avoid peformance optimization. At the end it comes to the same conclusion, 
+Overall, we can see that there are always excuses to avoid peformance optimization. At the end it comes to the same conclusion,
+performance matters, but it has it consequences. Mainly that it's hard to achieve, takes time and might impact readability.
+
+So, how to approach this topic? 
+
+[C] First and foremost: Step number one! Detect the bottleneck, find the problem you want to solve.  
+
+[C] There is a good rule related to premature optimization as touched before: Don't do any peformance changes if they are not needed
+now or in near future. There are probably more important things you can spend your time on 
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### How to approach performance optimizations?
+@snapend
+
+@snap[south-west span-95 padded]
+![width=200](assets/images/slides/SPACEGIRL_GOPHER.png)
+@snapend
+
+@snap[north span-90 text-08 padded]
+<br/>
+@box[rounded](Step 1: Define the problem, find the bottleneck)
+@snapend
+
+@snap[midpoint span-90 text-08 padded]
+@ol[list-spaced-bullets](true)
+1. API / RPC / Command / Action execution is slow or time-outs.
+1. API / RPC / Command / Action execution is crashing (DOS) the machine or process is being killed and fails
+@olend
+@snapend
+
+Note:
+
+This sounds solid, but how to do that? Well, usually you don't find the problem, the problem finds you!!
+
+Generally problems you can potentially solve by optimizing your Go code can be divided into two groups: [C] [C]
+
+What's the difference? Well 
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -306,10 +383,18 @@ Note:
 ##### Summary
 @snapend
 
-@snap[midpoint span-75 text-07 text-bold text-left]
-@ol[](false)
-* Amazing [ashleymcnamara gophers](https://github.com/ashleymcnamara/gophers)
-@olend
+Note:
+
+So let's sum up what we learned today:
+1. There are many excused to ignore optimizing our Go code, but resist, but with healthy balance!
+1. Don't overwork. Focus on critical paths and your biggest bottlenecks, we don't need to save all the tiny CPU 
+cycles and allocation in our programs.
+1. Base code decision on data! Either microbenchmarks on e2e load tests
+1. We went throguh some tricks that you might want to consider.
+
+Anyway we do all of this to see at the end your day this:
+
+Tweet madness!
 
 ---
 @snap[north span-100]
@@ -335,12 +420,15 @@ Note:
 
 ---
 @snap[north span-95 text-left]
-#### Credits
+#### Sources & Credits
 @snapend
 
 @snap[midpoint span-75 text-06 text-bold text-left]
 @ol[](false)
-* Amazing [ashleymcnamara gophers](https://github.com/ashleymcnamara/gophers)
+* Amazing [ashleymcnamara](https://github.com/ashleymcnamara/gophers) gophers
+* [viva64](https://www.viva64.com/en/t/0084/#:~:text=Definition%20and%20Properties,performs%20fewer%20input%2Foutput%20operations.)
+* [wiki.c2.com](http://wiki.c2.com/?RulesOfOptimization)
+
 @olend
 
 ----
