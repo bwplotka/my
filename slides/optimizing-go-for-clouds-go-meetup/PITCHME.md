@@ -660,12 +660,17 @@ What's important is that RARELY you can optimize code without sacrificing someth
 
 ---
 @snap[north span-95 text-05 text-left padded]
-##### 3. Optimize & Measure: Data Driven Decisions.
+##### How to approach performance optimizations?
+@snapend
+
+@snap[north span-100 text-8 text-bold padded]
+<br/>
+@box[rounded](Step 3. Optimize & Measure: Data Driven Decisions.)
 @snapend
 
 @snap[midpoint span-100 text-06 padded fragment]
 ![width=800](assets/images/slides/Measurement.png)
-<br/><br/>
+<br/>
 @snapend
 
 @snap[south span-95 text-06 padded]
@@ -700,11 +705,38 @@ Note:
 ##### Summary
 @snapend
 
-@ol[list-spaced-bullets text-08](true)
+@snap[south-east span-95 padded]
+![width=150](assets/images/slides/SPACEGIRL1.png)
+@snapend
+
+@snap[north span-100]
+<br/>
+@ol[span-90 text-06](true)
 1. Resist the excuses, optimize Go code to solve your performance bottlenecks!
-1. Focus on 
-1.
+1. Three steps process: **First: define the problem and find bottleneck** 
+1. **Second: Find the right balance, a tradeoff. What's more important?**
+1. **Third: Optimize & Measure, ensure Data Driven Decisions**
+1. Code suggestions, find more in [Thanos Go Style Guide!](https://thanos.io/contributing/coding-style-guide.md/#development-code-review)
 @olend
+@snapend
+
+@snap[south-west span-100 padded fragment]
+<br/>
+![width=600](assets/images/slides/bench.png)
+@snapend
+
+@snap[south span-100 padded fragment]
+<br/>
+![width=500](assets/images/slides/tweet1.png)
+@snapend
+
+@snap[west span-100 padded fragment]
+![width=500](assets/images/slides/tweet2.png)
+@snapend
+
+@snap[east span-100 padded fragment]
+![width=450](assets/images/slides/tweet3.png)
+@snapend
 
 Note:
 
@@ -712,8 +744,9 @@ So let's sum up what we learned today:
 1. There are many excused to ignore optimizing our Go code, but resist, but with healthy balance!
 1. Don't overwork. Focus on critical paths and your biggest bottlenecks, we don't need to save all the tiny CPU 
 cycles and allocation in our programs.
-1. Base code decision on data! Either microbenchmarks on e2e load tests
-1. We went throguh some tricks that you might want to consider.
+1. Choose your tradeoff, You want faster execution, probably you would need more memory space.
+1. Base code decision on data! Either microbenchmarks on e2e load tests are must have.
+1. Thanos style guide!
 
 Anyway we do all of this to see at the end your day this:
 
@@ -751,41 +784,7 @@ Tweet madness!
 * Amazing [ashleymcnamara](https://github.com/ashleymcnamara/gophers) gophers
 * [viva64](https://www.viva64.com/en/t/0084/#:~:text=Definition%20and%20Properties,performs%20fewer%20input%2Foutput%20operations.)
 * [wiki.c2.com](http://wiki.c2.com/?RulesOfOptimization)
-
+* [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/)
+* [Dave's bench tutorial](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go)
+* [Thanos Go Style Guide!](https://thanos.io/contributing/coding-style-guide.md/#development-code-review)
 @olend
-
-----
-
-Note: 
-
-Backup: 
-https://www.meetup.com/LondonGophers/events/270419925/ (25m + 5mQ&A)
-Introduction:
-I am PSWE, however SRE, in our job we build services. Parts of bigger systems usually running on K8s.
-There is pressure on scaling but applications themselves have lots of overhead.
-Go is popular for cloud-native applications. We will focus on cloud-native applications as usual, we don't want to go into extremes. We don't need extreme efficiency. We just want to avoid leaks and silly allocations/CPU waste. This is to save money and putting scalability complexity when not needed. We also care about readability!
-challenges: NO one really gives real demos, takes time, context switching, easy to make wrong assumptions. Example: https://github.com/thanos-io/thanos/pull/2603
-How to approach it?
-Always start simple. Never micro optimize.
-Two main categories (for simplicity, there are others like network/IO). Usually optimizing
- means:
-Reducing unnecessary wor
- balancing between those two.
-CPU (Compressible and what it means)
-Memory
-HOW to tell what is bottleneck? How to tell we can do anything? Measure dataset vs actual resources usage (e.g lookup 100B on large index is using 12GB?)
-Focus on whats your main bottlenecks. Gather data first. Is your server CPU or Memory sensitive? Will it timeout of OOM first? This will tell us where we can make some tradeoffs. Stateful (e.g. DB) vs  stateless applications (e.g. proxy).
-Measure, optimize, measure and compare again. Repeat.
-Measuring
-Micro benchmarks (go test -bench) vs e2e benchmarks (e.g feedback from e.g cgroups/OS/go metrics.
-Writing test is a challenge. It’s very tempting to write benchmark spanning huge logic, for example whole complicated query request inDB. This is hard there are too many moving parts. It’s much easier to start with smaller things
-Understading. The more test you will write, better, the more runs, better
-Profiling
-When to use each of those.
-Optimizing
-CPU: Will explain basic issues: (recursiveness, no sleep between wait loops, starvations, etc.
-Memory: basic pitfalls, mmap and why it's not really safe.
-Summary:
-Useful tools benchstat, funcbench, leaktest, etc.
-Takeaways.     https://github.com/alecthomas/unsafeslice/blob/master/unsafeslice.go
-
