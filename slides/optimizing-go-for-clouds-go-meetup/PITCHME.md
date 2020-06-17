@@ -109,11 +109,6 @@ is estimated to be more important than probable consequences of a change in the 
 <br/>
 @snapend
 
-@snap[north span-95 text-07 text-black text-bold padded fragment]
-<br/><br/><br/><br/><br/>
-@box[bg-gold rounded](True! But there are some basic Go patterns to use, and pitfalls to avoid from the start of the project!)
-@snapend
-
 Note:
 
 Awesome! Let's start. Let's imagine we are adding some feature or improvement in the code, and in the PR we have following 
@@ -125,6 +120,33 @@ This means that potentially we would be adding unnecessary complexity and clutte
 * Or maybe optimization is just not needed overall, so we might want to spent time on something else instead.
 
 [C] So overall in many cases the YAGNI rule kicks in, meaning that we simply might be wasting our time here. 
+
+---
+@snap[north span-95 text-06 text-left padded]
+##### Should you optimize your code for performance?
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
+@snapend
+
+@snap[north span-90 text-06 text-right padded]
+</br></br></br></br>
+@css[text-yellow text-italics](...we are just guessing here, this is just a micro-optimization!)
+@snapend
+
+@snap[south-west span-95 padded]
+![width=300, shadow opacity-50](assets/images/slides/premature_opt2.jpg)
+@snapend
+
+@snap[south-east span-95 padded]
+![width=400, shadow opacity-50](assets/images/slides/premature_opt3.jpg)
+<br/>
+@snapend
+
+@snap[midpoint span-95 text-07 text-black text-bold padded]
+<br/><br/><br/><br/><br/>
+@box[bg-gold rounded](True! But there are some basic Go patterns to use, and pitfalls to avoid from the start of the project!)
+@snapend
+
+Note:
 
 So from YAGNI code practice, does performance matter? 
 I would say yes, while premature optimizations are evil there are some basic Go patterns you can stick to, in order to avoid basic performance pitfalls
@@ -152,11 +174,6 @@ _[Snippet from latest Thanos code for lookup of label names in memory-maped file
 
 @[22-24, zoom-20]
 
-@snap[north span-95 text-07 text-black text-bold padded fragment]
-<br/><br/><br/><br/><br/>
-@box[bg-gold rounded](Fair, but with good balance and consistency, code can be still readable)
-@snapend
-
 Note:
 
 Let's focus on yet another potential misconception here. (...) And there is lots of truth here!
@@ -170,6 +187,34 @@ based on Prometheus and this code is for fetching certain data from file that is
 
 It's overall a very fair point, we chose Go because it's simple, consistent and readable. That's why it is so efficient to write programs in Go.
 So.. does performance really matter if it reduces readability?
+
+---
+@snap[north span-95 text-06 text-left padded]
+##### Should you optimize your code for performance?
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
+@snapend
+
+@snap[north span-95 text-06 text-right padded]
+</br></br></br></br>
+@css[text-yellow text-italics](...we mainly care about readability, let's not obfuscate our code!)
+@snapend
+
+@snap[south span-100 text-04 padded opacity-50]
+@code[golang code-noblend code-max zoom-05](slides/optimizing-go-for-clouds-go-meetup/perf.go?lines=31-51,58-60)
+_[Snippet from latest Thanos code for lookup of label names in memory-maped file](https://github.com/thanos-io/thanos/blob/63ef382fc335969fa2fb3e9c9025eb0511fbc3af/pkg/block/indexheader/binary_reader.go#L841)_ 
+@snapend
+
+@snap[south-east span-95 padded]
+![width=400, shadow opacity-50](assets/images/slides/readable.jpg)
+<br/><br/><br/>
+@snapend
+
+@snap[midpoint span-95 text-07 text-black text-bold padded]
+<br/><br/><br/><br/><br/>
+@box[bg-gold rounded](Fair, but with good balance and consistency, code can be still readable)
+@snapend
+
+Note:
 
 I would again advocate yes - performance still matter as there are ways to have performant and still readable Go code. Especially if we 
 consider certain performance patterns, maybe even yoloString, a consistent pattern in our code, it's not longer surprising, thus it
@@ -196,11 +241,6 @@ still might be considered readable.
 <br/><br/>
 @snapend
 
-@snap[north span-95 text-07 text-black text-bold padded fragment]
-<br/><br/><br/><br/><br/>
-@box[bg-gold rounded](Still there are limitations: Slow garbage collections for huge heaps and multicore architecture fun: IO, network, memory bandwidth etc)
-@snapend
-
 Note:
 
 Some times we have cases that we just have computing power needed, so why we should focus on performance. And that's a solid
@@ -210,6 +250,33 @@ statement as well.
 to pay for those.
 
 [C] And that gives this impression that we don't need to focus on code performance much, we can just do whatever, it should not matter.
+---
+@snap[north span-95 text-06 text-left padded]
+##### Should you optimize your code for performance?
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
+@snapend
+
+@snap[north span-90 text-06 text-right padded]
+</br></br></br></br>
+@css[text-yellow text-italics](...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/))
+@snapend
+
+@snap[south-west span-95 padded opacity-50]
+![width=400, shadow](assets/images/slides/aws-machines.png)
+<br/>
+@snapend
+
+@snap[south-east span-95 padded opacity-50]
+![width=400, shadow](assets/images/slides/brute-force.jpeg)
+<br/><br/>
+@snapend
+
+@snap[midpoint span-95 text-07 text-black text-bold padded]
+<br/><br/><br/><br/><br/>
+@box[bg-gold rounded](Still there are limitations: Slow garbage collections for huge heaps and multicore architecture fun: IO, network, memory bandwidth etc)
+@snapend
+
+Note:
 
 Well, in practice it's not that nice as it looks. Concurrent programming is hard, despite Go having pretty amazing framework for it
 like go routines and channels, you will hit process scalability limitation pretty quickly. Think about cases like resource starvation or 
@@ -268,16 +335,6 @@ different phases, and explain how it will scale from 100 users to 10 thousands t
 Vertical Scalability
 @snapend
 
-@snap[south-east span-95 text-08 padded fragment]
-![width=400, shadow](assets/images/slides/scaleout.gif)
-Horizontal Scalability
-@snapend
-
-@snap[north span-95 text-07 text-black text-bold padded fragment]
-<br/><br/><br/><br/><br/>
-@box[bg-gold rounded](Performance still matters. Think: complexity of distributed applications, cost, cold start, etc...)
-@snapend
-
 Note:
 
 The key concept that every cloud engineer has to know then is Scalability of the system. It's extremely exciting topic and it essentially
@@ -287,11 +344,62 @@ more CPU, Memory than you have available to serve your users... what do you do?
 [C] Basic way of doing this is through something called scale up/down procedure, in different words Vertical scalability. You 
 increase capabilities of your service by just giving it more resources, more CPU, RAM, better network, but usually it's just single process, single machine
 
-[C] Now this become very boring recently, and for last 5y the new fashion was to scale out / scale in method. Which means that you can grow your application
+---
+@snap[north span-95 text-06 text-left padded]
+##### Should you optimize your code for performance?
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
+@snapend
+
+@snap[north span-90 text-06 text-right padded]
+</br></br></br></br>
+@css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
+@snapend
+
+@snap[south-west span-95 text-08 padded opacity-50]
+![width=400, shadow](assets/images/slides/scaleup.gif)
+Vertical Scalability
+@snapend
+
+@snap[south-east span-95 text-08 padded]
+![width=400, shadow](assets/images/slides/scaleout.gif)
+Horizontal Scalability
+@snapend
+
+Note:
+
+Now this become very boring recently, and for last 5y the new fashion was to scale out / scale in method. Which means that you can grow your application
 by just replicating it horizontally on different machines. In this model someone can say that optimizing single process is not a priority, because
 you can just add another server or virtual machine or container etc.
 
-[C] The problem is that as you seen horizontal scalability became a buzz word, certain "fashion". And this is actually the true motivation for me for making 
+---
+@snap[north span-95 text-06 text-left padded]
+##### Should you optimize your code for performance?
+@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
+@snapend
+
+@snap[north span-90 text-06 text-right padded]
+</br></br></br></br>
+@css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
+@snapend
+
+@snap[south-west span-95 text-08 padded opacity-50]
+![width=400, shadow](assets/images/slides/scaleup.gif)
+Vertical Scalability
+@snapend
+
+@snap[south-east span-95 text-08 padded opacity-50]
+![width=400, shadow](assets/images/slides/scaleout.gif)
+Horizontal Scalability
+@snapend
+
+@snap[midpoint span-95 text-07 text-black text-bold padded]
+<br/><br/><br/><br/><br/>
+@box[bg-gold rounded](Performance still matters. Think: complexity of distributed applications, cost, cold start, etc...)
+@snapend
+
+Note:
+
+The problem is that as you seen horizontal scalability became a buzz word, certain "fashion". And this is actually the true motivation for me for making 
 this presentation. This scale out fashion, because maybe more exciting for engineers caused many people to really sometimes **prematurely** dive into distributing
 their application and using tools like Kubernetes or Mesos, even though they can quickly optimize a couple of critical paths and unnecessary allocation in their code and allow
 single-process Go application to serve thousands of users without issues.    
@@ -449,43 +557,41 @@ At the end for we could see in our example: We spend lots of cycles on TextMarsh
 @snapend
 
 @snap[west span-90 text-06 padded fragment]
-a) @emoji[watch] Execution is very slow or time-outs.
+b) @emoji[fire] Execution is crashing the machine or process is just killed before succeeding.
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 @snapend
 
 @snap[south span-95 text-04 padded bg-go fragment]
-![width=600, shadow](assets/images/slides/querylatency.png)
-Symptom: Alert (e.g via [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/))
+![width=900, shadow](assets/images/slides/crashloop.png)
+Symptom: Process is crashing e.g on [Kubernetes](http://kubernetes.io/) (via [OpenShift Console](https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it?sc_cid=7013a000002DkSqAAK&gclid=CjwKCAjw_qb3BRAVEiwAvwq6VtRhQegkDHNqedqfhFpGxGhhTxf3PJ4gTrlt5R9baahwYrAu5qgWyRoC_FcQAvD_BwE&gclsrc=aw.ds))
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
 @snapend
 
 @snap[south span-95 text-04 padded bg-go fragment]
-![width=600, shadow](assets/images/slides/duration.png)
+![width=700, shadow](assets/images/slides/memory.png)
 Drill down 1: Metrics via [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com/) dashboards. 
-<br/><br/><br/><br/><br/>
 @snapend
 
 @snap[south span-95 text-04 padded bg-go fragment]
-<br/><br/><br/><br/>
-![width=800, shadow](assets/images/slides/Trace.png)
-Drill down 2: Traces via [Jaeger](https://www.jaegertracing.io/). 
-<br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+Drill down 2: Traces? @css[text-pink](Not really useful, it's not latency issue...)
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 @snapend
 
 @snap[south span-95 text-04 padded bg-go fragment]
-![width=800, shadow](assets/images/slides/flame.png)
-Drill down 3a: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/) [Flamegraph](http://www.brendangregg.com/flamegraphs.html) 
-<br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+Drill down 2: Profiling? @css[text-pink](Profiling what, process already crashed...)
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 @snapend
 
 @snap[south span-95 text-04 padded bg-go fragment]
-![width=600, shadow](assets/images/slides/profile1.png)
-Drill down 3b: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/)
+![width=500, shadow](assets/images/slides/conprof.png)
+Drill down 2: Continous profiling! via [ConProf](https://github.com/conprof/conprof) (check good intro [here](https://youtu.be/kRVE15j1zxQ?t=221))
 @snapend
 
 Note:
 
-At the end for we could see in our example: We spend lots of cycles on TextMarshaller and this is where we should focus.
+
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -557,16 +663,28 @@ What's important is that RARELY you can optimize code without sacrificing someth
 ##### 3. Optimize & Measure: Data Driven Decisions.
 @snapend
 
+@snap[midpoint span-100 text-06 padded fragment]
+![width=800](assets/images/slides/Measurement.png)
+<br/><br/>
+@snapend
+
+@snap[south span-95 text-06 padded]
+@ol[list-spaced-bullets text-08](true)
+1. Benchmarks (aka "micro-benchmarks"): [go test -bench](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go), [benchcmp old new](https://godoc.org/golang.org/x/tools/cmd/benchcmp), [benchstat](https://godoc.org/golang.org/x/perf/cmd/benchstat), [funcbench](https://github.com/prometheus/test-infra/tree/master/funcbench)
+1. Load Tests (Deploy & Measure): [prombench](https://github.com/prometheus/test-infra/tree/master/prombench), Kubernetes + Prometheus, [perf](http://www.brendangregg.com/perf.html)
+@olend
+<br/><br/>
+@snapend
 
 Note:
 
-With the problem defined and the direction of optimization we can focus on the last step, number 3.
+With the problem defined, exact bottleneck found and the direction of optimization we can focus on the last step, number 3.
 Finally optimizations! To peform optimizations efficiently we need to learn how to measure the results of our work.
 
-Don't trust your feeling, and find 
+Don't trust your feeling, always make sure you measure the result. This is very tedious but every programming language especially Go 
+holds thousands of compiler optimizations that might impact things, so you might be surprised many times.
 
-
-
+High level flow would look like this [C]
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -581,6 +699,12 @@ Note:
 @snap[north span-95 text-05 text-left padded]
 ##### Summary
 @snapend
+
+@ol[list-spaced-bullets text-08](true)
+1. Resist the excuses, optimize Go code to solve your performance bottlenecks!
+1. Focus on 
+1.
+@olend
 
 Note:
 
