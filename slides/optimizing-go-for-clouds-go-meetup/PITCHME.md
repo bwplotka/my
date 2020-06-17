@@ -119,12 +119,15 @@ Note:
 Awesome! Let's start. Let's imagine we are adding some feature or improvement in the code, and in the PR we have following 
 review: ...
 
-[C] And this might be good advice, there is quite a battle in SW development about microoptimizations that might be premature optimizations.
+[C] And this might be good advice, there is quite a battle in SW development about microoptimizations that might be premature.
 This means that potentially we would be adding unnecessary complexity and cluttering our code that might not needed. 
 * It might be that the optimization is done not on critical path, so the optimization really does not give much.
 * Or maybe optimization is just not needed overall, so we might want to spent time on something else instead.
 
-[C] So overall in many cases the YAGNI rule kicks in, meaning that we simply might be wasting our time here. 
+[C] So overall in many cases the YAGNI rule kicks in so "You are not gonna need", meaning that we simply might be wasting our time by
+adding extra complexity.
+
+So from YAGNI code practice, does performance matter? 
 
 ---
 @snap[north span-95 text-06 text-left padded]
@@ -153,8 +156,8 @@ This means that potentially we would be adding unnecessary complexity and clutte
 
 Note:
 
-So from YAGNI code practice, does performance matter? 
 I would say yes, while premature optimizations are evil there are some basic Go patterns you can stick to, in order to avoid basic performance pitfalls
+I will list some at then of this pres
 
 ---
 @snap[north span-95 text-06 text-left padded]
