@@ -310,13 +310,12 @@ especially if the Go code is not optimized.
 
 @snap[north span-90 text-8 text-bold padded fragment]
 <br/>
-@box[rounded](Step 1: Define the problem, find the bottleneck)
+@box[rounded](Step 1: Define the problem; find the bottleneck.)
 @snapend
 
 @snap[midpoint span-90 text-08 padded fragment]
 @quote[<br/>1. First rule of Optimization: Don't do it.<br/>2. Second rule of Optimization: Don't do it... yet.<br/>3. Profile before Optimizing](http://wiki.c2.com/?RulesOfOptimization)
 @snapend
-
 
 Note:
 
@@ -328,7 +327,7 @@ So, how to approach this topic?
 [C] First and foremost: Step number one! Detect the bottleneck, find the problem you want to solve.  
 
 [C] There is a good rule related to premature optimization as touched before: Don't do any peformance changes if they are not needed
-now or in near future. There are probably more important things you can spend your time on 
+now or in near future. There are probably more important things you can spend your time on. 
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -382,7 +381,24 @@ is popularly known as OOM or out of memory exception.
 
 This is quite important differentiations and will help you to tell what kind of bottleneck you should solve first while optimizing Go program.
 
-Ok, let's say we found issue with our Go program, what's next?
+---
+@snap[north span-95 text-05 text-left padded]
+##### How to approach performance optimizations?
+@snapend
+
+@snap[south-west span-95 padded]
+![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
+@snapend
+
+@snap[north span-90 text-8 text-bold padded]
+<br/>
+@box[rounded](Bottleneck: What part of the code causes undesired resource consumption?)
+@snapend
+
+<iframe width="750" height="500" src="https://www.youtube.com/embed/kRVE15j1zxQ?t=221" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Note:
+
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -436,7 +452,7 @@ Note:
 
 Next is Step 2 - to decide where you want to be? Often when optimizing you have to sacrifice one resource to solve saturation of others.
 
-Generally all optimizations, both micro and big system level optimimzations really jumps from one resource to another depending on the bottleneck.
+Generally all optimizations, both micro and big system level optimimations really jumps from one resource to another depending on the bottleneck.
 
 For example you want to have your program to be faster knowing the saturation of the CPU time is your bottleneck? For example
 searching through documents in the storage, you can lean more on disk and memory and precompute index and caches, so search operation will
@@ -445,15 +461,25 @@ need much less CPU cycles, thus it can be potentially much much faster.
 On the other hand, if your program crashes with because of not enoguh memory, you might want to optimize your program to use more CPU instead, 
 by implementing some kind of streaming and increase your programs concurrency. 
 
-What's important is that RARELY you can optimize code without sacrificing sc else especially in backend application. This is called a tradeoff. 
+Last but not the least you maybe want to limit some functionality or change it, to improve readability and disk usage.
+
+What's important is that RARELY you can optimize code without sacrificing something else. This is called a tradeoff. 
 
 ---
 @snap[north span-95 text-05 text-left padded]
-##### Data Driven Decisions: Measuring performance.
+##### 3. Optimize & Measure: Data Driven Decisions.
 @snapend
 
 
 Note:
+
+With the problem defined and the direction of optimization we can focus on the last step, number 3.
+Finally optimizations! To peform optimizations efficiently we need to learn how to measure the results of our work.
+
+Don't trust your feeling, and find 
+
+
+
 
 ---
 @snap[north span-95 text-05 text-left padded]
