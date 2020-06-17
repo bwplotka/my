@@ -319,7 +319,7 @@ especially if the Go code is not optimized.
 
 Note:
 
-Overall, we can see that there are always excuses to avoid peformance optimization. At the end it comes to the same conclusion,
+Overall, we can see that there are always excuses to avoid performance optimization. At the end it comes to the same conclusion,
 performance matters, but it has it consequences. Mainly that it's hard to achieve, takes time and might impact readability.
 
 So, how to approach this topic? 
@@ -395,10 +395,97 @@ This is quite important differentiations and will help you to tell what kind of 
 @box[rounded](Bottleneck: What part of the code causes undesired resource consumption?)
 @snapend
 
-<iframe width="750" height="500" src="https://www.youtube.com/embed/kRVE15j1zxQ?t=221" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+@snap[west span-90 text-06 padded fragment]
+a) @emoji[watch] Execution is very slow or time-outs.
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+![width=600, shadow](assets/images/slides/querylatency.png)
+Symptom: Alert (e.g via [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/))
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+![width=600, shadow](assets/images/slides/duration.png)
+Drill down 1: Metrics via [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com/) dashboards. 
+<br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+<br/><br/><br/><br/>
+![width=800, shadow](assets/images/slides/Trace.png)
+Drill down 2: Traces via [Jaeger](https://www.jaegertracing.io/). 
+<br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+![width=800, shadow](assets/images/slides/flame.png)
+Drill down 3a: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/) [Flamegraph](http://www.brendangregg.com/flamegraphs.html) 
+<br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+![width=600, shadow](assets/images/slides/profile1.png)
+Drill down 3b: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/)
+@snapend
 
 Note:
 
+At the end for we could see in our example: We spend lots of cycles on TextMarshaller and this is where we should focus.
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### How to approach performance optimizations?
+@snapend
+
+@snap[south-west span-95 padded]
+![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
+@snapend
+
+@snap[north span-90 text-8 text-bold padded]
+<br/>
+@box[rounded](Bottleneck: What part of the code causes undesired resource consumption?)
+@snapend
+
+@snap[west span-90 text-06 padded fragment]
+a) @emoji[watch] Execution is very slow or time-outs.
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+![width=600, shadow](assets/images/slides/querylatency.png)
+Symptom: Alert (e.g via [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/))
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+![width=600, shadow](assets/images/slides/duration.png)
+Drill down 1: Metrics via [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com/) dashboards. 
+<br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+<br/><br/><br/><br/>
+![width=800, shadow](assets/images/slides/Trace.png)
+Drill down 2: Traces via [Jaeger](https://www.jaegertracing.io/). 
+<br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+![width=800, shadow](assets/images/slides/flame.png)
+Drill down 3a: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/) [Flamegraph](http://www.brendangregg.com/flamegraphs.html) 
+<br/><br/><br/>
+@snapend
+
+@snap[south span-95 text-04 padded bg-go fragment]
+![width=600, shadow](assets/images/slides/profile1.png)
+Drill down 3b: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/)
+@snapend
+
+Note:
+
+At the end for we could see in our example: We spend lots of cycles on TextMarshaller and this is where we should focus.
 
 ---
 @snap[north span-95 text-05 text-left padded]
