@@ -380,6 +380,73 @@ or slowing it down.
 Linux kernel has to kill such offending process as nothing else can be really done (with some caveats e.g swap or trashing). It terminates that proces which
 is popularly known as OOM or out of memory exception.
 
+This is quite important differentiations and will help you to tell what kind of bottleneck you should solve first while optimizing Go program.
+
+Ok, let's say we found issue with our Go program, what's next?
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### How to approach performance optimizations?
+@snapend
+
+@snap[south-west span-95 padded]
+![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
+@snapend
+
+@snap[north span-100 text-8 text-bold padded]
+<br/>
+@box[rounded](Step 2: Find the right balance, a _tradeoff_.<br/> What's more important?)
+@snapend
+
+@snap[west span-45 text-06 padded]
+@box[rounded bg-gold box-padded](CPU)
+@snapend
+
+@snap[midpoint span-45 text-10 padded]
+<br/><br/><br/><br/><br/>
+🤔
+?
+@snapend
+
+@snap[east span-45 text-06 padded]
+@box[rounded bg-purple box-padded](Memory)
+@snapend
+
+@snap[west span-45 text-06 padded]
+<br/><br/><br/><br/><br/><br/>
+@box[rounded bg-green box-padded](Disk)
+@snapend
+
+@snap[east span-45 text-06 padded]
+<br/><br/><br/><br/><br/><br/>
+@box[rounded bg-blue box-padded](Network)
+@snapend
+
+@snap[south-west span-45 text-06 padded]
+@box[rounded bg-gray box-padded](Functionality)
+<br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south-east span-45 text-06 padded]
+@box[rounded bg-pink box-padded](Readability)
+<br/><br/><br/><br/><br/>
+@snapend
+
+Note:
+
+Next is Step 2 - to decide where you want to be? Often when optimizing you have to sacrifice one resource to solve saturation of others.
+
+Generally all optimizations, both micro and big system level optimimzations really jumps from one resource to another depending on the bottleneck.
+
+For example you want to have your program to be faster knowing the saturation of the CPU time is your bottleneck? For example
+searching through documents in the storage, you can lean more on disk and memory and precompute index and caches, so search operation will
+need much less CPU cycles, thus it can be potentially much much faster.
+
+On the other hand, if your program crashes with because of not enoguh memory, you might want to optimize your program to use more CPU instead, 
+by implementing some kind of streaming and increase your programs concurrency. 
+
+What's important is that RARELY you can optimize code without sacrificing sc else especially in backend application. This is called a tradeoff. 
+
 ---
 @snap[north span-95 text-05 text-left padded]
 ##### Data Driven Decisions: Measuring performance.
