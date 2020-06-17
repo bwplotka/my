@@ -693,14 +693,97 @@ High level flow would look like this [C]
 
 ---
 @snap[north span-95 text-05 text-left padded]
-##### Optimization tricks & pitfalls @emoji[bomb]
+##### Few optimization tricks & pitfalls @emoji[bomb]
 @snapend
 
+@snap[south-east span-100 text-06 text-gray]
+This is leaking memory in net/http package.                        
+@snapend
 
-Note:
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=12-21)
 
+@[6]
 
 ---
+@snap[north span-95 text-05 text-left padded]
+##### Few optimization tricks & pitfalls @emoji[bomb]
+@snapend
+
+@snap[south-east span-100 text-06 text-gray]
+Ensure you close and exhaust the body. This actually can read from network directly!                       
+@snapend
+
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=24-36)
+
+@[5-8]
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### Few optimization tricks & pitfalls @emoji[bomb]
+@snapend
+
+@snap[south-east span-100 text-06 text-gray]
+Feel free to use Thanos [github.com/thanos-io/thanos/pkg/runutil](https://pkg.go.dev/github.com/thanos-io/thanos@v0.11.0/pkg/runutil?tab=doc) package                    
+@snapend
+
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=39-48)
+
+@[5]
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### Few optimization tricks & pitfalls @emoji[bomb]
+@snapend
+
+@snap[south-east span-100 text-06 text-gray]
+This code can allocate a lot and use more CPU than needed for growing array.
+@snapend
+
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/alloc.go?lines=3-11)
+
+@[5-6]
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### Few optimization tricks & pitfalls @emoji[bomb]
+@snapend
+
+@snap[south-east span-100 text-06 text-gray]
+It's a good pattern to pre-allocate Go arrays! You can do that using `make()`
+@snapend
+
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/alloc.go?lines=13-23)
+
+@[2-3]
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### Few optimization tricks & pitfalls @emoji[bomb]
+@snapend
+
+@snap[south-east span-100 text-06 text-gray]
+We are hitting problem with lazy GC.
+@snapend
+
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/reuse.go?lines=4-16)
+
+@[11]
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### Few optimization tricks & pitfalls @emoji[bomb]
+@snapend
+
+@snap[south-east span-100 text-06 text-gray]
+Reusing the same slice to avoid allocation is nice here.
+@snapend
+
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/reuse.go?lines=19-30)
+
+@[10]
+
+---
+
 @snap[north span-95 text-05 text-left padded]
 ##### Summary
 @snapend
@@ -745,7 +828,7 @@ So let's sum up what we learned today:
 1. Don't overwork. Focus on critical paths and your biggest bottlenecks, we don't need to save all the tiny CPU 
 cycles and allocation in our programs.
 1. Choose your tradeoff, You want faster execution, probably you would need more memory space.
-1. Base code decision on data! Either microbenchmarks on e2e load tests are must have.
+1. Base code decision on data! Either micro-benchmarks on e2e load tests are must have.
 1. Thanos style guide!
 
 Anyway we do all of this to see at the end your day this:
