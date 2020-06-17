@@ -15,9 +15,6 @@ func x() {
 	}
 
 	scanner := bufio.NewScanner(resp.Body)
-	// If any error happens and we return in the middle of scanning
-	// body, we can end up with unread buffer, which
-	// will use memory and hold TCP connection!
 	for scanner.Scan() {
 		// read...
 	}

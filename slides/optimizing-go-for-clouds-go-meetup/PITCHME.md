@@ -824,9 +824,9 @@ That was theory! Now for last 5 minutes, let's jump into a few optimization tric
 This is leaking memory in net/http package.                        
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=12-26)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=12-23)
 
-@[6,10-11,13-14]
+@[6,7-8,10-11]
 
 Note:
 
@@ -839,9 +839,11 @@ Can you tell what's wrong?
 
 [C] Yes, so the are two problems here
 
-First is that we never close which means you never close the HTTP connection and keep some go routines in net/http runnnig
-Second is that if either during scan or during error case we return, the body might be not fully read. 
-And this is a problem because Body has io.Reader which can be fetching bytes directly from network, so if you never read
+First is that we never close response body, which means you don't release the HTTP connection, so it cannot be used in later step
+and will keep some go routines in net/http.
+
+Second is that if either during scan or during error case we just  return, the body might be not fully read. 
+And this is a problem because Body is   io.Reader which can be fetching bytes directly from network, so if you never read
 or exhauset the reader, they might never released.
 
 This is pretty common problem, it's not obvious and super easy to forget.
@@ -857,7 +859,7 @@ And you can avoid this problem with following changes:
 Ensure you close and exhaust the body. This actually can read from network directly!                       
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=28-45)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=25-42)
 
 @[5-8]
 
@@ -875,7 +877,7 @@ And if this code is not clean or pretty for you, which is fair, you can check th
 Feel free to use Thanos [github.com/thanos-io/thanos/pkg/runutil](https://pkg.go.dev/github.com/thanos-io/thanos@v0.11.0/pkg/runutil?tab=doc) package                    
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=47-61)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=44-58)
 
 @[5]
 
@@ -901,7 +903,7 @@ Note:
 Second tip is related to creating slices and maps, so overall arrays.
 This code might be very slow and allocate more than you want.
 
-Anyone can tell what's wrong?
+Anyone can you tell what's wrong?
 
 [C] Ok the problem is in this part. We append one by one. This is not the best, as Go wants to grow 
 underlying arrays for you in small steps. So usually it means, it will allocate two items, then you append one more,
@@ -925,13 +927,13 @@ It's a good pattern to pre-allocate Go arrays! You can do that using `make()`
 
 @code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/alloc.go?lines=13-23)
 
-@[2-3]
+@[2-3,6,8]
 
 Note:
 
-Be nice to Go runtime, and tell ahead how many items you will add to both slice and map
-
-...especially if you can how much it should
+Be nice to Go runtime, and tell ahead the runtime how many items you will add to both slice and map, especially if 
+have this information because we are literally copy the array. All thanks to make statement, which takes
+number of elements for length pre-grow.
  
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -939,12 +941,19 @@ Be nice to Go runtime, and tell ahead how many items you will add to both slice 
 @snapend
 
 @snap[south-east span-100 text-06 text-gray]
-We are hitting problem with lazy GC.
+We are hitting problem with lazy GC, and we allocate more than needed.
 @snapend
 
 @code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/reuse.go?lines=4-16)
 
-@[11]
+@[7-11]
+
+Note:
+
+Last optimization I want to show is this snippet, I kind of comment what's wrong. It essentially allocates more than
+needed.
+
+[C] so the problem is line 11, and this is because we allocate new string slice evey time we split message by max Lenghth.
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -957,7 +966,12 @@ Reusing the same slice to avoid allocation is nice here.
 
 @code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/reuse.go?lines=19-30)
 
-@[10]
+@[7-10]
+
+
+Note:
+Instead it might be better to just reset slice in this form, as this is cutting the slice and resets its length to zero, however
+still maintaing underlying array!
 
 ---
 
@@ -1001,16 +1015,20 @@ Reusing the same slice to avoid allocation is nice here.
 Note:
 
 So let's sum up what we learned today:
+
 1. There are many excused to ignore optimizing our Go code, but resist, but with healthy balance!
-1. Don't overwork. Focus on critical paths and your biggest bottlenecks, we don't need to save all the tiny CPU 
+1. Next, the 3 step process! Don't overwork. Focus on critical paths and your biggest bottlenecks, we don't need to save all the tiny CPU 
 cycles and allocation in our programs.
-1. Choose your tradeoff, You want faster execution, probably you would need more memory space.
-1. Base code decision on data! Either micro-benchmarks on e2e load tests are must have.
-1. Thanos style guide!
+1. Choose your tradeoff wisely, You want faster execution, probably you would need more memory space.
+1. Base your code decision on real data! Either micro-benchmarks on e2e load tests are must have.
+1. And after all feel free to try the optimization suggestions I gave, and you can find more in our Thanos GO style guide!
 
-Anyway we do all of this to see at the end your day this:
+Anyway, all this talk, and all this kind of complext work - we to see at the end of your day following things
+ 
+[C] the major bugs that single bigger optimiation solved for people, and seeing the happiness
+[C][C] on twitter thanks to optimizations 
 
-Tweet madness!
+It might be worth it!
 
 ---
 @snap[north span-100]
@@ -1047,4 +1065,5 @@ Tweet madness!
 * [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/)
 * [Dave's bench tutorial](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go)
 * [Thanos Go Style Guide!](https://thanos.io/contributing/coding-style-guide.md/#development-code-review)
+* [Amazing gitpitch framework for slide creation!](https://gitpitch.com/)
 @olend
