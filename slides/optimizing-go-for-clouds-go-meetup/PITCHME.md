@@ -898,7 +898,21 @@ This code can allocate a lot and use more CPU than needed for growing array.
 
 Note:
 
-Second item!
+Second tip is related to creating slices and maps, so overall arrays.
+This code might be very slow and allocate more than you want.
+
+Anyone can tell what's wrong?
+
+[C] Ok the problem is in this part. We append one by one. This is not the best, as Go wants to grow 
+underlying arrays for you in small steps. So usually it means, it will allocate two items, then you append one more,
+it allocates twice more and copy old array into new memory slot.
+Few more, it again allocates 8 and copy things over. If you put 9, it doubles again, and copies.
+
+You can see where it goes for millions of elements.
+
+And runtime does it step by step, because it does not want to overallocate!
+
+So what's the solution?
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -913,6 +927,12 @@ It's a good pattern to pre-allocate Go arrays! You can do that using `make()`
 
 @[2-3]
 
+Note:
+
+Be nice to Go runtime, and tell ahead how many items you will add to both slice and map
+
+...especially if you can how much it should
+ 
 ---
 @snap[north span-95 text-05 text-left padded]
 ##### Few optimization tricks & pitfalls @emoji[bomb]
