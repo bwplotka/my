@@ -48,8 +48,8 @@ expertise. But, to be honest you can take this knowledge and apply to any Go Pro
 ###### Agenda:
 
 @ol[list-fade-fragments list-spaced-bullets](true)
-1. Should you optimize your code for performance? _"Our design is scalable, machines big and code has to be readable, let's not worry about performance"_ @note[First of all, we will touch on the potential system misconception, so why performance for single application is still quite important nowadays and why you don't need to sacrifice readability!]
-1. How to approach performance optimizations in Go? @note[Then we will discuss how to efficiently approach performance this task, how to start with optimizing]
+1. Should you optimize your code for performance? _"Our design is scalable, machines big and code has to be readable, let's not worry about performance"_ @note[First of all, we will touch on the potential misconception, so essentially why performance for single application is still quite important nowadays and why you don't need to sacrifice readability!]
+1. How to approach performance optimizations in Go? @note[Then we will discuss how to efficiently approach performance, how to start with optimizing and when]
 1. Go optimization tricks & pitfalls @emoji[bomb] @note[Last but not the least I would love to share some tricks and usual patterns that helps improve things! But before that.. short introduction]
 @olend
 @snapend
@@ -59,7 +59,7 @@ expertise. But, to be honest you can take this knowledge and apply to any Go Pro
 @snapend
 
 Note:
-Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back to the Earth. We can divide our talk to 4 steps.
+Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back to the Earth. We can divide our talk to 3 steps.
 
 ---?include=slides/common/whoami-go/PITCHME.md
 
@@ -85,9 +85,14 @@ _An optimized program must have the same output and side effects as its non-opti
 
 Note:
 
-The basic requirements optimization methods should comply with, is that an optimized program must have the same output and
-side effects as its non-optimized version. This requirement, however, may be ignored in the case that the benefit from optimization,
-is estimated to be more important than probable consequences of a change in the program behavior.
+Let's start our optimization journey with definition!
+
+a code optimization is essentially a method of changing the code in a way to improve something. Maybe smaller binary size, maybe
+to make program faster or use less memory.
+
+There is actually on soft requirement: is that an optimized program must have the same output and
+side effects as its non-optimized version. This requirement, however, is soft. As it may be ignored,
+in the case that the benefit from optimization is estimated to be more important than keeping the same output!
 
 ---
 @snap[north span-95 text-06 text-left padded]
