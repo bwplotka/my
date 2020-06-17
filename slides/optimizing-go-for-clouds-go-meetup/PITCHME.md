@@ -157,7 +157,7 @@ So from YAGNI code practice, does performance matter?
 Note:
 
 I would say yes, while premature optimizations are evil there are some basic Go patterns you can stick to, in order to avoid basic performance pitfalls
-I will list some at then of this pres
+I hopefully can list some of the tricks near the finish of this presentation.
 
 ---
 @snap[north span-95 text-06 text-left padded]
@@ -184,16 +184,20 @@ _[Snippet from latest Thanos code for lookup of label names in memory-maped file
 
 Note:
 
-Let's focus on yet another potential misconception here. (...) And there is lots of truth here!
+Let's focus on yet another potential misconception here. (..readdbility) 
+And there is lots of truth here!
 
-[C] Let's consider this snippet of the code from Thanos project. Thanos is kind of horizontally scalable metric databases
-based on Prometheus and this code is for fetching certain data from file that is memory-mapped on Linux based systems.
+[C] Let's consider following snippet of the code from Thanos project. Thanos is kind of horizontally scalable metric database
+based on Prometheus and this code is for fetching certain data from file that is memory-mapped on Linux based systems. 
+So as you can imagine, very critical path of project.
 
-[C] We can definitely agree it's some sophisticated code which might be not clear immediately when you look on it. 
+[C] We can definitely agree that this sophisticated piece of code might be not clear immediately from start, when you look on it. 
 
-[C] Especially if you look on my favorite line here, function yoloString, would you accept this in your production code?
+Especially if you look on my favorite line here,[C]  function yoloString, It's actually pretty neat, it allows to convert through different types without
+extra allocation, reusing the same memory space. In this example, between bytes and strings. BUT would you accept this in your production code?
 
-It's overall a very fair point, we chose Go because it's simple, consistent and readable. That's why it is so efficient to write programs in Go.
+At then end it's overall a very fair point, to avoid extreme optimization to keep code readable. 
+After all we chose Go because it's simple, consistent and readable. That's why it is so efficient to write programs in Go.
 So.. does performance really matter if it reduces readability?
 
 ---
@@ -225,8 +229,7 @@ _[Snippet from latest Thanos code for lookup of label names in memory-maped file
 Note:
 
 I would again advocate yes - performance still matter as there are ways to have performant and still readable Go code. Especially if we 
-consider certain performance patterns, maybe even yoloString, a consistent pattern in our code, it's not longer surprising, thus it
-still might be considered readable.
+consider certain performance patterns, to be used consistently across the code, maybe even yoloString, so it's not longer surprising.
 
 ---
 @snap[north span-95 text-06 text-left padded]
@@ -251,8 +254,8 @@ still might be considered readable.
 
 Note:
 
-Some times we have cases that we just have computing power needed, so why we should focus on performance. And that's a solid
-statement as well. 
+Other excuse, we hear the comment that we just have all the computing power needed, so why we should focus on performance. And that's a solid
+statement in some cases. 
 
 [C] For example AWS has those epic, huge bare metal servers available for you, and there are companies happy 
 to pay for those.
@@ -286,10 +289,14 @@ to pay for those.
 
 Note:
 
-Well, in practice it's not that nice as it looks. Concurrent programming is hard, despite Go having pretty amazing framework for it
-like go routines and channels, you will hit process scalability limitation pretty quickly. Think about cases like resource starvation or 
-garbage collection latency on an enormous heap so shared memory across go routines. Not mentioning other aspects like memory or disk IO bandwidth. 
-At the end you have to optimize code in some way or scale out of the single process.
+Well, in practice it's not that nice as it looks. Concurrent programming is hard, despite Go having pretty amazing framework for it.
+
+With lots of go routines and channels, you will hit process scalability limitation at some point. Think about cases like resource starvation or 
+garbage collection latency on an enormous heap so shared memory across go routines. 
+
+Not mentioning other aspects like memory or disk IO bandwidth. 
+
+At the end you have to optimize the code in some way or scale out of the single process.
 
 ---
 @snap[north span-95 text-06 text-left padded]
@@ -318,14 +325,20 @@ At the end you have to optimize code in some way or scale out of the single proc
 
 Note:
 
-Which brings us to last reason why you would potentially ignore code optimizations. Our code have unlimited horizontal
-scalability, why would we care how much single process use?
+Which brings us to last misconception, why someone would potentially ignore doing optimizations. We often here that our
+code have unlimited horizontal scalability, why would we care how much single process uses?
 
 This is actually something I see a lot in the infrastructure culture.
 
-Nowadays you want to be a backend engineer on top typical programming and linux questions on interview, you have to show your skills in
-designing scalable systems. [C] You have to either design system like Twitter or Messenger or like Google Docs, you need to go through
-different phases, and explain how it will scale from 100 users to 10 thousands to millions.
+And nowadays if you want to be hired as a backend engineer, on the top typical programming and linux questions on interview, you have to show your skills in
+designing scalable systems 
+
+[C] You have to either design system like Twitter or Messenger or like Google Docs, you need to go through
+different phases, and explain how it will scale from 100 users to 10 thousands and then up to million.
+
+At the end the key concept that every cloud engineer has to know then is Scalability of the system. It's extremely exciting topic and it essentially
+means how to grow or shrink you backend or service capabilities with the request traffic. So when your application become too slow or require 
+more CPU, Memory than you have available ... what do you do?
 
 ---
 @snap[north span-95 text-06 text-left padded]
@@ -338,19 +351,17 @@ different phases, and explain how it will scale from 100 users to 10 thousands t
 @css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
 @snapend
 
-@snap[south-west span-95 text-08 padded fragment]
+@snap[south-west span-95 text-08 padded]
 ![width=400, shadow](assets/images/slides/scaleup.gif)
 Vertical Scalability
 @snapend
 
 Note:
 
-The key concept that every cloud engineer has to know then is Scalability of the system. It's extremely exciting topic and it essentially
-means how to grow or shrink you backend or service capabilities with the request traffic. So when your application become too slow or require 
-more CPU, Memory than you have available to serve your users... what do you do?
-
 [C] Basic way of doing this is through something called scale up/down procedure, in different words Vertical scalability. You 
 increase capabilities of your service by just giving it more resources, more CPU, RAM, better network, but usually it's just single process, single machine
+
+Now this become very boring recently, and for last 5y the new fashion emerged...
 
 ---
 @snap[north span-95 text-06 text-left padded]
@@ -375,9 +386,20 @@ Horizontal Scalability
 
 Note:
 
-Now this become very boring recently, and for last 5y the new fashion was to scale out / scale in method. Which means that you can grow your application
-by just replicating it horizontally on different machines. In this model someone can say that optimizing single process is not a priority, because
+Scale out / scale in method. Which means that you can grow your application
+by just replicating it horizontally on different machines. 
+
+And particularly in this model someone can say that optimizing single process is not a priority, because
 you can just add another server or virtual machine or container etc.
+
+The problem is that as you seen horizontal scalability became a buzz word, certain "fashion". And this problem, misconception
+is actually the true motivation for me for making this presentation. 
+
+Because scale-out fashion, is maybe more exciting for engineers? caused many people to really sometimes **prematurely** dive into distributing
+their application and using tools like Kubernetes or Mesos. 
+ 
+And that's despite the fact that they can quickly optimize a couple of critical paths, unnecessary allocation in their code and allow single-process Go application 
+to serve thousands of users without issues.    
 
 ---
 @snap[north span-95 text-06 text-left padded]
@@ -407,13 +429,8 @@ Horizontal Scalability
 
 Note:
 
-The problem is that as you seen horizontal scalability became a buzz word, certain "fashion". And this is actually the true motivation for me for making 
-this presentation. This scale out fashion, because maybe more exciting for engineers caused many people to really sometimes **prematurely** dive into distributing
-their application and using tools like Kubernetes or Mesos, even though they can quickly optimize a couple of critical paths and unnecessary allocation in their code and allow
-single-process Go application to serve thousands of users without issues.    
-
-So I want to reiterate, performance still matters. Horizontal scaling can be extremely expensive and difficult to implement properly. Not mentioning overhead and delay in scaling this way,
-especially if the Go code is not optimized.
+So I want to reiterate, performance still matters. Horizontal scaling can be extremely expensive and difficult to implement properly.
+Not mentioning overhead and delay in scaling this way, especially if the Go code is not optimized.
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -443,7 +460,9 @@ So, how to approach this topic?
 [C] First and foremost: Step number one! Detect the bottleneck, find the problem you want to solve.  
 
 [C] There is a good rule related to premature optimization as touched before: Don't do any peformance changes if they are not needed
-now or in near future. There are probably more important things you can spend your time on. 
+now or in near future actually
+
+There are probably more important things you can spend your time on. 
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -474,26 +493,60 @@ b) @emoji[fire] crashing the machine or process is just killed before succeeding
 e.g CPU time, Disk IO, Memory IO, Network IO 
 @snapend
 
-@snap[south-east span-45 text-05 padded fragment]
+Note:
+
+This sounds solid, but how to do that? Well, usually you don't find the problem, the problem finds you!!
+
+Generally things you can potentially solve by optimizing your Go code can be divided into two groups: 
+
+[C] [C] (...)
+
+What's the difference? Well both symptoms are actually because of the same reason: host that process is running on does not have enough resources to
+perform the operation. The difference between these two is actually in the characteristics of the underlying resource that is saturated (not enough of it).
+
+[C] First one is compressible resources like.. Those the resources you can throttle temporarily without stopping the program. This usually means freezing execution
+or slowing it down.
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### How to approach performance optimizations?
+@snapend
+
+@snap[south-west span-95 padded]
+![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
+@snapend
+
+@snap[north span-90 text-8 text-bold padded]
+<br/>
+@box[rounded](Problem: API / RPC / Command / Action execution is...)
+@snapend
+
+@snap[west span-45 text-06 padded]
+a) @emoji[watch] very slow or time-outs.
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[east span-45 text-06 text-center padded]
+b) @emoji[fire] crashing the machine or process is just killed before succeeding.
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south-west span-45 text-05 padded opacity-50]
+![width=400, shadow](assets/images/slides/compressible.gif)
+e.g CPU time, Disk IO, Memory IO, Network IO 
+@snapend
+
+@snap[south-east span-45 text-05 padded]
 ![width=400, shadow](assets/images/slides/incompressible.gif)
 e.g Storage: Memory, Disk, or DB Space, Power
 @snapend
 
 Note:
 
-This sounds solid, but how to do that? Well, usually you don't find the problem, the problem finds you!!
-
-Generally problems you can potentially solve by optimizing your Go code can be divided into two groups: [C] [C]
-
-What's the difference? Well both sympthoms are actually because of the same reason: host that process is running on does not have enough resources to
-perform the operation. The difference between these two is actually in the characteristics of the underlying resource that is saturated (not enough of it).
-
-[C] First one is compressible resources like.. Those the resources you can throttle temporarily without stopping the program. This usually means freezing execution
-or slowing it down.
-
 [C] Second are incompressible resources Those you cannot throttle without causing a failure. For example if process requires more memory and there is none, 
-Linux kernel has to kill such offending process as nothing else can be really done (with some caveats e.g swap or trashing). It terminates that proces which
-is popularly known as OOM or out of memory exception.
+Linux kernel has to kill such offending process as nothing better can be really done. 
+
+It terminates that process which is popularly known as OOM or out of memory exception.
 
 This is quite important differentiations and will help you to tell what kind of bottleneck you should solve first while optimizing Go program.
 
@@ -548,7 +601,27 @@ Drill down 3b: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-g
 
 Note:
 
-At the end for we could see in our example: We spend lots of cycles on TextMarshaller and this is where we should focus.
+Ok, so we know what is our problem, but how to tell what's exactly piece of code causes the problem, was is the root cause from given 
+symptom!
+
+And quick clue: All that's help doing it is fitting the term "OBSERVABILITY"
+
+[C] And let's focus on slow execution problem first.
+
+[C] Usually journey of backend engineer starts with an alert! This is usually a first symptom that you can - a notification that some
+process is slower than usual.
+
+[C] Then we can navigate to Grafana and drill down to certain component using metric signal
+
+[C] When we know roughly the component we can usually using Tracing thanks to Jaeger - to detect some slow request, and check 
+exactly what were the timing of each phases,
+
+[C] And at then we hopefully can get some profiles of the program running itself, to check what exactly line of code is taking so much
+CPU cycles. I am not going to dive super deeply into profiling on my presentation there are links to good blog post about it, in this flamegraphs!
+ 
+And at the end for we could see in our example thanks to different CPU profile view: Graph! 
+
+...We spend lots of cycles on TextMarshaller and this is where we should focus our optimization on...
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -564,7 +637,7 @@ At the end for we could see in our example: We spend lots of cycles on TextMarsh
 @box[rounded](Bottleneck: What part of the code causes undesired resource consumption?)
 @snapend
 
-@snap[west span-90 text-06 padded fragment]
+@snap[west span-90 text-06 padded]
 b) @emoji[fire] Execution is crashing the machine or process is just killed before succeeding.
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 @snapend
@@ -599,7 +672,23 @@ Drill down 2: Continous profiling! via [ConProf](https://github.com/conprof/conp
 
 Note:
 
+However for potentially crashing service, so saturation of incompressible resources, it's not that easy! 
 
+[C] Our symptom is now different: For example in case of Kubernetes, we would see CRASH LOOP
+
+[C] If we try to see Grafana, and memory usage, we can see it immidiately after crash, gets up and tries to use too much, gets OOM.
+
+[C] Now if we would follow previous example, we could try tracing. But this is not that easy, as this not latency issue, and potentially
+not a single request, or go routine causing this. Rather all things together. 
+
+[C] so maybe we can try profiling? Nope. Well process is constantly crashing, immediately after start, so it's somehow really hard to get profiles in right moment.
+
+As you can see it's not easy... but there are some ways, something you can try is..
+ 
+[C] Continous profiling! So here we are using ConProf which is open source, maintained by us as well, and I am not going to details again but TL;DR is allows to catch
+profiles every 15 seconds, so you can see the profiles retroactively, allowing us to figure out the code lines, or libraries that causing huge or many allocations.
+
+So overall, as you can see, even detecting, and drilling down to actually root cause can take time and effort. 
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -651,20 +740,24 @@ Note:
 
 Note:
 
-Next is Step 2 - to decide where you want to be? Often when optimizing you have to sacrifice one resource to solve saturation of others.
+So once we figured out problem, next is Step number two: To decide where you want to be?
+ 
+Often when optimizing you have to sacrifice one resource to solve saturation of others.
 
-Generally all optimizations, both micro and big system level optimimations really jumps from one resource to another depending on the bottleneck.
+Generally all optimizations, both micro and big system level optimizations really jumps from one resource to another depending on the bottleneck.
 
-For example you want to have your program to be faster knowing the saturation of the CPU time is your bottleneck? For example
-searching through documents in the storage, you can lean more on disk and memory and precompute index and caches, so search operation will
+For example you want to have your program to be faster knowing the saturation of the CPU time is your bottleneck?
+ 
+1. For example searching through documents in the storage, you can lean more on disk and memory and precompute index and caches. This way search operation will
 need much less CPU cycles, thus it can be potentially much much faster.
 
-On the other hand, if your program crashes with because of not enoguh memory, you might want to optimize your program to use more CPU instead, 
+2. On the other hand, if your program crashes because of not enoguh memory, you might want to optimize your program to use more CPU instead, 
 by implementing some kind of streaming and increase your programs concurrency. 
 
-Last but not the least you maybe want to limit some functionality or change it, to improve readability and disk usage.
+3. Last but not the least you maybe want to limit some functionality or change it, to improve readability and disk usage.
 
-What's important is that RARELY you can optimize code without sacrificing something else. This is called a tradeoff. 
+So. It's very important that RARELY you can optimize code without sacrificing something else. This is called a tradeoff. 
+The key is to choose based on your priority.
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -691,13 +784,36 @@ What's important is that RARELY you can optimize code without sacrificing someth
 
 Note:
 
-With the problem defined, exact bottleneck found and the direction of optimization we can focus on the last step, number 3.
-Finally optimizations! To peform optimizations efficiently we need to learn how to measure the results of our work.
+So finally! Out  problem is defined, exact bottleneck found the we agreed on direction of our optimization. N
 
-Don't trust your feeling, always make sure you measure the result. This is very tedious but every programming language especially Go 
-holds thousands of compiler optimizations that might impact things, so you might be surprised many times.
+Now we can start actually coding! But just before that, to perform optimizations effectively we need to learn how to measure the results of our work first.
+High level flow would look like this [C] 
 
-High level flow would look like this [C]
+First you have to inital benchmark. Something that we will take as a baseline for future comparision.
+
+And there are two good ways of doing it:
+[C] Microbenchmarks, usually done by `go test` really, there are good blog post about those and amazing tools.
+[C] Then we can also try to deploy and just measure using maybe metrics. And there automation for Go as well!
+
+So what happens is very iterative model. You benchmark first, then if you are happy, try to deploy and check. 
+On the first run, you have initial results, so then you can start optimizing. Then you have to measure it in some way,
+either by microbenchmarks or full load test. In any step, if you are not satisfied, you do it again and again.
+
+Only when you are totally happy, you can release it!
+
+This is very very important. Essentially. Don't trust your instincts here. Always make sure you measure the result.
+This is very tedious sometimes, but every programming language especially Go holds thousands of compiler optimizations, and operating
+systems, kernels are having even more and they are changing constantly. So make sure you avoid suprisies and improve code step by step 
+with checks and this is called Data Driven Decision Methodology.
+
+---
+@snap[north span-95 text-05 text-left padded]
+##### Few optimization tricks & pitfalls @emoji[bomb]
+@snapend
+
+Note:
+
+That was theory! Now for last 5 minutes, let's jump into a few optimization tricks you can apply generally.
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -708,9 +824,29 @@ High level flow would look like this [C]
 This is leaking memory in net/http package.                        
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=12-21)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=12-26)
 
-@[6]
+@[6,10-11,13-14]
+
+Note:
+
+First one is related to the standard net/http package. Sometimes when you read a response from some HTTP call it goes like this.
+AND. This is wrong, by wrong I mean it can literally leak lots of memory and not only.
+ 
+Can you tell what's wrong?
+ 
+[Let's make it interactive! Please state on YT comments what's wrong here (:)]
+
+[C] Yes, so the are two problems here
+
+First is that we never close which means you never close the HTTP connection and keep some go routines in net/http runnnig
+Second is that if either during scan or during error case we return, the body might be not fully read. 
+And this is a problem because Body has io.Reader which can be fetching bytes directly from network, so if you never read
+or exhauset the reader, they might never released.
+
+This is pretty common problem, it's not obvious and super easy to forget.
+ 
+And you can avoid this problem with following changes:
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -721,9 +857,14 @@ This is leaking memory in net/http package.
 Ensure you close and exhaust the body. This actually can read from network directly!                       
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=24-36)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=28-45)
 
 @[5-8]
+
+Note:
+
+Just ensure you defer reading full body and closing it.
+And if this code is not clean or pretty for you, which is fair, you can check the helper we created for this.
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -734,9 +875,13 @@ Ensure you close and exhaust the body. This actually can read from network direc
 Feel free to use Thanos [github.com/thanos-io/thanos/pkg/runutil](https://pkg.go.dev/github.com/thanos-io/thanos@v0.11.0/pkg/runutil?tab=doc) package                    
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=39-48)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=47-61)
 
 @[5]
+
+Note: 
+
+From runutil package, called very lengthy ... it exactly does the same, plus it properly return error from this operation as well 
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -750,6 +895,10 @@ This code can allocate a lot and use more CPU than needed for growing array.
 @code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/alloc.go?lines=3-11)
 
 @[5-6]
+
+Note:
+
+Second item!
 
 ---
 @snap[north span-95 text-05 text-left padded]

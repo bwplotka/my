@@ -19,6 +19,10 @@ func x() {
 	// body, we can end up with unread buffer, which
 	// will use memory and hold TCP connection!
 	for scanner.Scan() {
+		// read...
+	}
+	if scanner.Err() != nil {
+		// handle...
 	}
 
 	resp, err := http.Get("http://example.com/")
@@ -34,6 +38,10 @@ func x() {
 	// If any error happens and we return in the middle of scanning body,
 	// defer will handle all well.
 	for scanner.Scan() {
+		// read...
+	}
+	if scanner.Err() != nil {
+		// handle...
 	}
 
 	resp, err := http.Get("http://example.com/")
@@ -46,6 +54,10 @@ func x() {
 	// If any error happens and we return in the middle of scanning body,
 	// defer will handle all well.
 	for scanner.Scan() {
+		// read...
+	}
+	if scanner.Err() != nil {
+		// handle...
 	}
 
 }
