@@ -263,7 +263,6 @@ different phases, and explain how it will scale from 100 users to 10 thousands t
 @css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
 @snapend
 
-
 @snap[south-west span-95 text-08 padded fragment]
 ![width=400, shadow](assets/images/slides/scaleup.gif)
 Vertical Scalability
@@ -306,17 +305,16 @@ especially if the Go code is not optimized.
 @snapend
 
 @snap[south-west span-95 padded]
-![width=200](assets/images/slides/SPACEGIRL_GOPHER.png)
+![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
 @snapend
 
-@snap[midpoint span-90 text-10 text-bold padded fragment]
+@snap[north span-90 text-8 text-bold padded fragment]
+<br/>
 @box[rounded](Step 1: Define the problem, find the bottleneck)
-<br/><br/><br/><br/>
 @snapend
 
-@snap[south span-60 text-06 padded fragment]
+@snap[midpoint span-90 text-08 padded fragment]
 @quote[<br/>1. First rule of Optimization: Don't do it.<br/>2. Second rule of Optimization: Don't do it... yet.<br/>3. Profile before Optimizing](http://wiki.c2.com/?RulesOfOptimization)
-<br/><br/><br/><br/>
 @snapend
 
 
@@ -338,19 +336,32 @@ now or in near future. There are probably more important things you can spend yo
 @snapend
 
 @snap[south-west span-95 padded]
-![width=200](assets/images/slides/SPACEGIRL_GOPHER.png)
+![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
 @snapend
 
-@snap[north span-90 text-08 padded]
+@snap[north span-90 text-8 text-bold padded]
 <br/>
-@box[rounded](Step 1: Define the problem, find the bottleneck)
+@box[rounded](Problem: API / RPC / Command / Action execution is...)
 @snapend
 
-@snap[midpoint span-90 text-08 padded]
-@ol[list-spaced-bullets](true)
-1. API / RPC / Command / Action execution is slow or time-outs.
-1. API / RPC / Command / Action execution is crashing (DOS) the machine or process is being killed and fails
-@olend
+@snap[west span-45 text-06 padded fragment]
+a) @emoji[watch] very slow or time-outs.
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[east span-45 text-06 text-center padded fragment]
+b) @emoji[fire] crashing the machine or process is just killed before succeeding.
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+@snapend
+
+@snap[south-west span-45 text-05 padded fragment]
+![width=400, shadow](assets/images/slides/compressible.gif)
+e.g CPU time, Disk IO, Memory IO, Network IO 
+@snapend
+
+@snap[south-east span-45 text-05 padded fragment]
+![width=400, shadow](assets/images/slides/incompressible.gif)
+e.g Storage: Memory, Disk, or DB Space, Power
 @snapend
 
 Note:
@@ -359,7 +370,15 @@ This sounds solid, but how to do that? Well, usually you don't find the problem,
 
 Generally problems you can potentially solve by optimizing your Go code can be divided into two groups: [C] [C]
 
-What's the difference? Well 
+What's the difference? Well both sympthoms are actually because of the same reason: host that process is running on does not have enough resources to
+perform the operation. The difference between these two is actually in the characteristics of the underlying resource that is saturated (not enough of it).
+
+[C] First one is compressible resources like.. Those the resources you can throttle temporarily without stopping the program. This usually means freezing execution
+or slowing it down.
+
+[C] Second are incompressible resources Those you cannot throttle without causing a failure. For example if process requires more memory and there is none, 
+Linux kernel has to kill such offending process as nothing else can be really done (with some caveats e.g swap or trashing). It terminates that proces which
+is popularly known as OOM or out of memory exception.
 
 ---
 @snap[north span-95 text-05 text-left padded]
