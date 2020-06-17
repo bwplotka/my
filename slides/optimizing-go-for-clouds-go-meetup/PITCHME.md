@@ -839,12 +839,12 @@ Can you tell what's wrong?
 
 [C] Yes, so the are two problems here
 
-First is that we never close response body, which means you don't release the HTTP connection, so it cannot be used in later step
-and will keep some go routines in net/http.
+First is that we never close response body, which means you don't release the HTTP connection, so it cannot be reused in for other incomingh connection,
+the server has to create new TCP connection which is slow and takes extra resources. 
 
-Second is that if either during scan or during error case we just  return, the body might be not fully read. 
-And this is a problem because Body is   io.Reader which can be fetching bytes directly from network, so if you never read
-or exhauset the reader, they might never released.
+Second problem is that if either during scan or during error case we just return, the body might be not fully read. 
+And this is a problem because Body is actually an io.Reader which can be fetching bytes directly from network, so if you never read
+or exhauset the reader, you never read those bytes - this memory might be never released.
 
 This is pretty common problem, it's not obvious and super easy to forget.
  
@@ -865,7 +865,9 @@ Ensure you close and exhaust the body. This actually can read from network direc
 
 Note:
 
-Just ensure you defer reading full body and closing it.
+[C]!
+
+Just make sure that you defer reading full body and closing it.
 And if this code is not clean or pretty for you, which is fair, you can check the helper we created for this.
 
 ---
@@ -883,7 +885,10 @@ Feel free to use Thanos [github.com/thanos-io/thanos/pkg/runutil](https://pkg.go
 
 Note: 
 
-From runutil package, called very lengthy ... it exactly does the same, plus it properly return error from this operation as well 
+[C]!
+
+inside Thanos runutil package. The name is quite lengthy ... but it does what needed and
+properly return error if this operation fails which is nice! 
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -900,8 +905,8 @@ This code can allocate a lot and use more CPU than needed for growing array.
 
 Note:
 
-Second tip is related to creating slices and maps, so overall arrays.
-This code might be very slow and allocate more than you want.
+Second potential pitfall is related to creating slices and maps, so overall Go arrays.
+We want to copy a slice into another slice and map. And this code might be very slow and allocate more than you want.
 
 Anyone can you tell what's wrong?
 
@@ -931,9 +936,12 @@ It's a good pattern to pre-allocate Go arrays! You can do that using `make()`
 
 Note:
 
-Be nice to Go runtime, and tell ahead the runtime how many items you will add to both slice and map, especially if 
-have this information because we are literally copy the array. All thanks to make statement, which takes
-number of elements for length pre-grow.
+[C]!
+
+...Be nice to the Go runtime, and tell ahead the runtime how many items you will add to both slice and map, especially if 
+have this information because we are literally copy the array. 
+
+All thanks to make statement, which takes number of elements for length pre-grow.
  
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -950,10 +958,12 @@ We are hitting problem with lazy GC, and we allocate more than needed.
 
 Note:
 
-Last optimization I want to show is this snippet, I kind of comment what's wrong. It essentially allocates more than
-needed.
+Last optimization I want to show is this snippet, I kind of commented what's wrong, so no point in guessing.
+It essentially allocates more than needed.
 
-[C] so the problem is line 11, and this is because we allocate new string slice evey time we split message by max Lenghth.
+[C] so the problem is that we allocate new string slice evey time we split message by max lenghth. In theory old allocated slice should
+be released from memory by garbage collection, but this collection happens periodically so it will lag behind and leaving lot's 
+of extra memory used.
 
 ---
 @snap[north span-95 text-05 text-left padded]
@@ -970,7 +980,10 @@ Reusing the same slice to avoid allocation is nice here.
 
 
 Note:
-Instead it might be better to just reset slice in this form, as this is cutting the slice and resets its length to zero, however
+
+[C]!
+
+What's the solution? instead it might be better to just reset slice in this form This is cutting the slice and resets its length to zero, however
 still maintaing underlying array!
 
 ---
