@@ -1,7 +1,7 @@
 ---
 authors:
 - name: "Bartek Płotka"
-date: 2020-06-04
+date: 2020-06-28
 linktitle: Need to Version Go Tools for Your Project? That's a Bingo! 
 type:
 - post 
@@ -265,8 +265,7 @@ Now, while those are actually very nice steps in a good direction, but still the
 * **You still have quite a major burden of fighting with dependency hell. When upgrading single tool you need to fight will all cross dependency
 incompatibilities**
 * Still, there are some manual steps here. Especially around adding/removing or upgrading tools with `tools.go` pattern.
-While `gobin` helps a little bit, you still need to install `gobin` somehow to use those tools, so there is a chicken & egg problem here.
-  * Looks like `gobin` is also meant an experiment only.
+While `gobin` helps a little, you still need to install `gobin` somehow to use those tools, so there is a chicken & egg problem here.
 * You have to "remember" full package installation path whenever you want to use the tool.
 * You still do not guarantee that ran binary has a certain version.
 
@@ -278,6 +277,7 @@ And that's a pretty popular use case, consider following real scenarios:
 1. [Prometheus](https://github.com/prometheus/prometheus) has a single module for multiple packages. For example, it has multiple, useful `main` packages:
   * `cmd/prometheus`
   * `cmd/promtool` 
+
 It's plausible that project may require `prometheus` for end-to-end tests as well as `promtool` for other reasons. The problem is, that with the `tools.go` solution, I can only install those tools from the same commit. This is bad because if for some reason I cannot upgrade `promtool` I am blocked with `prometheus` upgrade as well.
   
 2. To extend the above example, inside [Thanos](https://github.com/thanos-io/thanos) we heavily care about quality and tests. Since 
@@ -328,8 +328,8 @@ bingo get <tool>
 Overall, `bingo` allows to easily maintain a separate, nested Go Module for each binary. By default, it will keep it `.bingo/<tool>.mod`
 This allows to correctly pin the binary without polluting the main go module or other's tool module.
 
-Also, make sure to check out the generated `.bingo/Variables.mk` if your project uses `Makefile`. It has useful helper variables 💖that makes it super easy to install pinned
-binaries without even installing `bingo` (it will use just `go build`!). For `shell` users, you can invoke `source .bingo/variables.env` to source those variables. 
+Also, make sure to check out the generated `.bingo/Variables.mk` if your project uses `Makefile`. It has useful variables 💖to include which makes installing pinned
+binaries super easy, without even installing `bingo` (it will use just `go build`!). For `shell` users, you can invoke `source .bingo/variables.env` to source those variables. 
 
 See an extensive and up-to-date description of the `bingo` usage [here](https://github.com/bwplotka/bingo#usage).
 
@@ -399,4 +399,7 @@ This being said, any feedback and contributions are welcome! Just use GitHub Iss
 You can already look through [open GitHub Issues](https://github.com/bwplotka/bingo/issues) and check those with `help wanted` label.
 
 Ideally, it would be nice for such tooling to be part of Go. Hopefully projects like `bingo`
-and `gobin` will help a little to make that happen. Until that, enjoy `bingo` and feel free to help us maintaining this project! (:
+and `gobin` will help (a little) to make that happen. In fact, I know Paul from [Go London Meetup he co-organize](https://www.meetup.com/LondonGophers) and
+we already started discussion about [joining forces](https://github.com/myitcv/gobin/issues/96) 🤗. 
+
+However, until Go has a full answer to this problem, enjoy `bingo` and feel free to help us maintain this project! (:
