@@ -399,7 +399,7 @@ This being said, any feedback and contributions are welcome! Just use GitHub Iss
 You can already look through [open GitHub Issues](https://github.com/bwplotka/bingo/issues) and check those with `help wanted` label.
 
 Ideally, it would be nice for such tooling to be part of Go. Hopefully projects like `bingo`
-and `gobin` will help (a little) to make that happen. In fact, I know Paul from [Go London Meetup he co-organize](https://www.meetup.com/LondonGophers) and
-we already started discussion about [joining forces](https://github.com/myitcv/gobin/issues/96) 🤗. 
+and `gobin` will help (a little) to make that happen. In fact, I know Paul from [Go London Meetup he co-organizes](https://www.meetup.com/LondonGophers) and
+we already started discussion about [joining forces](https://github.com/myitcv/gobin/issues/96)  so we may time to try more time-saving improvements!🤗 
 
 However, until Go has a full answer to this problem, enjoy `bingo` and feel free to help us maintain this project! (:
