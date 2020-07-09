@@ -205,7 +205,7 @@ Plus, instead of making it easier for such use cases, Go blames others. ):
 This is also why `bingo` was needed and why I built it.
 
 * We build and import packages, but version modules. If you add an overhead of maintaining modules and releasing it (see the above issue),
-it's clear that maintaining multiple modules is not a good answer. That's why [Duco's](Helcaraxan) amazing [`modularise`](https://github.com/modularise/modularise)
+it's clear that maintaining multiple modules is not a good answer. That's why [Duco's](https://github.com/Helcaraxan) amazing [`modularise`](https://github.com/modularise/modularise)
 the project was born. It would be better if we have good out of box solution instead.
 
 * Managing Major versions are painful. Rewriting path for everything to include this `v2` is very nasty and tedious, but the only
