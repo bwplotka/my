@@ -3,6 +3,15 @@
 @import "_variables/default.scss";
 
 .post-warp {
+    p,
+    li {
+        font-size: 1.1em;
+    }
+
+    ul {
+        font-size: 1em;
+    }
+
     .post-content {
         ::-webkit-scrollbar {
             background: #fff;
