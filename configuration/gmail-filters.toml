@@ -56,13 +56,10 @@ from:(builds@circleci.com)
 Archive = true
 label = "Dev/CIs"
 
+# ): Too spammy.
 [[filter]]
 query = """
-(list:(cluster-monitoring-operator.openshift.github.com) OR \
-list:(console.openshift.github.com) OR \
-list:(kubernetes-metrics-server.openshift.github.com) OR \
-list:(openshift-state-metrics.openshift.github.com)) \
--to:team_mention@noreply.github.com \
+list:(openshift.github.com) \
 -to:mention@noreply.github.com \
 -to:author@noreply.github.com \
 -to:assign@noreply.github.com
