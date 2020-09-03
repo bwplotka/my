@@ -1,7 +1,7 @@
 ---
 authors:
 - name: "Bartek Płotka"
-date: 2020-09-02
+date: 2020-09-03
 linktitle: Thanos Announces Weekly Mentoring Office Hours
 type:
 - post 
@@ -19,7 +19,7 @@ duties: `75%` the [Thanos](https://thanos.io) Team ([Giedrius](https://giedrius.
 [Chris](https://github.com/csmarchbanks) and me) were mentoring amazing people in their first steps in the Open Source! 🎉
 We taught mostly students but also already experienced developers, all new to the [CNCF](https://www.cncf.io/) space and projects. 
 
-We very are grateful that this year's edition was full of smart, diverse and incredibly curious candidates that applied for Thanos and Prometheus
+We are very grateful that this year's edition was full of smart, diverse and incredibly curious candidates that applied for Thanos and Prometheus
 mentoring through [Google Summer of Code (GSoC)](https://developers.google.com/open-source/gsoc) and [Community Bridge](https://communitybridge.org/) programs.
  
 A longer blog post about learnings and tips that might be useful for other projects which willing to participate in such mentoring/internships is in progress, so stay tuned!
@@ -28,7 +28,7 @@ However, today we present you the first actionable result of our learnings: **We
  
 ## Why?
 
-Long story, short, as part of the mentoring we scheduled a weekly meeting with each of our student for the duration of the program.
+_Long story short,_ as part of the mentoring we scheduled a weekly meeting with each of our student for the duration of the program.
 
 ![My casual week during this summer. Red boxes: mentoring 1:1s.](/images/blog/thanos-mentoring-office-hours/calendar-mentoring.png)
 
@@ -76,7 +76,7 @@ Looking forward to expanding more in the future, if you have any feedback, let u
 
 ## BTW Do we Plan Further Mentoring in Future Quarters?
 
-![First ever polish definition of the horse: "Horse is as it is, everyone can see it." (pl: "Koń jaki jest, każdy widzi"). In Poland we sometimes quote this as the synonym of something very obvious.](/images/blog/thanos-mentoring-office-hours/kon.jpg)
+![The answer is obvious! In Poland 🇵🇱 when we see something obvious we sometimes bring up this funny first ever written definition of the horse: "Koń jaki jest, każdy widzi" which literally means just "Horse is a horse, everyone can see what it is"](/images/blog/thanos-mentoring-office-hours/kon.jpg)
 
 Well, of Course! 
 
@@ -87,6 +87,5 @@ exciting open source topics! ([details](https://research.redhat.com/blog/2020/05
 
 ## Summary
 
-As mentioned before, this is just a quick announcement. Ask us in few weeks how it goes, but we, Thanos maintainers are
-definitely super exciting for offering Mentoring Office Hours. 🤩
- 
+As mentioned before, this is just a quick announcement. Ask us in a few weeks how it goes, but we, Thanos maintainers are
+definitely super excited for offering Mentoring Office Hours. 🤩
