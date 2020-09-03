@@ -3,13 +3,14 @@
     {{ with .Site.Params.avatar}}
     {{ $avatar := .}}
     <div class="avatar">
-        <a href="https://github.com/bwplotka"> <img src="{{ (printf "%s%s" $cdn_url $avatar)}}"> </a>
+        <a href="/about"> <img src="{{ (printf "%s%s" $cdn_url $avatar)}}"> </a>
     </div>
     {{ end }}
     {{ if .Site.Params.subtitle}}
     <h2 class="description">
         Bartłomiej Płotka (Bartek)
-        <p> Pr. Software Engineer / SRE | <a href="https://thanos.io">Thanos</a> Co-author | <a href="https://prometheus.io">Prometheus</a> Maintainer | Go & Open source enthusiast | <a href="posts/">Blogger</a> | Volleyball player.</p>
+        <p>| Principal Software Engineer / SRE / Team Lead | <a href="https://thanos.io">Thanos</a> co-author | <a href="https://prometheus.io">Prometheus</a> maintainer |</p>
+        <p>| CNCF <a href="https://github.com/cncf/sig-observability#tech-lead">SIG Observability Tech Lead</a> | Go & open source enthusiast | <a href="posts/">Blogger</a> | Volleyball player 🏐 |</p>
     </h2>
     {{ end }}
     <div class="social-links">
