@@ -14,21 +14,21 @@ featuredImage: "/images/blog/thanos-mentoring-office-hours/uche-overview.png"
 ---
 
 During Summer of 2020, on top of our full-time work, on-call rotations, open source project's work, preparing conference talks and ☕ we had extra
-duties: `75%` the [Thanos](https://thanos.io) Team ([Giedrius](https://giedrius.blog/), [Lucas](https://github.com/squat), [Kemal](https://kakkoyun.me/), 
+duties: `75%` of the [Thanos](https://thanos.io) Team ([Giedrius](https://giedrius.blog/), [Lucas](https://github.com/squat), [Kemal](https://kakkoyun.me/), 
 [Matthias](https://matthiasloibl.com/), [Povilas](https://povilasv.me/) and me) and a few members of [Prometheus](https://prometheus.io) Team ([Callum](https://github.com/cstyan),
-[Chris](https://github.com/csmarchbanks) and me) were mentoring amazing people in their first steps in the Open Source! 🎉
+[Chris](https://github.com/csmarchbanks) and me) were mentoring amazing people in their first steps into Open Source! 🎉
 We taught mostly students but also already experienced developers, all new to the [CNCF](https://www.cncf.io/) space and projects. 
 
 We are very grateful that this year's edition was full of smart, diverse and incredibly curious candidates that applied for Thanos and Prometheus
 mentoring through [Google Summer of Code (GSoC)](https://developers.google.com/open-source/gsoc) and [Community Bridge](https://communitybridge.org/) programs.
  
-A longer blog post about learnings and tips that might be useful for other projects which willing to participate in such mentoring/internships is in progress, so stay tuned!
+A longer blog post about learnings and tips that might be useful for other projects which are willing to participate in such mentoring/internships is in progress, so stay tuned!
  
 However, today we present you the first actionable result of our learnings: **Weekly Thanos Mentoring Office Hours**.
  
 ## Why?
 
-_Long story short,_ as part of the mentoring we scheduled a weekly meeting with each of our student for the duration of the program.
+_Long story short,_ as part of the mentoring, we scheduled a weekly meeting with each of our student for the duration of the program.
 
 ![My casual week during this summer. Red boxes: mentoring 1:1s.](/images/blog/thanos-mentoring-office-hours/calendar-mentoring.png)
 
@@ -38,7 +38,7 @@ Despite extra time spent on mentoring, I personally got used to those extra meet
 > Every meeting was fully utilized thanks to energetic and passionated students and we could see that mentees literally respect and fully use our time. 🤗
 
 In fact, it was so addictive and fun that when GSoC and Community Bridge programs finished, it was just super awkward to... just stop our mentoring like that. 😱
-Most of our students had still some PRs open and the next tasks were still within the reach and quite exciting for all us. `Project is never ready. You can always improve things!`.
+Most of our students had still some PRs open and the next tasks were still within the reach and quite exciting for all of us. `Project is never ready. You can always improve things!`
 Given that all of Thanos mentees expressed the willingness to contribute in their free time after the program, we left our weekly meetings for an extra month.
 
 However, as always, the month passed quickly and we had to again decide what's next. With more programs being planned and other, potentially also passionated and diverse candidates
