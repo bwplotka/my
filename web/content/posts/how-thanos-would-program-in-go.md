@@ -561,7 +561,7 @@ errors, ambiguity and maintenance burden.
 
 type Block struct {
     // Things...
-    ID ulid.ULID
+    MyID ulid.ULID
 
     mtx sync.Mutex
 }
@@ -573,10 +573,10 @@ func (b *Block) Unlock() {  b.mtx.Unlock() }
 func (b *Block) ID() ulid.ULID {
     b.mtx.Lock()
     defer b.mtx.Unlock()
-    return b.ID
+    return b.MyID
 }
 
-func (b *Block) IDNoLock() ulid.ULID {  return b.ID }
+func (b *Block) IDNoLock() ulid.ULID {  return b.MyID }
 {{</highlight>}}
 
 </td></tr>
@@ -1103,7 +1103,7 @@ No Grammarly plugin for this yet ): (We wish).
 
 Ensured [here](https://github.com/thanos-io/thanos/blob/40526f52f54d4501737e5246c0e71e56dd7e0b2d/Makefile#L317).
 
-#### Commentaries Should we a Full Sentence.
+#### Commentaries Should be a Full Sentence.
 
 All comments should be a full sentence. Should start with Uppercase letter and end with a period.
 
