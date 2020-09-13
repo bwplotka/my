@@ -10,6 +10,7 @@ title: What to expect when monitoring memory usage for modern Go applications.
 weight: 1
 categories:
 - go
+- infra
 ---
 
 **TL;DR: Applications build with Go 1.12+ reports higher RSS memory usage on Linux. 

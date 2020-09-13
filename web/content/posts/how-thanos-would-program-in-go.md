@@ -10,7 +10,8 @@ title: How Thanos Would Program in Go
 weight: 1
 categories:
 - go
-featuredImage: "/images/blog/how-thanos-would-program-in-go/header.jpg"
+- observability
+featuredImage: "/og-images/style-guide-header.jpg"
 images:
 - "/twitter-how-thanos-would-program-in-go.jpg"
 ---

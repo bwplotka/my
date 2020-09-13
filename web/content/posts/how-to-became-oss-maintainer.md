@@ -10,6 +10,7 @@ title: "How to Become an Amazing OSS Project Maintainer, Survive, And Have Fun o
 weight: 1
 categories:
 - open-source
+- observability
 ---
 
 In this post, I would like to share what, in my honest opinion, a **"perfect"** maintainer of an open source software should do.

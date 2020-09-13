@@ -10,7 +10,10 @@ title: Need to Version Go Tools for Your Project? That's a Bingo!
 weight: 1
 categories:
 - go
-featuredImage: "/images/blog/bingo/demo.gif"
+- infra
+images:
+- "/og-images/bingo-demo.gif"
+featuredImage: "/og-images/bingo-demo.gif"
 ---
 _See bigger version of the above demo as .gif [here](https://raw.githubusercontent.com/bwplotka/bingo/master/examples/bingo-demo.gif)_
 

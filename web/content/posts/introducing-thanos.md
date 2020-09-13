@@ -13,7 +13,8 @@ readingTime: 15
 weight: 1
 categories:
 - thanos
-featuredImage: "/images/thanos-header.jpg"
+- observability
+featuredImage: "/og-images/thanos-header.jpg"
 ---
 Available on Improbable blog [here](https://improbable.io/blog/thanos-prometheus-at-scale).
 
