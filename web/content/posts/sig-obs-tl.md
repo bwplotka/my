@@ -31,9 +31,9 @@ donated or related to the [CNCF](https://landscape.cncf.io/) is just enormous.
 
 ![CNCF Landscape: How to manage this open source machine?](/images/blog/sig-obs-tl/landscape.png)
 
-The popularity of the CNCF universe is undoubtedly high. The last pre-COVID CNCF conference was in San Diego in 2019, and it was one the largest. It had nearly 10k physical (!) attendees.
+The popularity of the CNCF universe is undoubtedly high. The last pre-COVID CNCF conference was in San Diego in 2019, and it was one of the largest. It had nearly 10k physical (!) attendees.
 Looking at [the latest stats](https://all.devstats.cncf.io/d/1/activity-repository-groups?panelId=4&fullscreen&orgId=1&var-period=h&var-repogroups=All), the activity in all CNCF's Projects on just GitHub (code, reviews, comments) every hour is 500 on average with peaks up to 1k. And that does not
-even count activity in thousands of open source dependencies on, tools and projects related to the main repositories, and all non-GitHub activity
+even count activity in thousands of open source dependencies, tools and projects related to the main repositories, and all non-GitHub activity
 like participating or organizing events (meetups, conferences), mentoring, teaching, etc.
 
 ![Peak of 1k hourly activities on main GitHub repos? That gives a single, meaningful human contribution event every 3.5999928 seconds!](/images/blog/sig-obs-tl/cncfactivity.png)
@@ -140,7 +140,7 @@ what we can achieve! (:
 
 *Technically* SIG Tech Lead duties are: 
 
-* Supports projects in the SIG’s area.
+* To support projects in the SIG’s area.
 * To have the time and ability to perform deep technical dives on projects. Projects may include formal CNCF projects or other projects in the area covered by the SIG.
 
 It's really more about the hard work and the responsibility than any major decision making. And that's actually quite nice as I would love to stay
@@ -185,7 +185,7 @@ from scratch to suit our additional needs,  such as:
 
 ...and much more! This, sometimes annoying, stuff is vital for the project to be usable, reliable, and easy to start with. So why almost every project
 rebuild these tooling and facilities from scratch rather than reuse them? (: It would be nice to get together and learn from each other, especially
-when we are part of the same foundation and topic! (:
+when we are part of the same foundation and domain! (:
 
 > **Action Item**: If you are active in a CNCF project and need help, try to check out if a similar problem has already been solved in another 
 project! You can use SIG Observability space for this freely, so [reach us!](#how-you-can-reach-us)

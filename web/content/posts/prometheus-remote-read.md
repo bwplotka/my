@@ -13,6 +13,8 @@ categories:
 - prometheus
 - thanos
 - observability
+images:
+- "/og-images/prometheus-header.png"
 featuredImage: "/og-images/prometheus-header.png"
 ---
 Available on Prometheus blog [here](https://prometheus.io/blog/2019/10/10/remote-read-meets-streaming/).

@@ -10,6 +10,8 @@ title: Thanos Announces Weekly Mentoring Office Hours
 weight: 1
 categories:
 - open-source
+images:
+ - "/og-images/uche-header.png"
 featuredImage: "/og-images/uche-header.png"
 ---
 

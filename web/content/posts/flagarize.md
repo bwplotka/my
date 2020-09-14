@@ -11,6 +11,8 @@ weight: 1
 categories:
 - go
 - infra
+images:
+- "/og-images/ide-header.png"
 featuredImage: "/og-images/ide-header.png"
 ---
 

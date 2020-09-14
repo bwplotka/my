@@ -14,6 +14,8 @@ weight: 1
 categories:
 - thanos
 - observability
+images:
+ - "/og-images/thanos-header.jpg"
 featuredImage: "/og-images/thanos-header.jpg"
 ---
 
