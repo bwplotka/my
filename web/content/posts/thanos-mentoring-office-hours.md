@@ -10,7 +10,9 @@ title: Thanos Announces Weekly Mentoring Office Hours
 weight: 1
 categories:
 - open-source
-featuredImage: "/images/blog/thanos-mentoring-office-hours/uche-overview.png"
+images:
+ - "/og-images/uche-header.png"
+featuredImage: "/og-images/uche-header.png"
 ---
 
 During Summer of 2020, on top of our full-time work, on-call rotations, open source project's work, preparing conference talks and ☕ we had extra

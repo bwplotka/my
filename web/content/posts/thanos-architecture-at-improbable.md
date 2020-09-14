@@ -13,7 +13,10 @@ readingTime: 15
 weight: 1
 categories:
 - thanos
-featuredImage: "/images/thanos-header.jpg"
+- observability
+images:
+ - "/og-images/thanos-header.jpg"
+featuredImage: "/og-images/thanos-header.jpg"
 ---
 
 Available on Improbable blog [here](https://improbable.io/blog/thanos-architecture-at-improbable).

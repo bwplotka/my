@@ -10,7 +10,10 @@ title: Flagarize Your Go Configuration Struct!
 weight: 1
 categories:
 - go
-featuredImage: "/images/blog/flagarize/ide-header.png"
+- infra
+images:
+- "/og-images/ide-header.png"
+featuredImage: "/og-images/ide-header.png"
 ---
 
 **TL;DR In my free time I wrote a simple but powerful, open source Go library [flagarize](https://github.com/bwplotka/flagarize) to register

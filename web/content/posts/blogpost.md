@@ -10,7 +10,9 @@ title: Technical blog post.
 weight: 1
 categories:
 - ?
-featuredImage: "/images/blog/uche/uche.png"
+images:
+- "/og-images/uche.png"
+featuredImage: "/og-images/uche.png"
 ---
 
 This is the blog post written specially for Uche. He really wanted a blog post from me and could not wait. Here it is.

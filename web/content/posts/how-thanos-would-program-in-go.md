@@ -10,9 +10,10 @@ title: How Thanos Would Program in Go
 weight: 1
 categories:
 - go
-featuredImage: "/images/blog/how-thanos-would-program-in-go/header.jpg"
+- observability
 images:
-- "/twitter-how-thanos-would-program-in-go.jpg"
+- "/og-images/style-guide-header.jpg"
+featuredImage: "/og-images/style-guide-header.jpg"
 ---
 
 **TL;DR: Recently we introduced [extended Go Style Guide](https://thanos.io/contributing/coding-style-guide.md/) for [the Thanos project](http://thanos.io/),
