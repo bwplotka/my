@@ -18,10 +18,10 @@ featuredImage: "/og-images/santorini.jpg"
 
 **TL;DR: In March 2020, we established the official [CNCF's](https://cncf.io) Special Interest Group (SIG) for [Observability](https://github.com/cncf/sig-observability).
 Last week, the [TOC](https://github.com/cncf/toc) vote for the first Tech Lead for this SIG was closed, and results [were published](https://lists.cncf.io/g/cncf-toc/topic/76717430#5272). 
-I am proud to announce that my nomination passed! 🤩** 
+I am proud to announce that I have been elected! 🤩** 
 
 In this blog post, I would like to briefly explain what is the idea behind SIGs, what our "newly" created SIG for Observability is for.
-Last but not the least, I will share why I decided to help and what tech lead role in the SIG context even means. 
+Last but not the least, I will share why I decided to help and what tech lead role in the SIG context means. 
 
 ## Special Interest Groups for the Cloud Native Computing Foundation
 
@@ -31,9 +31,9 @@ donated or related to the [CNCF](https://landscape.cncf.io/) is just enormous.
 
 ![CNCF Landscape: How to manage this open source machine?](/images/blog/sig-obs-tl/landscape.png)
 
-The popularity of the CNCF universe is undoubtedly high, last largest pre-COVID conference in San Diego in 2019 had nearly 10k physical (!) attendees.
-Looking at [latest stats](https://all.devstats.cncf.io/d/1/activity-repository-groups?panelId=4&fullscreen&orgId=1&var-period=h&var-repogroups=All), the activity in all CNCF's Projects on just GitHub (code, reviews, comments) every hour is 500 on average with peaks up to 1k. And that does not
-even count activity in thousands of open source libraries that we depend on, tools and projects related to the main repositories, and all non-GitHub activity
+The popularity of the CNCF universe is undoubtedly high. The last pre-COVID CNCF conference was in San Diego in 2019, and it was one the largest. It had nearly 10k physical (!) attendees.
+Looking at [the latest stats](https://all.devstats.cncf.io/d/1/activity-repository-groups?panelId=4&fullscreen&orgId=1&var-period=h&var-repogroups=All), the activity in all CNCF's Projects on just GitHub (code, reviews, comments) every hour is 500 on average with peaks up to 1k. And that does not
+even count activity in thousands of open source dependencies on, tools and projects related to the main repositories, and all non-GitHub activity
 like participating or organizing events (meetups, conferences), mentoring, teaching, etc.
 
 ![Peak of 1k hourly activities on main GitHub repos? That gives a single, meaningful human contribution event every 3.5999928 seconds!](/images/blog/sig-obs-tl/cncfactivity.png)
@@ -141,12 +141,12 @@ what we can achieve! (:
 *Technically* SIG Tech Lead duties are: 
 
 * Supports projects in the SIG’s area.
-* Has the time and ability to perform deep technical dives on projects. Projects may include formal CNCF projects or other projects in the area covered by the SIG.
+* To have the time and ability to perform deep technical dives on projects. Projects may include formal CNCF projects or other projects in the area covered by the SIG.
 
-It's more about the hard work and the duties than really any major decision making. And that's actually quite nice as I would love to stay
-out of politics as much as possible. (: Instead, let's talk about some actionable, usability things we can improve for better... **observability!**
+It's really more about the hard work and the responsibility than any major decision making. And that's actually quite nice as I would love to stay
+out of politics as much as possible. (: Instead, let's talk about actions, usability, and the things that we can improve for better... **observability!**
 
-As I mentioned, overall it's all about where the SIG members focus will be, but since you are still reading this 😈, I can briefly inject some cool stuff we can improve
+As I mentioned, overall it's all about where the SIG members will focus, however since you are still reading this 😈, I can briefly inject some cool stuff that we can improve
 in the CNCF Observability world!
 
 I mentioned most of the things in my [nomination doc here](https://docs.google.com/document/d/194INvrWMRZT9p0VxhlkRa9yXK8a4npdBlDvOetWvPb0/edit#), but let's go quickly
@@ -154,63 +154,62 @@ through some of those:
 
 ### Supporting Projects
 
-The key responsibility of the SIG Observability is to help the CNCF projects in terms of guidance for any technical decisions they need help with.
-Additionally, for a project to graduate through different stages (Sandbox, Incubated, Graduated), it needs to fulfill some more or less strict rules
+The key responsibility of the SIG Observability is to help the CNCF projects, to provide guidance for any technical decisions and support the areas where they need help.
+Additionally, for a project to proceed through different stages (Sandbox, Incubated, Graduated); it has to fulfil a couple of, more or less, strict rules
 (see [Due Diligence doc](https://github.com/cncf/toc/blob/master/process/due-diligence-guidelines.md)). Those rules are actually
-quite solid, they aim for project growth, fairness, reliability, and open source values. My role is to review, indicate gaps, and help to resolve those.
+quite solid, they aim for project growth, fairness, reliability, and open-source values. My role is to review, point out gaps, and help to resolve those.
 
 > **Action Item**: If you are a member / contributor of the CNCF project within SIG Observability OR you have any questions related to observability for any
 other open-source project (e.g Kubernetes) [reach us!](#how-you-can-reach-us)
 
 ### Connecting Passionated People; Sharing Knowledge Between Projects
 
-Depending on the origins of the projects, some of the CNCF projects collaborate with each other more, some less. For example, both Cortex, Thanos, and OpenMetrics projects were created by
-Prometheus maintainers, thus it's natural we share some codebase, patterns and overall we work and communicate between each other a lot! 
+Depending on the origins of the projects, the CNCF projects collaborate with each other. Some more, some less. For example, both Cortex, Thanos, and OpenMetrics projects were created by
+Prometheus maintainers, thus it's natural we share some code pieces and patterns. Overall we work and communicate with each other a lot! 
 
-This is however not always true between other projects, even though we are all hosted under the CNCF. The truth is, that there is a huge potential
-of helping each other much more than nowadays. While maintaining big open source projects, there are many things we had to invent or build
-from scratch to suit our not-core functional needs in Thanos project like:
+This, however, is not always the case between other projects; even though we are all hosted under the CNCF. The truth is, that there is a huge potential
+of helping each other much more than what we have now. For example, while maintaining a big open source project like Thanos, there are many things we had to invent or build
+from scratch to suit our additional needs,  such as:
 
-* Suite of [static analysis tools and Go style guide](/2020/how-thanos-would-program-in-go/) 
+* A suite of [static analysis tools and Go style guide](/2020/how-thanos-would-program-in-go/) 
 * Auto-generated documentation (recently shaping it out of our bash into [mdox](https://github.com/bwplotka/mdox) tooling).
-* Tooling e.g [bingo](https://github.com/bwplotka/bingo).
-* Multi arch building e.g [promu](http://github.com/prometheus/promu)
-* E2e frameworks (we share [an awesome e2e library with Cortex](https://github.com/cortexproject/cortex/tree/master/integration/e2e)).
-* Website with versioned documentation, search and blog post space.
-* Structure and best practices for Mentoring/Internships and maybe even [Student Office Hours](/2020/thanos-mentoring-office-hours/)
-* Solid Governance.
-* Configuration methodologies.
-* Plugins
-* Marketing (Active Twitter account, Talks)
+* Development tooling e.g [bingo](https://github.com/bwplotka/bingo),
+* Multi-arch artifact building e.g [promu](http://github.com/prometheus/promu),
+* End-to-end test frameworks (we share [an awesome e2e library with Cortex](https://github.com/cortexproject/cortex/tree/master/integration/e2e)),
+* A website with versioned documentation, search and blog post space,
+* Arrangements and best practices for Mentorship/Internships e.g [Student Office Hours](/2020/thanos-mentoring-office-hours/),
+* A solid Open Governance model,
+* Various configuration practices and methodologies,
+* Plugins,
+* And marketing activities (Active Twitter account, Talks),
 
-...and much more! This, sometimes annoying stuff is critical for the project to be usable, reliable, and easy to start with. So why almost every project
-rebuild those from scratch if we can learn or reuse something from each other? (: It would be nice to get together and learn from each other, especially
+...and much more! This, sometimes annoying, stuff is vital for the project to be usable, reliable, and easy to start with. So why almost every project
+rebuild these tooling and facilities from scratch rather than reuse them? (: It would be nice to get together and learn from each other, especially
 when we are part of the same foundation and topic! (:
 
-> **Action Item**: If you are active in some CNCF project and need help, let's check out if a similar problem was not already solved in another 
+> **Action Item**: If you are active in a CNCF project and need help, try to check out if a similar problem has already been solved in another 
 project! You can use SIG Observability space for this freely, so [reach us!](#how-you-can-reach-us)
 
 ### Be Open Minded for Outside World
 
-One point I want to highlight is that, as the SIG Observability, we are not limited to a few hosted projects only. There are certainly some gaps
-in cloud native observability portfolio. Things that we could learn and project that already comply, integrate or even are already extremely useful for
-complete observability journey in the CNCF ecosystem but not directly under CNCF governance. I am looking at you: [Grafana](https://github.com/grafana/grafana),
+Another point I want to highlight is that, as the SIG Observability, we are not limited to a few hosted projects only. There are certainly missing pieces```
+in cloud-native observability portfolio. Things that we could learn. Projects that already comply, integrate or even are already extremely useful for
+the whole observability journey in the CNCF ecosystem but not directly under the CNCF governance. I am looking at you: [Grafana](https://github.com/grafana/grafana),
 [Loki](https://github.com/grafana/loki) and [ConProf](https://github.com/conprof/conprof)!
 
-It would be awesome to maintain a good relationship with such projects, allow even better integration with them, communicate more, and help each other!
+It would be awesome to maintain a good relationship with such projects. Allow even better integration with them, communicate more, and help each other!
  
-> **Action Item**: If you feel that some projects or initiatives are extremely useful, but missing in Observability the CNCF portfolio, or something we can learn [reach us as well!](#how-you-can-reach-us)
+> **Action Item**: If you feel that some projects or initiatives are extremely useful, however missing in the CNCF Observability portfolio, or something we can learn from, please [reach out to us as well!](#how-you-can-reach-us)
 
 ## Summary
 
 ![View from Pyrgos village on Santorini island, Greece](/images/blog/sig-obs-tl/santorini2.jpg)
 
-I hope with this blog post, you learned a bit what this magic `SIG` concept is all about and how `YOU` can help within the area you are
-passionated the most about as well!
+I hope with this blog post, you have learned a bit what this magical `SIG` concept is all about. And how `YOU` can help within the domain you are
+passionated about!
 
-Thanks [all who voted for me](https://lists.cncf.io/g/cncf-toc/topic/76717430#5272) and particularly thanks to [Richi](https://twitter.com/twitchih)
+Thanks to [all who voted for me](https://lists.cncf.io/g/cncf-toc/topic/76717430#5272) and especially thanks to [Richi](https://twitter.com/twitchih)
 for some epic mentoring in this area 💪
 
 See Ya on our [SIG Observability Meetings](#how-you-can-reach-us) 👋
-
 
