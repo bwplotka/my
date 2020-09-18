@@ -104,8 +104,8 @@ label = "Life"
 
 [[filter]]
 query = """
-from:Launchpad OR \
-reply-to: reviews@mesos.apache.org 
+from:(launchpad) OR \
+reply-to:(reviews@mesos.apache.org)
 """
 Archive = true
 label = "ProbablyGarbage"
