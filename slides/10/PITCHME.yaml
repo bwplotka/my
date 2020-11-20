@@ -1,0 +1,53 @@
+title: "10 Life Saving Tips for Maintaining Go Projects in Open Source"
+description : "TBD"
+gitpitch: 4.0
+
+# thumbnail : assets/img/screenshot.png
+
+# Production readiness control.
+published: false # Set to false for dev tools.
+theme-builder: false
+eager-loading: false # Preload all setting.
+
+favicon: web/static/favicon.ico
+footnote: " "
+lang: "en"
+
+# Google Analytics
+#  1. Log into Google Analytics
+#  2. Create a new GA Property
+#  3. For your new GA Property, specify https://gitpitch.com as the property URL
+gatoken: 2170247562
+
+# Code.
+code-line-numbers: true
+
+# Navigation.
+mousewheel: false
+remote-control: true
+transition: none # none (default) - recommended for snap layouts, slide, fade, convex, concave, zoom
+
+# Print.
+print-fragments: true
+print-notes: false
+print-footer: true
+
+image-size-limits: true
+theme-override   : assets/css/PITCHME.css
+
+# PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
+theme            : template
+theme-background : [ "#1A0420" ]
+background          : assets/images/slides/tech-background3-crop.compressed.png
+background-position : right bottom
+background-size     : auto cover
+background-opacity  : 100
+theme-headline   : [ "Ubuntu", "#d7c5db", "none"]
+theme-byline     : [ "Ubuntu", "#d7c5db", "none"]
+theme-text       : [ "Ubuntu", "#ebebeb", "none"]
+theme-code       : [ "Source Code Pro" ]
+theme-links      : [ "#6D41FF", "#bdbb3e"]
+
+theme-controls   : [ "#C0C0C0" ]
+layout           : center
+# PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-END

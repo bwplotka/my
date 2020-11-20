@@ -1,4 +1,4 @@
-package example
+package main
 
 func x()  {
 	var messages []string{}

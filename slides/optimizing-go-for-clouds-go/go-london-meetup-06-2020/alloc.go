@@ -1,4 +1,4 @@
-package example
+package go_london_meetup_2020
 
 func copyIntoSliceAndMap(biggy []string) (a []string, b map[string]struct{}) {
 	b = map[string]struct{}{}

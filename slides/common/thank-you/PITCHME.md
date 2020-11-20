@@ -1,4 +1,4 @@
-@snap[midpoint span-100]
-## Thank You!
-@size[1em](Any Questions? @emoji[raising_hand])
-@snapend
+
+# Thank You!
+
+@size[2em](Any Questions? @emoji[raising_hand])

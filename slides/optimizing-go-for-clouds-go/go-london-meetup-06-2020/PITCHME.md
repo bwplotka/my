@@ -61,7 +61,7 @@ expertise. But, to be honest you can take this knowledge and apply to any Go Pro
 Note:
 Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back to the Earth. We can divide our talk to 3 steps.
 
----?include=slides/common/whoami-go/PITCHME.md
+---?include=slides/common/3.0/whoami-go/PITCHME.md
 
 ---
 @snap[north span-95 text-06 text-left padded]

@@ -1,5 +1,6 @@
 title: "Optimizing Go for Clouds: Practical Intro"
-description : "TBD"
+description: "TBD"
+gitpitch: 3.0
 # thumbnail : assets/img/screenshot.png
 
 # Production readiness control.
@@ -15,7 +16,7 @@ lang: "en"
 #  1. Log into Google Analytics
 #  2. Create a new GA Property
 #  3. For your new GA Property, specify https://gitpitch.com as the property URL
-# gatoken: UA-1111111-1
+gatoken: 2170247562
 
 # Code.
 code-line-numbers: true
