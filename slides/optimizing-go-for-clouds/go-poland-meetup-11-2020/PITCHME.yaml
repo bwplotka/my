@@ -1,7 +1,8 @@
 title: "Optimizing Go for Clouds: Practical Intro"
 description : "TBD"
-gitpitch : 3.0
+gitpitch : 4.0
 # thumbnail : assets/img/screenshot.png
+highlight: atom-one-dark
 
 # Production readiness control.
 published: false # Set to false for dev tools.
@@ -14,9 +15,9 @@ lang: "en"
 
 # Google Analytics
 #  1. Log into Google Analytics
-#  2. Create a new GA Property
+#  2. Create a new GA Propert
 #  3. For your new GA Property, specify https://gitpitch.com as the property URL
-gatoken: 2170247562
+gatoken: G-Y7Z2RDG1HQ
 
 # Code.
 code-line-numbers: true
@@ -32,7 +33,7 @@ print-notes: false
 print-footer: true
 
 image-size-limits: true
-theme-override   : assets/css/PITCHME.css
+theme-override   : assets/css/PITCHME_new.css
 
 # PITCHME-DOT-YAML-SETTINGS-THEME-BUILDER-GENERATED-START
 theme            : template

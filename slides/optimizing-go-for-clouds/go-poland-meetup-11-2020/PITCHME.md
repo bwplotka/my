@@ -1,87 +1,53 @@
-@snap[north span-100]
-![width=300](assets/images/slides/GopherSpaceCommunity.png)
+![drag=45 45, drop=50 25 true](assets/images/slides/GopherSpaceCommunity.png)
 
-#### Optimizing Go for Clouds (and beyond @emoji[rocket])
-#### _Practical Intro_
-@snapend
+[drag=80, drop=50 60 true true]
+### Optimizing Go for Clouds (and beyond @emoji[rocket])
 
-@snap[south-east padded snap-100 text-04 text-italics text-right]
-London, UK | 17.06.2020 | [London Gophers Meetup](https://www.meetup.com/LondonGophers/events/270419925/) | [Bartłomiej Płotka](https://bwplotka.dev) 
-@snapend
+[drag=80, drop=50 70 true true, set=text-italic]
+#### Practical Intro
+
+[drag=60, drop=0 -5 false true, set=text-italic, fit=0.7]
+Poland | 26.11.2020 | [Golang Poland Meetup](https://www.meetup.com/Golang-Poland/events/274616031/) | [Bartłomiej Płotka](https://bwplotka.dev) 
 
 Note:
-Thanks .., Hello everyone! I am super excited to be presenting today, in our local LondonGophers Meetup.
+Thanks .., Hello everyone! I am super excited to be presenting today, in our ... Meetup.
 I was very often joining this meetup as a guest, so I am triple honoured now to share what I know about Go and Performance from practical
 side. I am speaking from the virtual stage and I wish we could meet in reality, but let's focus on benefits of this situation:
 For example I am sure we have guest from outside of London, I know about a few Berlin friends, so there is always a bright side of things (: 
-
 ---
-@snap[north span-95 text-center]
-#### Optimizing Go for Clouds (and beyond @emoji[rocket])
-#### _Practical Intro_
-@snapend
 
-@snap[south-east span-60 text-right padding]
-![width=300](assets/images/slides/GopherSpaceMentor.png)
-@snapend
+[drag=80, drop=50 7 true true, set=align-left]
+### Optimizing Go for Clouds (and beyond @emoji[rocket])
 
-@snap[south span-50 fragment]
-@tweet[https://twitter.com/bwplotka/status/1267029085013843971]
-@snapend
+![drag=35 35, drop=70 -25 true](assets/images/slides/GopherSpaceMentor.png)
 
-Note:
-
-Anyway, today we will be talking about writing performant Go code and optimizations overall.
-
-This talk will be especially valid for the Go applications running for the Infrastructure, Cloud needs, so something from my area of
-expertise. But, to be honest you can take this knowledge and apply to any Go Program, you know, CLI tools, GUI, or even SPACE!
-
-[C] Because I don't know if you are aware you can use Go to automatically dock to International Space Station. How amazing is that?? 
- 
----
-@snap[north span-95 text-center]
-#### Optimizing Go for Clouds (and beyond @emoji[rocket])
-#### _Practical Intro_
-@snapend
-
-@snap[west span-75 text-07 padded]
+[drag=80, drop=50 -40 true false, set=align-left]
 ###### Agenda:
 
-@ol[list-fade-fragments list-spaced-bullets](true)
+[drag=80, drop=50 50 true true, set=align-left]
+@ol[list-spaced-bullets](true)
 1. Should you optimize your code for performance? _"Our design is scalable, machines big and code has to be readable, let's not worry about performance"_ @note[First of all, we will touch on the potential misconception, so essentially why performance for single application is still quite important nowadays and why you don't need to sacrifice readability!]
 1. How to approach performance optimizations in Go? @note[Then we will discuss how to efficiently approach performance, how to start with optimizing and when]
 1. Go optimization tricks & pitfalls @emoji[bomb] @note[Last but not the least I would love to share some tricks and usual patterns that helps improve things! But before that.. short introduction]
 @olend
-@snapend
-
-@snap[south-east span-60 text-right]
-![width=300](assets/images/slides/GopherSpaceMentor.png)
-@snapend
 
 Note:
-Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back to the Earth. We can divide our talk to 3 steps.
+Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back to the Earth.
+We can divide our talk to 3 steps.
 
----?include=slides/common/3.0/whoami-go/PITCHME.md
+---?include=slides/common/whoami-go/PITCHME.md
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Code Optimization
-@snapend
+[drag=80, drop=50 7 true true, set=align-left]
+### Code Optimization
 
-@snap[east span-95 padded]
-![width=200](assets/images/slides/SPACEGIRL1.png)
-<br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
+![drag=20 20, drop=80 20 true true](assets/images/slides/SPACEGIRL1.png)
 
-@snap[midpoint span-95 text-06 text-left padded]
+[drag=80, drop=50 50 true true, set=align-left]
 @quote[Code optimization is any method of code modification to improve code quality and efficiency. A program may be optimized so that it becomes a smaller size, consumes less memory, executes more rapidly, or performs fewer input/output operations.]()
-@snapend
 
-@snap[south span-95 text-05 text-left padded fragment]
-(Soft) Requirement: 
-_An optimized program must have the same output and side effects as its non-optimized version._
-<br/><br/><br/><br/>
-@snapend
+[drag=80, drop=50 80 true true, fit=0.8, set=align-left text-italic fragment]
+*Soft Requirement: An optimized program must have the same output and side effects as its non-optimized version.
 
 Note:
 
@@ -95,24 +61,18 @@ side effects as its non-optimized version. This requirement, however, is soft. A
 in the case that the benefit from optimization is estimated to be more important than keeping the same output!
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-90 text-06 text-right padded fragment]
-</br></br></br></br>
-@css[text-yellow text-italics](...we are just guessing here, this is just a micro-optimization!)
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=fragment align-right text-yellow text-italics]
+...we are just guessing here, this is just a micro-optimization!
 
-@snap[south-west span-95 padded fragment]
-![width=300, shadow](assets/images/slides/premature_opt2.jpg)
-@snapend
+![shadow, drag=50 70, drop=10 30, set=fragment](assets/images/slides/premature_opt2.jpg)
 
-@snap[south-east span-95 padded fragment]
-![width=400, shadow](assets/images/slides/premature_opt3.jpg)
-<br/>
-@snapend
+![shadow, drag=30 50, drop=60 40, stretch=true, set=fragment](assets/images/slides/premature_opt3.jpg)
 
 Note:
 
@@ -130,29 +90,25 @@ adding extra complexity.
 So from YAGNI code practice, does performance matter? 
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-90 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...we are just guessing here, this is just a micro-optimization!)
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow text-italics]
+...we are just guessing here, this is just a micro-optimization!
 
-@snap[south-west span-95 padded]
-![width=300, shadow opacity-50](assets/images/slides/premature_opt2.jpg)
-@snapend
+![shadow, drag=50 70, drop=10 30, opacity=0.5](assets/images/slides/premature_opt2.jpg)
 
-@snap[south-east span-95 padded]
-![width=400, shadow opacity-50](assets/images/slides/premature_opt3.jpg)
-<br/>
-@snapend
+![shadow, drag=30 50, drop=60 40, stretch=true, opacity=0.5](assets/images/slides/premature_opt3.jpg)
 
-@snap[midpoint span-95 text-07 text-black text-bold padded]
-<br/><br/><br/><br/><br/>
-@box[bg-gold rounded](True! But there are some basic Go patterns to use, and pitfalls to avoid from the start of the project!)
-@snapend
+[drag=80 30, drop=50 60 true true, set=padded bg-gold align-left]
+Yes! Keep it simple **but** maintain **basic Go hygiene** (from start!)
+
+* Use healthy **Go patterns consistently**
+* Avoid basic pitfalls causing **leaks** and **major over-allocations**
+* Monitor basic resources utilization for **extremes** @emoji[bomb]
 
 Note:
 
@@ -160,27 +116,22 @@ I would say yes, while premature optimizations are evil there are some basic Go 
 I hopefully can list some of the tricks near the finish of this presentation.
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-95 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...we mainly care about readability, let's not obfuscate our code!)
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow text-italics fragment]
+...we mainly care about readability, let's not obfuscate our code!
 
-@snap[south span-100 text-04 padded fragment]
-@code[golang code-noblend code-max zoom-05](slides/optimizing-go-for-clouds-go-meetup/perf.go?lines=31-51,58-60)
-_[Snippet from latest Thanos code for lookup of label names in memory-maped file](https://github.com/thanos-io/thanos/blob/63ef382fc335969fa2fb3e9c9025eb0511fbc3af/pkg/block/indexheader/binary_reader.go#L841)_ 
-@snapend
+[drag=80 70, drop=50 62 true true, fit=0.6, set=fragment]
+@code[golang, fit=0.8](slides/optimizing-go-for-clouds/go-poland-meetup-11-2020/perf.go?lines=31-51,58-60)
+_[Snippet Thanos Go code for lookup of label names in memory-mapped file](https://github.com/thanos-io/thanos/blob/63ef382fc335969fa2fb3e9c9025eb0511fbc3af/pkg/block/indexheader/binary_reader.go#L841)_ 
 
-@snap[south-east span-95 padded fragment]
-![width=400, shadow](assets/images/slides/readable.jpg)
-<br/><br/><br/>
-@snapend
+![shadow, drag=80, drop=80 60 true, set=fragment](assets/images/slides/readable.jpg)
 
-@[22-24, zoom-20]
+@[22-24, zoom-15]
 
 Note:
 
@@ -201,30 +152,23 @@ After all we chose Go because it's simple, consistent and readable. That's why i
 So.. does performance really matter if it reduces readability?
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-95 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...we mainly care about readability, let's not obfuscate our code!)
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow text-italics]
+...we mainly care about readability, let's not obfuscate our code!
 
-@snap[south span-100 text-04 padded opacity-50]
-@code[golang code-noblend code-max zoom-05](slides/optimizing-go-for-clouds-go-meetup/perf.go?lines=31-51,58-60)
-_[Snippet from latest Thanos code for lookup of label names in memory-maped file](https://github.com/thanos-io/thanos/blob/63ef382fc335969fa2fb3e9c9025eb0511fbc3af/pkg/block/indexheader/binary_reader.go#L841)_ 
-@snapend
+[drag=80 70, drop=50 62 true true, opacity=0.5, fit=0.6]
+@code[golang, fit=0.8](slides/optimizing-go-for-clouds/go-poland-meetup-11-2020/perf.go?lines=31-51,58-60)
+_[Snippet Thanos Go code for lookup of label names in memory-mapped file](https://github.com/thanos-io/thanos/blob/63ef382fc335969fa2fb3e9c9025eb0511fbc3af/pkg/block/indexheader/binary_reader.go#L841)_ 
 
-@snap[south-east span-95 padded]
-![width=400, shadow opacity-50](assets/images/slides/readable.jpg)
-<br/><br/><br/>
-@snapend
+![shadow, drag=80, drop=80 60 true, opacity=0.5](assets/images/slides/readable.jpg)
 
-@snap[midpoint span-95 text-07 text-black text-bold padded]
-<br/><br/><br/><br/><br/>
-@box[bg-gold rounded](Fair, but with good balance and consistency, code can be still readable)
-@snapend
+[drag=80 30, drop=50 60 true true, set=padded bg-gold align-left]
+Fair point, **but** with good balance and consistency, code can be still readable (TBD)
 
 Note:
 
@@ -232,25 +176,18 @@ I would again advocate yes - performance still matter as there are ways to have 
 consider certain performance patterns, to be used consistently across the code, maybe even yoloString, so it's not longer surprising.
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-90 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/))
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow text-italics fragment]
+...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/)
 
-@snap[south-west span-95 padded fragment]
-![width=400, shadow](assets/images/slides/aws-machines.png)
-<br/>
-@snapend
+![shadow, drag=60, drop=30 60 true, set=fragment](assets/images/slides/aws-machines.png)
 
-@snap[south-east span-95 padded fragment]
-![width=400, shadow](assets/images/slides/brute-force.jpeg)
-<br/><br/>
-@snapend
+![shadow, drag=40, drop=70 60 true, stretch=true, set=fragment](assets/images/slides/brute-force.jpeg)
 
 Note:
 
@@ -261,67 +198,49 @@ statement in some cases.
 to pay for those.
 
 [C] And that gives this impression that we don't need to focus on code performance much, we can just do whatever, it should not matter.
+
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-90 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/))
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow text-italics]
+...our machines have [224 CPU cores and 24 TBs of RAM](https://aws.amazon.com/ec2/instance-types/high-memory/)
 
-@snap[south-west span-95 padded opacity-50]
-![width=400, shadow](assets/images/slides/aws-machines.png)
-<br/>
-@snapend
+![shadow, drag=60, drop=30 60 true, opacity=0.5](assets/images/slides/aws-machines.png)
 
-@snap[south-east span-95 padded opacity-50]
-![width=400, shadow](assets/images/slides/brute-force.jpeg)
-<br/><br/>
-@snapend
+![shadow, drag=40, drop=70 60 true, stretch=true, opacity=0.5](assets/images/slides/brute-force.jpeg)
 
-@snap[midpoint span-95 text-07 text-black text-bold padded]
-<br/><br/><br/><br/><br/>
-@box[bg-gold rounded](Still there are limitations: Slow garbage collections for huge heaps and multicore architecture fun: IO, network, memory bandwidth etc)
-@snapend
+[drag=80 30, drop=50 60 true true, set=padded bg-gold align-left]
+Still there are limitations: Slow garbage collections for huge heaps and multicore architecture fun: 
+IO, network, memory bandwidth etc
+
 
 Note:
-
 Well, in practice it's not that nice as it looks. Concurrent programming is hard, despite Go having pretty amazing framework for it.
-
 With lots of go routines and channels, you will hit process scalability limitation at some point. Think about cases like resource starvation or 
 garbage collection latency on an enormous heap so shared memory across go routines. 
-
 Not mentioning other aspects like memory or disk IO bandwidth. 
-
 At the end you have to optimize the code in some way or scale out of the single process.
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-90 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow fragment]
+@css[text-italics](...there is no need, our system scales horizontally) 🤷
 
-@snap[south-west span-95 padded fragment]
-![width=400, shadow](assets/images/slides/twitterdesign.png)
-@snapend
+![shadow, drag=40, drop=25 60 true, set=fragment](assets/images/slides/twitterdesign.png)
 
-@snap[south-east span-50 padded fragment]
-![width=450, shadow](assets/images/slides/whatsapp.png)
-<br/>
-<br/>
-@snapend
+![shadow, drag=40, drop=75 80 true, set=fragment](assets/images/slides/whatsapp.png)
 
-@snap[midpoint span-95 padded fragment]
-![width=400, shadow](assets/images/slides/googledocs.png)
-@snapend
+![shadow, drag=40, drop=50 70 true, set=fragment](assets/images/slides/googledocs.png)
 
 Note:
 
@@ -341,20 +260,18 @@ means how to grow or shrink you backend or service capabilities with the request
 more CPU, Memory than you have available ... what do you do?
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-90 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow]
+@css[text-italics](...there is no need, our system scales horizontally) 🤷
 
-@snap[south-west span-95 text-08 padded]
-![width=400, shadow](assets/images/slides/scaleup.gif)
+![shadow, drag=30 80, drop=10 60 false true](assets/images/slides/scaleup.gif)
+[drag=30 10, drop=10 -10 false true]
 Vertical Scalability
-@snapend
 
 Note:
 
@@ -364,25 +281,22 @@ increase capabilities of your service by just giving it more resources, more CPU
 Now this become very boring recently, and for last 5y the new fashion emerged...
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-90 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow]
+@css[text-italics](...there is no need, our system scales horizontally) 🤷
 
-@snap[south-west span-95 text-08 padded opacity-50]
-![width=400, shadow](assets/images/slides/scaleup.gif)
+![shadow, drag=30 80, drop=10 60 false true, opacity=0.5](assets/images/slides/scaleup.gif)
+[drag=30 10, drop=10 -10 false true, opacity=0.5]
 Vertical Scalability
-@snapend
 
-@snap[south-east span-95 text-08 padded]
-![width=400, shadow](assets/images/slides/scaleout.gif)
+![shadow, drag=30 80, drop=60 60 false true](assets/images/slides/scaleout.gif)
+[drag=30 10, drop=60 -10 false true]
 Horizontal Scalability
-@snapend
 
 Note:
 
@@ -402,30 +316,25 @@ And that's despite the fact that they can quickly optimize a couple of critical 
 to serve thousands of users without issues.    
 
 ---
-@snap[north span-95 text-06 text-left padded]
-##### Should you optimize your code for performance?
+[drag=90, drop=50 7 true true, set=align-left]
+### Should you optimize code for performance?
+
+[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
 @quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-@snapend
 
-@snap[north span-90 text-06 text-right padded]
-</br></br></br></br>
-@css[text-yellow text-italics](...there is no need, our system scales horizontally )🤷
-@snapend
+[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow]
+@css[text-italics](...there is no need, our system scales horizontally) 🤷
 
-@snap[south-west span-95 text-08 padded opacity-50]
-![width=400, shadow](assets/images/slides/scaleup.gif)
+![shadow, drag=30 80, drop=10 60 false true, opacity=0.5](assets/images/slides/scaleup.gif)
+[drag=30 10, drop=10 -10 false true, opacity=0.5]
 Vertical Scalability
-@snapend
 
-@snap[south-east span-95 text-08 padded opacity-50]
-![width=400, shadow](assets/images/slides/scaleout.gif)
+![shadow, drag=30 80, drop=60 60 false true, opacity=0.5](assets/images/slides/scaleout.gif)
+[drag=30 10, drop=60 -10 false true, opacity=0.5]
 Horizontal Scalability
-@snapend
 
-@snap[midpoint span-95 text-07 text-black text-bold padded]
-<br/><br/><br/><br/><br/>
-@box[bg-gold rounded](Performance still matters. Think: complexity of distributed applications, cost, cold start, etc...)
-@snapend
+[drag=80 30, drop=50 60 true true, set=padded bg-gold align-left]
+Well... Performance still matters. Complexity of distributed applications, cost, cold start, etc...
 
 Note:
 
@@ -433,22 +342,16 @@ So I want to reiterate, performance still matters. Horizontal scaling can be ext
 Not mentioning overhead and delay in scaling this way, especially if the Go code is not optimized.
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### How to approach performance optimizations?
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### How to approach performance optimizations?
 
-@snap[south-west span-95 padded]
-![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
-@snapend
+![drag=20 20, drop=20 80 true true](assets/images/slides/SPACEGIRL_GOPHER.png)
 
-@snap[north span-90 text-8 text-bold padded fragment]
-<br/>
-@box[rounded](Step 1: Define the problem; find the bottleneck.)
-@snapend
+[drag=80, drop=50 20 true true, set=text-bold]
+Step 1: Define __the problem__; find __the bottleneck__.
 
-@snap[midpoint span-90 text-08 padded fragment]
-@quote[<br/>1. First rule of Optimization: Don't do it.<br/>2. Second rule of Optimization: Don't do it... yet.<br/>3. Profile before Optimizing](http://wiki.c2.com/?RulesOfOptimization)
-@snapend
+[drag=80, drop=50 50 true true, set=align-left]
+@quote[<br/>1. First rule of Optimization: Don't do it.<br/>2. Second rule of Optimization: Don't do it... yet.<br/>3. Profile before Optimizing](http://wiki.c2.com/?RulesOfOptimization) 
 
 Note:
 
@@ -465,37 +368,27 @@ now or in near future actually
 There are probably more important things you can spend your time on. 
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### How to approach performance optimizations?
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### How to approach performance optimizations?
 
-@snap[south-west span-95 padded]
-![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
-@snapend
+![drag=20 20, drop=20 80 true true](assets/images/slides/SPACEGIRL_GOPHER.png)
 
-@snap[north span-90 text-8 text-bold padded]
-<br/>
-@box[rounded](Problem: API / RPC / Command / Action execution is...)
-@snapend
+[drag=80, drop=50 20 true true, set=text-bold]
+The Problem: API / RPC / Command / Action execution is...
 
-@snap[west span-45 text-06 padded fragment]
-a) @emoji[watch] very slow or time-outs.
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
+[drag=40 10, drop=25 30 true true, fit=0.8, set=align-center fragment]
+a) @emoji[watch] Very slow or time-outs.
 
-@snap[east span-45 text-06 text-center padded fragment]
-b) @emoji[fire] crashing the machine or process is just killed before succeeding.
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
+[drag=40 10, drop=75 30 true true, fit=0.8, set=align-center fragment]
+b) @emoji[fire] Crashing the machine or process is killed before succeeding.
 
-@snap[south-west span-45 text-05 padded fragment]
-![width=400, shadow](assets/images/slides/compressible.gif)
-e.g CPU time, Disk IO, Memory IO, Network IO 
-@snapend
+[drag=40 60, drop=25 65 true true, fit=0.8, set=align-center fragment]
+![shadow](assets/images/slides/compressible.gif)
+@size[0.8em](e.g CPU time, Disk IO, Memory IO, Network IO) 
 
 Note:
 
-This sounds solid, but how to do that? Well, usually you don't find the problem, the problem finds you!!
+This sounds solid, but how to do that, how it looks in practice? Well, usually you don't find the problem, the problem finds you!!
 
 Generally things you can potentially solve by optimizing your Go code can be divided into two groups: 
 
@@ -508,38 +401,28 @@ perform the operation. The difference between these two is actually in the chara
 or slowing it down.
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### How to approach performance optimizations?
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### How to approach performance optimizations?
 
-@snap[south-west span-95 padded]
-![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
-@snapend
+![drag=20 20, drop=20 80 true true](assets/images/slides/SPACEGIRL_GOPHER.png)
 
-@snap[north span-90 text-8 text-bold padded]
-<br/>
-@box[rounded](Problem: API / RPC / Command / Action execution is...)
-@snapend
+[drag=80, drop=50 20 true true, set=text-bold]
+The Problem: API / RPC / Command / Action execution is...
 
-@snap[west span-45 text-06 padded]
-a) @emoji[watch] very slow or time-outs.
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
+[drag=40 10, drop=25 30 true true, fit=0.8, set=align-center]
+a) @emoji[watch] Very slow or time-outs.
 
-@snap[east span-45 text-06 text-center padded]
-b) @emoji[fire] crashing the machine or process is just killed before succeeding.
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
+[drag=40 10, drop=75 30 true true, fit=0.8, set=align-center]
+b) @emoji[fire] Crashing the machine or process is killed before succeeding.
 
-@snap[south-west span-45 text-05 padded opacity-50]
-![width=400, shadow](assets/images/slides/compressible.gif)
-e.g CPU time, Disk IO, Memory IO, Network IO 
-@snapend
+[drag=40 60, drop=25 65 true true, fit=0.8, opacity=0.5, set=align-center]
+![shadow](assets/images/slides/compressible.gif)
+@size[0.8em](e.g CPU time, Disk IO, Memory IO, Network IO) 
 
-@snap[south-east span-45 text-05 padded]
-![width=400, shadow](assets/images/slides/incompressible.gif)
-e.g Storage: Memory, Disk, or DB Space, Power
-@snapend
+![drag=32 60, drop=75 62 true true, shadow](assets/images/slides/incompressible.gif)
+
+[drag=40 60, drop=75 90 true true, fit=0.8, set=align-center]
+@size[0.8em](e.g Storage: Memory, Disk, or DB Space, Power) 
 
 Note:
 
@@ -551,53 +434,28 @@ It terminates that process which is popularly known as OOM or out of memory exce
 This is quite important differentiations and will help you to tell what kind of bottleneck you should solve first while optimizing Go program.
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### How to approach performance optimizations?
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### How to approach performance optimizations?
 
-@snap[south-west span-95 padded]
-![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
-@snapend
+![drag=20 20, drop=20 80 true true](assets/images/slides/SPACEGIRL_GOPHER.png)
 
-@snap[north span-90 text-8 text-bold padded]
-<br/>
-@box[rounded](Bottleneck: What part of the code causes undesired resource consumption?)
-@snapend
+[drag=80, drop=50 20 true true, set=text-bold]
+The bottleneck: What operation (part of the code) causes undesired resource consumption?
 
-@snap[west span-90 text-06 padded fragment]
+[drag=90 10, drop=50 30 true true, fit=0.8, set=align-center fragment]
 a) @emoji[watch] Execution is very slow or time-outs.
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
 
-@snap[south span-95 text-04 padded bg-go fragment]
-![width=600, shadow](assets/images/slides/querylatency.png)
+[drag=80 60, drop=50 65 true true, fit=0.8, flow=stack, set=align-center fragment]
 Symptom: Alert (e.g via [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/))
-<br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
-
-@snap[south span-95 text-04 padded bg-go fragment]
-![width=600, shadow](assets/images/slides/duration.png)
+![shadow](assets/images/slides/querylatency.png)
 Drill down 1: Metrics via [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com/) dashboards. 
-<br/><br/><br/><br/><br/>
-@snapend
-
-@snap[south span-95 text-04 padded bg-go fragment]
-<br/><br/><br/><br/>
-![width=800, shadow](assets/images/slides/Trace.png)
+![shadow](assets/images/slides/duration.png)
 Drill down 2: Traces via [Jaeger](https://www.jaegertracing.io/). 
-<br/><br/><br/><br/><br/>
-@snapend
-
-@snap[south span-95 text-04 padded bg-go fragment]
-![width=800, shadow](assets/images/slides/flame.png)
-Drill down 3a: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/) [Flamegraph](http://www.brendangregg.com/flamegraphs.html) 
-<br/><br/><br/>
-@snapend
-
-@snap[south span-95 text-04 padded bg-go fragment]
-![width=600, shadow](assets/images/slides/profile1.png)
-Drill down 3b: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/)
-@snapend
+![shadow](assets/images/slides/Trace.png)
+Drill down 3a: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/) CPU [Flamegraph](http://www.brendangregg.com/flamegraphs.html) 
+![shadow](assets/images/slides/flame.png)
+Drill down 3b: Profiling via [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/) CPU Profile
+![shadow](assets/images/slides/profile1.png)
 
 Note:
 
@@ -624,51 +482,29 @@ And at the end for we could see in our example thanks to different CPU profile v
 ...We spend lots of cycles on TextMarshaller and this is where we should focus our optimization on...
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### How to approach performance optimizations?
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### How to approach performance optimizations?
 
-@snap[south-west span-95 padded]
-![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
-@snapend
+![drag=20 20, drop=20 80 true true](assets/images/slides/SPACEGIRL_GOPHER.png)
 
-@snap[north span-90 text-8 text-bold padded]
-<br/>
-@box[rounded](Bottleneck: What part of the code causes undesired resource consumption?)
-@snapend
+[drag=80, drop=50 20 true true, set=text-bold]
+The bottleneck: What operation (part of the code) causes undesired resource consumption?
 
-@snap[west span-90 text-06 padded]
-b) @emoji[fire] Execution is crashing the machine or process is just killed before succeeding.
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
+[drag=90 10, drop=50 30 true true, fit=0.8, set=align-center]
+a) @emoji[fire] Execution is crashing the machine or process is killed before succeeding.
 
-@snap[south span-95 text-04 padded bg-go fragment]
-![width=900, shadow](assets/images/slides/crashloop.png)
+[drag=80 60, drop=50 65 true true, fit=0.8, flow=stack, set=align-center fragment]
 Symptom: Process is crashing e.g on [Kubernetes](http://kubernetes.io/) (via [OpenShift Console](https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it?sc_cid=7013a000002DkSqAAK&gclid=CjwKCAjw_qb3BRAVEiwAvwq6VtRhQegkDHNqedqfhFpGxGhhTxf3PJ4gTrlt5R9baahwYrAu5qgWyRoC_FcQAvD_BwE&gclsrc=aw.ds))
-<br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
-
-@snap[south span-95 text-04 padded bg-go fragment]
-![width=700, shadow](assets/images/slides/memory.png)
+![shadow](assets/images/slides/crashloop.png)
 Drill down 1: Metrics via [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com/) dashboards. 
-@snapend
-
-@snap[south span-95 text-04 padded bg-go fragment]
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+![shadow](assets/images/slides/memory.png)
+Drill down 2: Traces?
 Drill down 2: Traces? @css[text-pink](Not really useful, it's not latency issue...)
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
-
-@snap[south span-95 text-04 padded bg-go fragment]
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+Drill down 2: Profiling? 
 Drill down 2: Profiling? @css[text-pink](Profiling what, process already crashed...)
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-@snapend
+Drill down 2: __Continous Profiling__! via [ConProf](https://github.com/conprof/conprof) (check good intro [here](https://youtu.be/kRVE15j1zxQ?t=221))
+![shadow](assets/images/slides/conprof.png)
 
-@snap[south span-95 text-04 padded bg-go fragment]
-![width=500, shadow](assets/images/slides/conprof.png)
-Drill down 2: Continous profiling! via [ConProf](https://github.com/conprof/conprof) (check good intro [here](https://youtu.be/kRVE15j1zxQ?t=221))
-@snapend
 
 Note:
 
@@ -691,52 +527,34 @@ profiles every 15 seconds, so you can see the profiles retroactively, allowing u
 So overall, as you can see, even detecting, and drilling down to actually root cause can take time and effort. 
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### How to approach performance optimizations?
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### How to approach performance optimizations?
 
-@snap[south-west span-95 padded]
-![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
-@snapend
+![drag=20 20, drop=50 80 true true](assets/images/slides/SPACEGIRL_GOPHER.png)
 
-@snap[north span-100 text-8 text-bold padded]
-<br/>
-@box[rounded](Step 2: Find the right balance, a _tradeoff_.<br/> What's more important?)
-@snapend
+[drag=80, drop=50 20 true true, set=text-bold]
+Step 2: Find the right balance, a _tradeoff_.
 
-@snap[west span-45 text-06 padded]
-@box[rounded bg-gold box-padded](CPU)
-@snapend
+[drag=80, drop=50 60 true true, set=text-bold]
+What's more important?</br>🤔
 
-@snap[midpoint span-45 text-10 padded]
-<br/><br/><br/><br/><br/>
-🤔
-?
-@snapend
+[drag=30 10, drop=20 40 true true]
+@box[span-90 rounded bg-gold box-padded](CPU)
 
-@snap[east span-45 text-06 padded]
-@box[rounded bg-purple box-padded](Memory)
-@snapend
+[drag=30 10, drop=80 40 true true]
+@box[span-90 rounded bg-purple box-padded](Memory)
 
-@snap[west span-45 text-06 padded]
-<br/><br/><br/><br/><br/><br/>
-@box[rounded bg-green box-padded](Disk)
-@snapend
+[drag=30 10, drop=20 60 true true]
+@box[span-90 rounded bg-green box-padded](Disk)
 
-@snap[east span-45 text-06 padded]
-<br/><br/><br/><br/><br/><br/>
-@box[rounded bg-blue box-padded](Network)
-@snapend
+[drag=30 10, drop=80 60 true true]
+@box[span-90 rounded bg-blue box-padded](Network)
 
-@snap[south-west span-45 text-06 padded]
-@box[rounded bg-gray box-padded](Functionality)
-<br/><br/><br/><br/><br/>
-@snapend
+[drag=30 10, drop=20 80 true true]
+@box[span-90 rounded bg-gray box-padded](Functionality)
 
-@snap[south-east span-45 text-06 padded]
-@box[rounded bg-pink box-padded](Readability)
-<br/><br/><br/><br/><br/>
-@snapend
+[drag=30 10, drop=80 80 true true]
+@box[span-90 rounded bg-pink box-padded](Readability)
 
 Note:
 
@@ -760,31 +578,36 @@ So. It's very important that RARELY you can optimize code without sacrificing so
 The key is to choose based on your priority.
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### How to approach performance optimizations?
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### How to approach performance optimizations?
 
-@snap[north span-100 text-8 text-bold padded]
-<br/>
-@box[rounded](Step 3. Optimize & Measure: Data Driven Decisions.)
-@snapend
+[drag=80, drop=50 20 true true, set=text-bold]
+Step 3: Optimization Effectiveness vs Effort.
 
-@snap[midpoint span-100 text-06 padded fragment]
-![width=800](assets/images/slides/Measurement.png)
-<br/>
-@snapend
+[drag=80, drop=50 55 true true, set=fragment]
+![](assets/images/slides/pyramid.png)
 
-@snap[south span-95 text-06 padded]
+Note:
+
+---
+[drag=90, drop=50 7 true true, set=align-left]
+### How to approach performance optimizations?
+
+[drag=80, drop=50 20 true true, set=text-bold]
+Step 4. Optimize & Measure: Ensure __Data Driven__ Decisions.
+
+[drag=80, drop=50 55 true true, set=fragment]
+![](assets/images/slides/Measurement.png)
+
+[drag=80, drop=50 90 true true, fit=0.8, set=fragment]
 @ol[list-spaced-bullets text-08](true)
 1. Benchmarks (aka "micro-benchmarks"): [go test -bench](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go), [benchcmp old new](https://godoc.org/golang.org/x/tools/cmd/benchcmp), [benchstat](https://godoc.org/golang.org/x/perf/cmd/benchstat), [funcbench](https://github.com/prometheus/test-infra/tree/master/funcbench)
 1. Load Tests (Deploy & Measure): [prombench](https://github.com/prometheus/test-infra/tree/master/prombench), Kubernetes + Prometheus, [perf](http://www.brendangregg.com/perf.html)
 @olend
-<br/><br/>
-@snapend
 
 Note:
 
-So finally! Out  problem is defined, exact bottleneck found the we agreed on direction of our optimization. N
+So finally! Our problem is defined, exact bottleneck found the we agreed on direction of our optimization. N
 
 Now we can start actually coding! But just before that, to perform optimizations effectively we need to learn how to measure the results of our work first.
 High level flow would look like this [C] 
@@ -806,25 +629,23 @@ This is very tedious sometimes, but every programming language especially Go hol
 systems, kernels are having even more and they are changing constantly. So make sure you avoid suprisies and improve code step by step 
 with checks and this is called Data Driven Decision Methodology.
 
+
 ---
-@snap[north span-95 text-05 text-left padded]
-##### Few optimization tricks & pitfalls @emoji[bomb]
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### Performance optimization tricks & pitfalls @emoji[bomb]
 
 Note:
 
 That was theory! Now for last 5 minutes, let's jump into a few optimization tricks you can apply generally.
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### Few optimization tricks & pitfalls @emoji[bomb]
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### Performance optimization tricks & pitfalls @emoji[bomb]
 
-@snap[south-east span-100 text-06 text-gray]
-This is leaking memory in net/http package.                        
-@snapend
+[drag=80 10, drop=50 90 true true, fit=0.8, set=fragment align-left]
+Pitfall 1: This code is __leaking memory__ in net/http package. 
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=12-23)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.7, set=fragment](slides/optimizing-go-for-clouds/go-poland-meetup-11-2020/leak.go?lines=12-23)
 
 @[6,7-8,10-11]
 
@@ -851,15 +672,13 @@ This is pretty common problem, it's not obvious and super easy to forget.
 And you can avoid this problem with following changes:
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### Few optimization tricks & pitfalls @emoji[bomb]
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### Performance optimization tricks & pitfalls @emoji[bomb]
 
-@snap[south-east span-100 text-06 text-gray]
-Ensure you close and exhaust the body. This actually can read from network directly!                       
-@snapend
+[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
+Tip 1: Ensure you __close and exhaust the body__. Otherwise, the bytes are never read from the buffers (often channels), so go-routintes are left, sockets and connections are never reused.                        
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=25-42)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-poland-meetup-11-2020/leak.go?lines=25-42)
 
 @[5-8]
 
@@ -871,15 +690,13 @@ Just make sure that you defer reading full body and closing it.
 And if this code is not clean or pretty for you, which is fair, you can check the helper we created for this.
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### Few optimization tricks & pitfalls @emoji[bomb]
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### Performance optimization tricks & pitfalls @emoji[bomb]
 
-@snap[south-east span-100 text-06 text-gray]
+[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
 Feel free to use Thanos [github.com/thanos-io/thanos/pkg/runutil](https://pkg.go.dev/github.com/thanos-io/thanos@v0.11.0/pkg/runutil?tab=doc) package                    
-@snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=44-58)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-poland-meetup-11-2020/leak.go?lines=44-58)
 
 @[5]
 
@@ -891,15 +708,13 @@ inside Thanos runutil package. The name is quite lengthy ... but it does what ne
 properly return error if this operation fails which is nice! 
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### Few optimization tricks & pitfalls @emoji[bomb]
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### Performance optimization tricks & pitfalls @emoji[bomb]
 
-@snap[south-east span-100 text-06 text-gray]
-This code can allocate a lot and use more CPU than needed for growing array.
-@snapend
+[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
+Pitfall 2: This code can __allocate a lot of memory and use more CPU than needed for growing array__. 
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/alloc.go?lines=3-11)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/alloc.go?lines=3-11)
 
 @[5-6]
 
@@ -922,17 +737,16 @@ And runtime does it step by step, because it does not want to overallocate!
 So what's the solution?
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### Few optimization tricks & pitfalls @emoji[bomb]
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### Performance optimization tricks & pitfalls @emoji[bomb]
 
-@snap[south-east span-100 text-06 text-gray]
-It's a good pattern to pre-allocate Go arrays! You can do that using `make()`
-@snapend
+[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
+Tip 2: It's a good pattern to pre-allocate Go arrays! You can do that using `make()`
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/alloc.go?lines=13-23)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/alloc.go?lines=13-23)
 
 @[2-3,6,8]
+
 
 Note:
 
@@ -942,17 +756,15 @@ Note:
 have this information because we are literally copy the array. 
 
 All thanks to make statement, which takes number of elements for length pre-grow.
- 
+
 ---
-@snap[north span-95 text-05 text-left padded]
-##### Few optimization tricks & pitfalls @emoji[bomb]
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### Performance optimization tricks & pitfalls @emoji[bomb]
 
-@snap[south-east span-100 text-06 text-gray]
-We are hitting problem with lazy GC, and we allocate more than needed.
-@snapend
+[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
+: We are hitting problem with lazy GC, and we allocate more than needed.
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/reuse.go?lines=4-16)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/reuse.go?lines=4-16)
 
 @[7-11]
 
@@ -966,18 +778,15 @@ be released from memory by garbage collection, but this collection happens perio
 of extra memory used.
 
 ---
-@snap[north span-95 text-05 text-left padded]
-##### Few optimization tricks & pitfalls @emoji[bomb]
-@snapend
+[drag=90, drop=50 7 true true, set=align-left]
+### Performance optimization tricks & pitfalls @emoji[bomb]
 
-@snap[south-east span-100 text-06 text-gray]
+[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
 Reusing the same slice to avoid allocation is nice here.
-@snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/reuse.go?lines=19-30)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/reuse.go?lines=19-30)
 
 @[7-10]
-
 
 Note:
 
@@ -987,43 +796,27 @@ What's the solution? instead it might be better to just reset slice in this form
 still maintaing underlying array!
 
 ---
+[drag=90, drop=50 7 true true, set=align-left]
+### Summary
 
-@snap[north span-95 text-05 text-left padded]
-##### Summary
-@snapend
+![drag=20 20, drop=80 20 true true](assets/images/slides/SPACEGIRL1.png)
 
-@snap[south-east span-95 padded]
-![width=150](assets/images/slides/SPACEGIRL1.png)
-@snapend
-
-@snap[north span-100]
-<br/>
-@ol[span-90 text-06](true)
-1. Resist the excuses, optimize Go code to solve your performance bottlenecks!
-1. Three steps process: **First: define the problem and find bottleneck** 
+@ol[drag=90](true)
+1. Resist the excuses, consider optimizing Go code to solve your performance bottlenecks!
+1. **First: Define the problem and find the main bottleneck** 
 1. **Second: Find the right balance, a tradeoff. What's more important?**
-1. **Third: Optimize & Measure, ensure Data Driven Decisions**
-1. Code suggestions, find more in [Thanos Go Style Guide!](https://thanos.io/contributing/coding-style-guide.md/#development-code-review)
+1. **Third: Understand the effort**
+1. **Fourth: Optimize & Measure, ensure Data Driven Decisions**
+1. Remember about tips, find more in [Thanos Go Style Guide!](https://thanos.io/contributing/coding-style-guide.md/#development-code-review)
 @olend
-@snapend
 
-@snap[south-west span-100 padded fragment]
-<br/>
-![width=600](assets/images/slides/bench.png)
-@snapend
+![drag=90, drop=50 50 true true, set=fragment](assets/images/slides/bench.png)
 
-@snap[south span-100 padded fragment]
-<br/>
-![width=500](assets/images/slides/tweet1.png)
-@snapend
+![drag=90, drop=50 50 true true, set=fragment](assets/images/slides/tweet1.png)
 
-@snap[west span-100 padded fragment]
-![width=500](assets/images/slides/tweet2.png)
-@snapend
+![drag=90, drop=50 50 true true, set=fragment](assets/images/slides/tweet2.png)
 
-@snap[east span-100 padded fragment]
-![width=450](assets/images/slides/tweet3.png)
-@snapend
+![drag=90, drop=50 50 true true, set=fragment](assets/images/slides/tweet3.png)
 
 Note:
 
@@ -1043,40 +836,4 @@ Anyway, all this talk, and all this kind of complext work - we to see at the end
 
 It might be worth it!
 
----
-@snap[north span-100]
-## Thank You!
-@snapend
-
-@snap[west span-70 text-left text-06 padded]
-@size[1.2em](**Feel free to ask questions @emoji[raising_hand]& discuss:**)
-* _Live:_ on YouTube Stream
-* _Offline:_ on [Gopher Slack `#london`](https://gophers.slack.com) 
-  * My handle: `@bwplotka`
-<br/><br/><br/><br/><br/><br/><br/><br/> 
-@snapend
-
-@snap[east span-40 text-05 text-center]
-![width=200](assets/images/slides/qrcode-optimizing-go-code.png)
-<br/><br/><br/><br/><br/>
-@snapend
-
-@snap[south span-96 text-center]
-![width=800](assets/images/slides/GoCommunity.png)
-@snapend
-
----
-@snap[north span-95 text-left]
-#### Sources & Credits
-@snapend
-
-@snap[midpoint span-75 text-06 text-bold text-left]
-@ol[](false)
-* Amazing [ashleymcnamara](https://github.com/ashleymcnamara/gophers) gophers
-* [viva64](https://www.viva64.com/en/t/0084/#:~:text=Definition%20and%20Properties,performs%20fewer%20input%2Foutput%20operations.)
-* [wiki.c2.com](http://wiki.c2.com/?RulesOfOptimization)
-* [pprof](https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/)
-* [Dave's bench tutorial](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go)
-* [Thanos Go Style Guide!](https://thanos.io/contributing/coding-style-guide.md/#development-code-review)
-* [Amazing gitpitch framework for slide creation!](https://gitpitch.com/)
-@olend
+---?include=slides/common/thank-you/PITCHME.md

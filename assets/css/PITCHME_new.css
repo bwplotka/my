@@ -1,0 +1,17 @@
+.padded {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+
+.shadow {
+    box-shadow:0 10px 16px 10px rgba(0,0,0,0.20),
+    0 6px 20px 10px rgba(0,0,0,0.45) !important;
+}
+
+.bg-go {
+    background-color: #1A0420;
+}
+
+b, strong, i {
+    color: white !important;
+}

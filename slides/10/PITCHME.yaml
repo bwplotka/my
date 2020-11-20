@@ -17,7 +17,7 @@ lang: "en"
 #  1. Log into Google Analytics
 #  2. Create a new GA Property
 #  3. For your new GA Property, specify https://gitpitch.com as the property URL
-gatoken: 2170247562
+gatoken: G-Y7Z2RDG1HQ
 
 # Code.
 code-line-numbers: true

@@ -171,7 +171,7 @@ I hopefully can list some of the tricks near the finish of this presentation.
 @snapend
 
 @snap[south span-100 text-04 padded fragment]
-@code[golang code-noblend code-max zoom-05](slides/optimizing-go-for-clouds-go-meetup/perf.go?lines=31-51,58-60)
+@code[golang code-noblend code-max zoom-05](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/perf.go?lines=31-51,58-60)
 _[Snippet from latest Thanos code for lookup of label names in memory-maped file](https://github.com/thanos-io/thanos/blob/63ef382fc335969fa2fb3e9c9025eb0511fbc3af/pkg/block/indexheader/binary_reader.go#L841)_ 
 @snapend
 
@@ -212,7 +212,7 @@ So.. does performance really matter if it reduces readability?
 @snapend
 
 @snap[south span-100 text-04 padded opacity-50]
-@code[golang code-noblend code-max zoom-05](slides/optimizing-go-for-clouds-go-meetup/perf.go?lines=31-51,58-60)
+@code[golang code-noblend code-max zoom-05](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/perf.go?lines=31-51,58-60)
 _[Snippet from latest Thanos code for lookup of label names in memory-maped file](https://github.com/thanos-io/thanos/blob/63ef382fc335969fa2fb3e9c9025eb0511fbc3af/pkg/block/indexheader/binary_reader.go#L841)_ 
 @snapend
 
@@ -488,7 +488,7 @@ b) @emoji[fire] crashing the machine or process is just killed before succeeding
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 @snapend
 
-@snap[south-west span-45 text-05 padded fragment]
+@snap[south-west span-45 t  ext-05 padded fragment]
 ![width=400, shadow](assets/images/slides/compressible.gif)
 e.g CPU time, Disk IO, Memory IO, Network IO 
 @snapend
@@ -556,7 +556,7 @@ This is quite important differentiations and will help you to tell what kind of 
 @snapend
 
 @snap[south-west span-95 padded]
-![width=150](assets/images/slides/SPACEGIRL_GOPHER.png)
+![width=1Pro50](assets/images/slides/SPACEGIRL_GOPHER.png)
 @snapend
 
 @snap[north span-90 text-8 text-bold padded]
@@ -824,7 +824,7 @@ That was theory! Now for last 5 minutes, let's jump into a few optimization tric
 This is leaking memory in net/http package.                        
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=12-23)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/leak.go?lines=12-23)
 
 @[6,7-8,10-11]
 
@@ -859,7 +859,7 @@ And you can avoid this problem with following changes:
 Ensure you close and exhaust the body. This actually can read from network directly!                       
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=25-42)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/leak.go?lines=25-42)
 
 @[5-8]
 
@@ -879,7 +879,7 @@ And if this code is not clean or pretty for you, which is fair, you can check th
 Feel free to use Thanos [github.com/thanos-io/thanos/pkg/runutil](https://pkg.go.dev/github.com/thanos-io/thanos@v0.11.0/pkg/runutil?tab=doc) package                    
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/leak.go?lines=44-58)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/leak.go?lines=44-58)
 
 @[5]
 
@@ -899,7 +899,7 @@ properly return error if this operation fails which is nice!
 This code can allocate a lot and use more CPU than needed for growing array.
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/alloc.go?lines=3-11)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/alloc.go?lines=3-11)
 
 @[5-6]
 
@@ -930,7 +930,7 @@ So what's the solution?
 It's a good pattern to pre-allocate Go arrays! You can do that using `make()`
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/alloc.go?lines=13-23)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/alloc.go?lines=13-23)
 
 @[2-3,6,8]
 
@@ -952,7 +952,7 @@ All thanks to make statement, which takes number of elements for length pre-grow
 We are hitting problem with lazy GC, and we allocate more than needed.
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/reuse.go?lines=4-16)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/reuse.go?lines=4-16)
 
 @[7-11]
 
@@ -974,7 +974,7 @@ of extra memory used.
 Reusing the same slice to avoid allocation is nice here.
 @snapend
 
-@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds-go-meetup/reuse.go?lines=19-30)
+@code[golang code-noblend code-max zoom-10](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/reuse.go?lines=19-30)
 
 @[7-10]
 
