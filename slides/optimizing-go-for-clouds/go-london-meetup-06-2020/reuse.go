@@ -7,10 +7,6 @@ func x()  {
 
 		if len(messages) > maxMessageLen {
 			marshalAndSend(messages)
-			// This creates new array. Previous array
-			// will be garbage collected only after
-			// some time (seconds), which
-			// can create enormous memory pressure.
 			messages = []string{}
 		}
 	}

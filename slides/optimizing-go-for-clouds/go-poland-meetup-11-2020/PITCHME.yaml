@@ -1,7 +1,7 @@
-title: "Optimizing Go for Clouds: Practical Intro"
-description : "TBD"
+title: "Optimizing Go for Clouds"
+description : "Practical intro into Performance Optimization for Go"
 gitpitch : 4.0
-# thumbnail : assets/img/screenshot.png
+thumbnail : assets/images/slides/thumbnail.png
 highlight: atom-one-dark
 
 # Production readiness control.

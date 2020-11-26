@@ -13,7 +13,6 @@ Note:
 Thanks .., Hello everyone! I am super excited to be presenting today, in our ... Meetup.
 I was very often joining this meetup as a guest, so I am triple honoured now to share what I know about Go and Performance from practical
 side. I am speaking from the virtual stage and I wish we could meet in reality, but let's focus on benefits of this situation:
-For example I am sure we have guest from outside of London, I know about a few Berlin friends, so there is always a bright side of things (: 
 ---
 
 [drag=80, drop=50 7 true true, set=align-left]
@@ -28,12 +27,10 @@ For example I am sure we have guest from outside of London, I know about a few B
 @ol[list-spaced-bullets](true)
 1. Should you optimize your code for performance? _"Our design is scalable, machines big and code has to be readable, let's not worry about performance"_ @note[First of all, we will touch on the potential misconception, so essentially why performance for single application is still quite important nowadays and why you don't need to sacrifice readability!]
 1. How to approach performance optimizations in Go? @note[Then we will discuss how to efficiently approach performance, how to start with optimizing and when]
-1. Go optimization tricks & pitfalls @emoji[bomb] @note[Last but not the least I would love to share some tricks and usual patterns that helps improve things! But before that.. short introduction]
+1. Go optimization tricks & pitfalls @emoji[bomb] @note[Last but not the least I would love to share some tricks and usual patterns that helps improve things! But before that.. short introduction INTERACTIVITY]
 @olend
 
 Note:
-Still Infrastructure mostly runs in Clouds not yet in Space, so let's get back to the Earth.
-We can divide our talk to 3 steps.
 
 ---?include=slides/common/whoami-go/PITCHME.md
 
@@ -168,7 +165,7 @@ _[Snippet Thanos Go code for lookup of label names in memory-mapped file](https:
 ![shadow, drag=80, drop=80 60 true, opacity=0.5](assets/images/slides/readable.jpg)
 
 [drag=80 30, drop=50 60 true true, set=padded bg-gold align-left]
-Fair point, **but** with good balance and consistency, code can be still readable (TBD)
+Fair point, but with good abstractions, __balance__ and strict __consistency__, code can stay readable!
 
 Note:
 
@@ -215,16 +212,19 @@ to pay for those.
 ![shadow, drag=40, drop=70 60 true, stretch=true, opacity=0.5](assets/images/slides/brute-force.jpeg)
 
 [drag=80 30, drop=50 60 true true, set=padded bg-gold align-left]
-Still there are limitations: Slow garbage collections for huge heaps and multicore architecture fun: 
-IO, network, memory bandwidth etc
+This is not that easy: __Slow garbage collections for huge heaps__ and __multicore architecture "fun"__: 
+races, IO, network, memory bandwidth saturations etc, add huge complexity and brings limits quite early.
 
 
 Note:
-Well, in practice it's not that nice as it looks. Concurrent programming is hard, despite Go having pretty amazing framework for it.
+Well, in practice it's not that nice as it looks.
+ 
+Concurrent programming is hard, despite Go having pretty amazing framework for it.
 With lots of go routines and channels, you will hit process scalability limitation at some point. Think about cases like resource starvation or 
 garbage collection latency on an enormous heap so shared memory across go routines. 
+
 Not mentioning other aspects like memory or disk IO bandwidth. 
-At the end you have to optimize the code in some way or scale out of the single process.
+At the end you have to optimize the code in some way or scale out of the single process and do the operations efficiently.
 
 ---
 [drag=90, drop=50 7 true true, set=align-left]
@@ -236,50 +236,16 @@ At the end you have to optimize the code in some way or scale out of the single 
 [drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow fragment]
 @css[text-italics](...there is no need, our system scales horizontally) 🤷
 
-![shadow, drag=40, drop=25 60 true, set=fragment](assets/images/slides/twitterdesign.png)
-
-![shadow, drag=40, drop=75 80 true, set=fragment](assets/images/slides/whatsapp.png)
-
-![shadow, drag=40, drop=50 70 true, set=fragment](assets/images/slides/googledocs.png)
-
-Note:
-
-Which brings us to last misconception, why someone would potentially ignore doing optimizations. We often here that our
-code have unlimited horizontal scalability, why would we care how much single process uses?
-
-This is actually something I see a lot in the infrastructure culture.
-
-And nowadays if you want to be hired as a backend engineer, on the top typical programming and linux questions on interview, you have to show your skills in
-designing scalable systems 
-
-[C] You have to either design system like Twitter or Messenger or like Google Docs, you need to go through
-different phases, and explain how it will scale from 100 users to 10 thousands and then up to million.
-
-At the end the key concept that every cloud engineer has to know then is Scalability of the system. It's extremely exciting topic and it essentially
-means how to grow or shrink you backend or service capabilities with the request traffic. So when your application become too slow or require 
-more CPU, Memory than you have available ... what do you do?
-
----
-[drag=90, drop=50 7 true true, set=align-left]
-### Should you optimize code for performance?
-
-[drag=90, drop=50 25 true true, fit=0.8, set=align-left]
-@quote[ We don't need to optimize this program because...<br/><br/>](Your Code Reviewer)
-
-[drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow]
-@css[text-italics](...there is no need, our system scales horizontally) 🤷
-
-![shadow, drag=30 80, drop=10 60 false true](assets/images/slides/scaleup.gif)
-[drag=30 10, drop=10 -10 false true]
+![drag=30 80, drop=10 60 false true, set=fragment](assets/images/slides/scaleup.gif)
+[drag=30 10, drop=10 -10 false true, set=fragment]
 Vertical Scalability
 
 Note:
 
-[C] Basic way of doing this is through something called scale up/down procedure, in different words Vertical scalability. You 
-increase capabilities of your service by just giving it more resources, more CPU, RAM, better network, but usually it's just single process, single machine
+What we tried previously is a scale up proces, so adding more resources to single machine? 
+More CPU, RAM, better network, but usually it's just single process, single machine
 
-Now this become very boring recently, and for last 5y the new fashion emerged...
-
+  
 ---
 [drag=90, drop=50 7 true true, set=align-left]
 ### Should you optimize code for performance?
@@ -290,30 +256,32 @@ Now this become very boring recently, and for last 5y the new fashion emerged...
 [drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow]
 @css[text-italics](...there is no need, our system scales horizontally) 🤷
 
-![shadow, drag=30 80, drop=10 60 false true, opacity=0.5](assets/images/slides/scaleup.gif)
+![drag=30 80, drop=10 60 false true, opacity=0.5](assets/images/slides/scaleup.gif)
 [drag=30 10, drop=10 -10 false true, opacity=0.5]
 Vertical Scalability
 
-![shadow, drag=30 80, drop=60 60 false true](assets/images/slides/scaleout.gif)
+![drag=30 80, drop=60 60 false true](assets/images/slides/scaleout.gif)
 [drag=30 10, drop=60 -10 false true]
 Horizontal Scalability
 
+![shadow, drag=40 80, drop=15 60 false true, fragment](assets/images/slides/microservices.jpg)
+
 Note:
 
-Scale out / scale in method. Which means that you can grow your application
-by just replicating it horizontally on different machines. 
+
+But there is another excuse! Why should we invest time in code optimizations if we can just things
+horizontaly??
 
 And particularly in this model someone can say that optimizing single process is not a priority, because
-you can just add another server or virtual machine or container etc.
+if your operations need more resources because of bigger traffic, you can just add another server or virtual machine or container etc
+shard more distribute traffic more!
 
-The problem is that as you seen horizontal scalability became a buzz word, certain "fashion". And this problem, misconception
+The problem is that horizontal scalability became a buzz word, a certain "fashion". And this problem, misconception
 is actually the true motivation for me for making this presentation. 
 
 Because scale-out fashion, is maybe more exciting for engineers? caused many people to really sometimes **prematurely** dive into distributing
-their application and using tools like Kubernetes or Mesos. 
- 
-And that's despite the fact that they can quickly optimize a couple of critical paths, unnecessary allocation in their code and allow single-process Go application 
-to serve thousands of users without issues.    
+their application and using tools like Kubernetes, Mesos, OpenStack etc. 
+
 
 ---
 [drag=90, drop=50 7 true true, set=align-left]
@@ -325,21 +293,28 @@ to serve thousands of users without issues.
 [drag=90 10, drop=50 25 true true, fit=0.8, set=align-right text-yellow]
 @css[text-italics](...there is no need, our system scales horizontally) 🤷
 
-![shadow, drag=30 80, drop=10 60 false true, opacity=0.5](assets/images/slides/scaleup.gif)
+![drag=30 80, drop=10 60 false true, opacity=0.5](assets/images/slides/scaleup.gif)
 [drag=30 10, drop=10 -10 false true, opacity=0.5]
 Vertical Scalability
 
-![shadow, drag=30 80, drop=60 60 false true, opacity=0.5](assets/images/slides/scaleout.gif)
+![drag=30 80, drop=60 60 false true, opacity=0.5](assets/images/slides/scaleout.gif)
 [drag=30 10, drop=60 -10 false true, opacity=0.5]
 Horizontal Scalability
 
+![shadow, drag=40 80, drop=15 60 false true, opacity=0.5](assets/images/slides/microservices.jpg)
+
 [drag=80 30, drop=50 60 true true, set=padded bg-gold align-left]
-Well... Performance still matters. Complexity of distributed applications, cost, cold start, etc...
+__Performance still matters__. Distributed Systems are... complex, over consuming is expensive, cold starts, etc...
+
+![shadow, drag=30 80, drop=60 80 false true](assets/images/slides/doesnotsimply.jpg)
 
 Note:
 
 So I want to reiterate, performance still matters. Horizontal scaling can be extremely expensive and difficult to implement properly.
 Not mentioning overhead and delay in scaling this way, especially if the Go code is not optimized.
+
+And that's despite the fact that they can quickly optimize a couple of critical paths, unnecessary allocation in their code and allow single-process Go application 
+to serve thousands of users without issues.    
 
 ---
 [drag=90, drop=50 7 true true, set=align-left]
@@ -347,16 +322,15 @@ Not mentioning overhead and delay in scaling this way, especially if the Go code
 
 ![drag=20 20, drop=20 80 true true](assets/images/slides/SPACEGIRL_GOPHER.png)
 
-[drag=80, drop=50 20 true true, set=text-bold]
+[drag=80, drop=50 20 true true, set=text-bold, set=fragment]
 Step 1: Define __the problem__; find __the bottleneck__.
 
-[drag=80, drop=50 50 true true, set=align-left]
+[drag=80, drop=50 50 true true, set=align-left fragment]
 @quote[<br/>1. First rule of Optimization: Don't do it.<br/>2. Second rule of Optimization: Don't do it... yet.<br/>3. Profile before Optimizing](http://wiki.c2.com/?RulesOfOptimization) 
 
 Note:
 
-Overall, we can see that there are always excuses to avoid performance optimization. At the end it comes to the same conclusion,
-performance matters, but it has it consequences. Mainly that it's hard to achieve, takes time and might impact readability.
+OK hopefully I motivate you a bit to think about performance improvements for your  Go app, so
 
 So, how to approach this topic? 
 
@@ -416,10 +390,10 @@ a) @emoji[watch] Very slow or time-outs.
 b) @emoji[fire] Crashing the machine or process is killed before succeeding.
 
 [drag=40 60, drop=25 65 true true, fit=0.8, opacity=0.5, set=align-center]
-![shadow](assets/images/slides/compressible.gif)
+![](assets/images/slides/compressible.gif)
 @size[0.8em](e.g CPU time, Disk IO, Memory IO, Network IO) 
 
-![drag=32 60, drop=75 62 true true, shadow](assets/images/slides/incompressible.gif)
+![drag=32 60, drop=75 62 true true](assets/images/slides/incompressible.gif)
 
 [drag=40 60, drop=75 90 true true, fit=0.8, set=align-center]
 @size[0.8em](e.g Storage: Memory, Disk, or DB Space, Power) 
@@ -601,8 +575,8 @@ Step 4. Optimize & Measure: Ensure __Data Driven__ Decisions.
 
 [drag=80, drop=50 90 true true, fit=0.8, set=fragment]
 @ol[list-spaced-bullets text-08](true)
-1. Benchmarks (aka "micro-benchmarks"): [go test -bench](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go), [benchcmp old new](https://godoc.org/golang.org/x/tools/cmd/benchcmp), [benchstat](https://godoc.org/golang.org/x/perf/cmd/benchstat), [funcbench](https://github.com/prometheus/test-infra/tree/master/funcbench)
-1. Load Tests (Deploy & Measure): [prombench](https://github.com/prometheus/test-infra/tree/master/prombench), Kubernetes + Prometheus, [perf](http://www.brendangregg.com/perf.html)
+1. Benchmarks ("micro-benchmarks"): [go test -bench](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go), [benchcmp old new](https://godoc.org/golang.org/x/tools/cmd/benchcmp), [benchstat](https://godoc.org/golang.org/x/perf/cmd/benchstat), [funcbench](https://github.com/prometheus/test-infra/tree/master/funcbench)
+1. Load Tests ("macro-benchmarks"): [prombench](https://github.com/prometheus/test-infra/tree/master/prombench), Kubernetes + Prometheus, [perf](http://www.brendangregg.com/perf.html)
 @olend
 
 Note:
@@ -629,27 +603,20 @@ This is very tedious sometimes, but every programming language especially Go hol
 systems, kernels are having even more and they are changing constantly. So make sure you avoid suprisies and improve code step by step 
 with checks and this is called Data Driven Decision Methodology.
 
-
----
-[drag=90, drop=50 7 true true, set=align-left]
-### Performance optimization tricks & pitfalls @emoji[bomb]
-
-Note:
-
-That was theory! Now for last 5 minutes, let's jump into a few optimization tricks you can apply generally.
-
 ---
 [drag=90, drop=50 7 true true, set=align-left]
 ### Performance optimization tricks & pitfalls @emoji[bomb]
 
 [drag=80 10, drop=50 90 true true, fit=0.8, set=fragment align-left]
-Pitfall 1: This code is __leaking memory__ in net/http package. 
+Pitfall 1 "__Reading HTTP Response__": this code is __leaking memory__ in net/http package. Do you know why?
 
 @code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.7, set=fragment](slides/optimizing-go-for-clouds/go-poland-meetup-11-2020/leak.go?lines=12-23)
 
 @[6,7-8,10-11]
 
 Note:
+
+That was theory! Now for last 5 minutes, let's jump into a few optimization tricks you can apply generally.
 
 First one is related to the standard net/http package. Sometimes when you read a response from some HTTP call it goes like this.
 AND. This is wrong, by wrong I mean it can literally leak lots of memory and not only.
@@ -675,7 +642,7 @@ And you can avoid this problem with following changes:
 [drag=90, drop=50 7 true true, set=align-left]
 ### Performance optimization tricks & pitfalls @emoji[bomb]
 
-[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
+[drag=80 20, drop=50 90 true true, fit=0.8, set=align-left]
 Tip 1: Ensure you __close and exhaust the body__. Otherwise, the bytes are never read from the buffers (often channels), so go-routintes are left, sockets and connections are never reused.                        
 
 @code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-poland-meetup-11-2020/leak.go?lines=25-42)
@@ -693,7 +660,7 @@ And if this code is not clean or pretty for you, which is fair, you can check th
 [drag=90, drop=50 7 true true, set=align-left]
 ### Performance optimization tricks & pitfalls @emoji[bomb]
 
-[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
+[drag=80 20, drop=50 90 true true, fit=0.8, set=align-left]
 Feel free to use Thanos [github.com/thanos-io/thanos/pkg/runutil](https://pkg.go.dev/github.com/thanos-io/thanos@v0.11.0/pkg/runutil?tab=doc) package                    
 
 @code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-poland-meetup-11-2020/leak.go?lines=44-58)
@@ -711,8 +678,8 @@ properly return error if this operation fails which is nice!
 [drag=90, drop=50 7 true true, set=align-left]
 ### Performance optimization tricks & pitfalls @emoji[bomb]
 
-[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
-Pitfall 2: This code can __allocate a lot of memory and use more CPU than needed for growing array__. 
+[drag=80 20, drop=50 90 true true, fit=0.8, set=align-left]
+Pitfall 2 "__Copy Slide Into Slice and Map__": This code __allocates more memory and use more CPU__ than needed. Where?
 
 @code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/alloc.go?lines=3-11)
 
@@ -740,7 +707,7 @@ So what's the solution?
 [drag=90, drop=50 7 true true, set=align-left]
 ### Performance optimization tricks & pitfalls @emoji[bomb]
 
-[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
+[drag=80 20, drop=50 90 true true, fit=0.8, set=align-left]
 Tip 2: It's a good pattern to pre-allocate Go arrays! You can do that using `make()`
 
 @code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/alloc.go?lines=13-23)
@@ -761,19 +728,21 @@ All thanks to make statement, which takes number of elements for length pre-grow
 [drag=90, drop=50 7 true true, set=align-left]
 ### Performance optimization tricks & pitfalls @emoji[bomb]
 
-[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
-: We are hitting problem with lazy GC, and we allocate more than needed.
+[drag=80 20, drop=50 90 true true, fit=0.8, set=align-left]
+Pitfall 3 "__Continuous Marshalling__": We allocate and create __CPU pressure more than needed__. Can you see why?
 
-@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/reuse.go?lines=4-16)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/reuse.go?lines=4-12)
 
-@[7-11]
+@[7]
 
 Note:
 
 Last optimization I want to show is this snippet, I kind of commented what's wrong, so no point in guessing.
 It essentially allocates more than needed.
 
-[C] so the problem is that we allocate new string slice evey time we split message by max lenghth. In theory old allocated slice should
+
+[C] We are hitting problem with lazy GC, and we allocate more than needed.
+so the problem is that we allocate new string slice evey time we split message by max lenghth. In theory old allocated slice should
 be released from memory by garbage collection, but this collection happens periodically so it will lag behind and leaving lot's 
 of extra memory used.
 
@@ -781,10 +750,10 @@ of extra memory used.
 [drag=90, drop=50 7 true true, set=align-left]
 ### Performance optimization tricks & pitfalls @emoji[bomb]
 
-[drag=80 20, drop=50 90 true true, fit=0.8, set=fragment align-left]
-Reusing the same slice to avoid allocation is nice here.
+[drag=80 20, drop=50 90 true true, fit=0.8, set=align-left]
+Tip 3: Reuse the same slice if you can!
 
-@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/reuse.go?lines=19-30)
+@code[golang code-noblend code-max zoom-10, drag=80 60, drop=50 50 true true, fit=0.6, set=fragment](slides/optimizing-go-for-clouds/go-london-meetup-06-2020/reuse.go?lines=15-26)
 
 @[7-10]
 
