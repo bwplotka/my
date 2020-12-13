@@ -13,6 +13,9 @@ categories:
 - infra
 ---
 
+> EDIT (2020.12.13): From Go 1.16, Go on Linux moves back to using `MADV_DONTNEED` when releasing memory. However, this blog post
+> still applies in terms of how to monitor memory consumption, although we should see less memory cached by Go runtime. See [this issue](https://github.com/golang/go/issues/42330).
+
 **TL;DR: Applications build with Go 1.12+ reports higher RSS memory usage on Linux. 
 This does not mean that they `require` more memory, it's just optimization for cases where there is no other memory
 pressure. This is especially visible inside a container.**

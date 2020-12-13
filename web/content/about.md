@@ -44,6 +44,9 @@ Some talks I performed (or co-performed 🤗)
 
 | Title | Event | Location | Month | Links |
 |-------|-------|----------|-------|-------|
+| [*Evolution of Metric Monitoring and Alerting: Upgrade Your Prometheus Today*](https://sched.co/ekHn) | KubeConNA 2020 | Virtual | 11.2020 | [video](https://www.youtube.com/watch?v=HpWJg7qZLEY) |
+| [*Observing Cloud Native Observables with the New SIG Observability*](https://sched.co/ekFx) | KubeConNA 2020 | Virtual | 11.2020 | [slides](https://docs.google.com/presentation/d/18tFnyNDp6cF5LuBj59wQTN8ObuMzpq2zxsZZtOmHh-c/edit), [video](https://youtu.be/Yg9XByetXsI) |
+| [*Absorbing Thanos Infinite Powers for Multi-Custer Telemetry*](https://sched.co/ekHk) | KubeConNA 2020 | Virtual | 11.2020 | [slides](https://docs.google.com/presentation/d/1gMBQ7wLqAae45uGOcaYex-_9s675yzgexW705D7KM1Y/edit), [video](https://www.youtube.com/watch?v=6Nx2BFyr7qQ) |
 | [*Prometheus: Shaping Metric Monitoring in 2020*](https://kccnceu20.sched.com/event/Zey2) | KubeConEU 2020 | Virtual | 08.2020 | [slides](https://static.sched.com/hosted_files/kccnceu20/85/KubeCon%202020_%20Prometheus%20Deep%20Dive%20Bartek%20_%20Goutham%20%281%29.pdf), [video](https://www.youtube.com/watch?v=Xx16tAoqw70) |
 | [*Sharing is Caring: Leveraging Open Source to Improve Cortex & Thanos*](https://promcon.io/2020-online/talks/sharing-is-caring--leveraging-open-source-to-improve-cortex---thanos/) | PromConNA 2020 | Virtual | 07.2020 | [video](https://www.youtube.com/watch?v=2oTLouUvsac) |
 | [*Optimizing Go for Clouds: Practical Intro*](https://www.meetup.com/LondonGophers/events/270419925/) | LondonGophers Meetup | Virtual | 06.2020 | [video](https://youtu.be/WlW1CS6A_8o?t=5301) |
