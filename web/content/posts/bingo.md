@@ -15,6 +15,7 @@ images:
 - "/og-images/bingo-demo.gif"
 featuredImage: "/og-images/bingo-demo.gif"
 ---
+
 _See bigger version of the above demo as .gif [here](https://raw.githubusercontent.com/bwplotka/bingo/master/examples/bingo-demo.gif)_
 
 In this blog post, I would like to introduce [`bingo`](https://github.com/bwplotka/bingo), a simple and efficient CLI (Command Line Interface) Tool ,
