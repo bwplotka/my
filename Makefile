@@ -1,3 +1,5 @@
+include .bingo/Variables.mk
+
 WEB_DIR           ?= web
 WEBSITE_BASE_URL  ?= https://bwplotka.dev
 
@@ -26,6 +28,11 @@ define require_clean_work_tree
     fi
 
 endef
+
+.PHONY: docs
+docs: $(MDOX) ## Generates config snippets and doc formatting.
+	@echo ">> generating & formatting docs"
+	@$(MDOX) fmt $(shell find  web/content/ -name "*.md" -type f | xargs)
 
 .PHONY: web
 web: $(HUGO)
