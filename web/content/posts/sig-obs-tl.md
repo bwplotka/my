@@ -23,6 +23,8 @@ I am proud to announce that I have been elected! 🤩**
 In this blog post, I would like to briefly explain what is the idea behind SIGs, what our "newly" created SIG for Observability is for.
 Last but not the least, I will share why I decided to help and what tech lead role in the SIG context means. 
 
+> EDIT: Since writing this the CNCF changed the name of all groups from SIG to TAG (Technical Advisory Group).
+
 ## Special Interest Groups for the Cloud Native Computing Foundation
 
 Around April 2019, the CNCF [approved the initiative called Special Interest Groups (SIGs)](https://github.com/quinton-hoole/toc/blob/06ffaaa9a288b081b012f8c508ede5f1e45cf900/sigs/cncf-sigs.md). 
