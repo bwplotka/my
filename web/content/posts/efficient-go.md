@@ -73,7 +73,7 @@ How do I know that this topic is relevant? We all live in some kind of social bu
 * I maintain many smaller open-source projects e.g [Prometheus client-go](https://github.com/prometheus/client_golang), [bingo](https://github.com/bwplotka/bingo), [go-grpc-middlewares](https://github.com/grpc-ecosystem/go-grpc-middleware), [mdox](https://github.com/bwplotka/mdox), [mimic](https://github.com/bwplotka/mimic), [e2e](https://github.com/efficientgo/e2e) and more! Some of them are used on critical performance paths in other production Go code.
 * I even wrote our own [opinionated and stricter Go-style guide](https://thanos.io/tip/contributing/coding-style-guide.md/).
 
-I worked with both experienced, ex-Google Go experts. I worked with people new to the language. I worked in huge mono-repos as well as scattered tiny Go projects. In close as well as open-source. In face-pace startup as well as multi-org corporations. At some point, I realized that:
+I worked with both experienced, ex-Google Go experts. I worked with people new to the language. I worked in huge mono-repos as well as scattered tiny Go projects. In close as well as open-source. In fast-paced startup as well as multi-org corporations. At some point, I realized that:
 
 1. I am repeating myself. I am constantly explaining the same stuff about Go to other people. How to write Go, how to make it efficient, how to benchmark and observe performance. What are the common pitfalls (e.g [Go 1.12-1.15 sneaky memory release model](https://www.bwplotka.dev/2019/golang-memory-monitoring/)).
 2. There is not many deep, up-to-date resources or literature about software efficiency and tooling, especially for every-day Go programming. Most of the knowledge I gathered was empirical, self-thought.
