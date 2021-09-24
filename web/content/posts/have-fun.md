@@ -85,7 +85,7 @@ But maintaining it over time is a pain. Things get obsolete super quickly. Contr
 
 All of this was making me feel I was wasting time when adding any project documentation. I did not like it. I was procrastinating, delaying, avoiding those tasks.
 
-Solution for me? Automate all I can, try to excel at doc writing practices, innovate in this space. So we designed and created tooling that automates everything related to building project docs in markdown. After creation and adoption in many projects, we wrote about it with my GSoC mentee Saswata [here](./mdox.md).
+Solution for me? Automate all I can, try to excel at doc writing practices, innovate in this space. So we designed and created tooling that automates everything related to building project docs in markdown. After creation and adoption in many projects, we wrote about it with my GSoC mentee Saswata [here](./../mdox/).
 
 Now, writing docs is much more "efficient" and gives me more pleasure. I do it more often. I hope it's easier for others too.
 
