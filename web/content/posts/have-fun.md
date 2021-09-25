@@ -47,7 +47,7 @@ In my view, all of them have one thing in common: Element of surprise and novelt
 
 Well, guess what, not everything is like that. On the surface, most of the activities are non-eventful and mundane. For example in your life: Cleaning your room/flat/house. Systematic gym. Diet. Systematic learning (**Actually, systematic ANYTHING** 🔥). Organizing your to-do list. Doing taxes, bookkeeping etc. Of course, in software development, we have tons of similar tedious tasks too: Organizing JIRA tasks, leading status meetings, rolling out the same production service with tiny change (especially if tedious and manual), fixing one little non-brainer thing in code, supporting customers with the same questions and issues every time, adjusting alerting or recording rules, making presentations about topics I already spoke about. I can list many things that are not very interesting to me. They might be ultra interesting to you, though! This is just how my brain works.
 
-Everyone has their list of stuff you hate doing. But still, we have to do it. There are moments you can delegate this work to those who like it, but sometimes there is no other way than do it (no one can do a healthy food diet for me, unfortunately).
+Everyone has their list of stuff you hate doing. But still, we have to do it. There are moments you can delegate this work to those who like it, but sometimes there is no other way than do it (no one can perform a gym session or burn calories for me, unfortunately).
 
 How to do those things you don't like? Do we close our eyes, stop thinking, do it and forget about it? Unfortunately, that's a path to frustration, depression and overall sad life. So we procrastinate on those tasks. As an effect, we can be less valuable at our work, dropping opportunity for earning more and growing. In the end, we waste time. But there exists a better solution!
 
@@ -58,6 +58,7 @@ Instead of speaking about it, let me share a snippet of a fantastic podcast that
 > One thing we haven't talked about is how important to goal achievement it is to be having fun. (...) We do better when we align what's fun with our goals. Like much better. Vastly better. And people weirdly don't get that. They think like, oh, if I just, you know, just do it. Like Nike says, if I just grind through, I'll achieve more.
 >
 > But if we take a different approach and try to wrap whatever it is we're trying to achieve and find that better results ensue. And I think my advice to my twenty-five-year-old self would be like the things that are really, really unfun if they have to be done, find a way to make them fun, but also lean into the things that you love. Yeah, you know, I'm not saying everybody should quit their day job and become a musician.
+>
 > That's not my advice, but rather like find what it is you love in your day job, something practical that you're most enjoying and do more of that. And you will be great at it because you will be motivated to pursue your goals day and night and you will have that drive. But within your career, what do you love most and how can you make that more central to what you're doing?
 
 Those words are an amazing summarization of also my trick to achieve more in life, be satisfied on the way and deal with difficult moments (we all have them - that's a normal part of life).
@@ -101,7 +102,7 @@ Another thing I started to get bored with was the number of introduction talks I
 
 But there are still more and more newcomers who want to start with Prometheus, Thanos or any other topic I spoke about. Recently, especially with virtual conferences, I felt it's a bit boring for me to prepare similar presentations over and over. It's not challenging. It's also less valuable for more advanced community members who already saw me at past conferences. So I started to stop sending CFPs and was delegating this to others (which was not a bad idea!).
 
-At some point, I realized I could make it more fun for myself (and others!) by adding a pinch of my pattern for fun: novelty and educational purpose`!
+At some point, I realized I could make it more fun for myself (and others!) by adding a pinch of my pattern for fun: `novelty and educational purpose`!
 
 On the first virtual KubeCon, we organized a literal "podcast" in place of a traditional "deep dive" session about Prometheus. Thanks to that novel form IMO, many Prometheus experts had the motivation to participate in this--an effort that they would otherwise have skipped.
 
