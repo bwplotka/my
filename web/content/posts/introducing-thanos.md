@@ -18,5 +18,6 @@ images:
 - "/og-images/thanos-header.jpg"
 featuredImage: "/og-images/thanos-header.jpg"
 ---
+
 Available on Improbable blog [here](https://improbable.io/blog/thanos-prometheus-at-scale).
 
