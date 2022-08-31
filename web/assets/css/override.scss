@@ -1,8 +1,17 @@
-/** Post **/
-
 @import "_variables/default.scss";
 
+html {
+    font-family: "Roboto" -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft Yahei", "WenQuanYi Micro Hei", Arial, Verdana, sans-serif;
+}
+
 .post-warp {
+     max-width: 900px;
+
+     p {
+         margin: 1.1em 0;
+         line-height: 1.5em;
+     }
+
     .post-content {
         ::-webkit-scrollbar {
             background: #fff;
