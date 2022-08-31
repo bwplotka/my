@@ -1,4 +1,5 @@
 .idea
 bin
+.bin
 web/public
 web/resources/_gen

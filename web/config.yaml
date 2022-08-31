@@ -28,9 +28,12 @@ menu:
   - name: "Blog"
     url: "/posts/"
     weight: 1
-  - name: "About me"
-    url: "/about/"
+  - name: "My Book"
+    url: "/book/"
     weight: 2
+  - name: "About Me"
+    url: "/about/"
+    weight: 3
 
 params:
   since: 2019
