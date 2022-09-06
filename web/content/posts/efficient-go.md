@@ -85,6 +85,6 @@ Given the evident knowledge gap in the community, lack of extensive resources on
 
 The book is planned to be released near the end of Q1 2022. No delays are yet planned, but you know how it works. 😉 Both me and Frederic have full (if not over-full) time jobs and lots of open source commitments, but we are on track so far. Stay Tuned!
 
-We are slowly building a small community around the book and Go efficiency topics in the new `Efficient Go Community` Discord server. Here is the link to [join us](https://discord.gg/3rCttps74F). This is the perfect spot to give feedback to us about the early access content, propose topics to write about and ask questions around Go and performance!
+We are slowly building a small community around the book and Go efficiency topics in the new `Efficient Go Community` Discord server. Here is the link to [join us](https://discord.com/invite/7g5MJqFcQG). This is the perfect spot to give feedback to us about the early access content, propose topics to write about and ask questions around Go and performance!
 
 You can also follow [@bwplotka](https://twitter.com/bwplotka) and [@fredbrancz](https://twitter.com/fredbrancz) on Twitter. If you want, get notified about updates, promotions, opportunities to contribute and events! My DMs and email are also open if you have any suggestions for the content already!
