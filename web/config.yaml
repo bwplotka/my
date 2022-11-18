@@ -49,11 +49,13 @@ params:
     GitHub: "bwplotka"
     Linkedin: "bwplotka"
     Twitter: "bwplotka"
+    Mastodon: "@bwplotka"
     Email: "bwplotka@gmail.com"
   share:
     Twitter: true
     Facebook: true
     Linkedin: true
+    Mastodon: true
 
 author:
   name: "@bwplotka"
