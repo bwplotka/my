@@ -41,7 +41,7 @@ Why not! It's hard to tell which chapter is my favourite, but I am especially pr
 
 ![](/images/blog/efficient-go/heap.png)
 
-At the end of this chapter you will learn how to setup continous profiling setup for **free** in minutes, using amazing open source software like [Parca](https://github.com/parca-dev/parca). And it's not just a "toy"--we use it in production for ~2 years. 😉 
+At the end of this chapter you will learn how to setup continous profiling setup for **free** in minutes, using amazing open source software like [Parca](https://github.com/parca-dev/parca). And it's not just a "toy"--we have been using it in production for ~2 years. 😉 
 
 ### How to Get "Efficient Go"?
 
@@ -55,7 +55,7 @@ E-books are available. If you order a printed copy, be mindful that Amazon is sc
 
 ### Feedback
 
-I am already getting good feedback from people who already managed to read some of it (and it was about the 9th chapter, so either they skipped a lot or read very fast! 🙈). There is nothing better than good feedback--it's essentially one reason why I create this book. (:
+I am already getting good feedback from people who managed to read some of the book (and it was about the 9th chapter, so either they skipped a lot or read very fast! 🙈). There is nothing better than good feedback--it's essentially one reason why I create this book. (:
 
 Have you read the book and have questions? Or you found a typo? Or you just wanted to share your opinion about the content?
 
