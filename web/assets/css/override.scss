@@ -4,8 +4,12 @@ html {
     font-family: "Roboto" -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft Yahei", "WenQuanYi Micro Hei", Arial, Verdana, sans-serif;
 }
 
+body {
+   font-size: 12pt;
+ }
+
 .post-warp {
-     max-width: 900px;
+     max-width: 1000px;
 
      p {
          margin: 1.1em 0;

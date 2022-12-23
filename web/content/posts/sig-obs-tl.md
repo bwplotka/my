@@ -11,6 +11,7 @@ weight: 1
 categories:
 - open-source
 - observability
+- career
 images:
  - "/og-images/santorini.jpg"
 featuredImage: "/og-images/santorini.jpg"
