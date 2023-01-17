@@ -14,7 +14,6 @@ Once cloned, make sure to run `git submodule update --init --recursive`
 
 git submodule update --init --recursive
 
-
 ### What open source tools I used to build this?
 
 * [Hugo](https://gohugo.io/overview/introduction/)
