@@ -6,7 +6,8 @@
 base = ""
 publish = "web/public"
 
-environment = { HUGO_VERSION="0.55.3" }
+[build.environment]
+HUGO_VERSION = "0.110.0"
 
 # NOTE: Sleep at then is to make sure logs are not truncated on error.
 command = "(env && make web HUGO=$(which hugo)) || (sleep 30; false)"
