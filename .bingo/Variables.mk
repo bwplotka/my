@@ -1,4 +1,4 @@
-# Auto generated binary variables helper managed by https://github.com/bwplotka/bingo v0.8. DO NOT EDIT.
+# Auto generated binary variables helper managed by https://github.com/bwplotka/bingo v0.9. DO NOT EDIT.
 # All tools are designed to be build inside $GOBIN.
 BINGO_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 GOPATH ?= $(shell go env GOPATH)
@@ -17,11 +17,11 @@ GO     ?= $(shell which go)
 #	@echo "Running hugo"
 #	@$(HUGO) <flags/args..>
 #
-HUGO := $(GOBIN)/hugo-v0.118.2
+HUGO := $(GOBIN)/hugo-v0.110.0
 $(HUGO): $(BINGO_DIR)/hugo.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
-	@echo "(re)installing $(GOBIN)/hugo-v0.118.2"
-	@cd $(BINGO_DIR) && GOWORK=off CGO_ENABLED=1 $(GO) build -tags=extended -mod=mod -modfile=hugo.mod -o=$(GOBIN)/hugo-v0.118.2 "github.com/gohugoio/hugo"
+	@echo "(re)installing $(GOBIN)/hugo-v0.110.0"
+	@cd $(BINGO_DIR) && GOWORK=off CGO_ENABLED=1 $(GO) build -tags=extended -mod=mod -modfile=hugo.mod -o=$(GOBIN)/hugo-v0.110.0 "github.com/gohugoio/hugo"
 
 MDOX := $(GOBIN)/mdox-v0.9.0
 $(MDOX): $(BINGO_DIR)/mdox.mod
