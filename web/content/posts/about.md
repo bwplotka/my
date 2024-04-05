@@ -19,7 +19,9 @@ My main focus was always building and running software in web/backend/distribute
 
 I worked at [Improbable](https://improbable.io), a fantastic gaming UK startup with a global Kubernetes infrastructure using and developing impressive and unique systems. In late 2017, we created [Thanos](https://thanos.io) project with Fabian Reinartz, which gained popularity as a default choice for scaling Prometheus. That started my shift to work entirely on open source around the Prometheus ecosystem, becoming a Prometheus maintainer and working as Principal Engineer at [Red Hat](https://redhat.com). 🚀
 
-In 2022 I published my [Efficient Go](/book) which spawned out of the need to teach others the pragmatic efficiency skills I learned in my career. I hope this will trigger even better quality (and cheaper to run) Go projects in the future! (:
+3 years later I joined Google as Senior SWE Tech Lead for Google Cloud Managed Prometheus team to get Prometheus experience into enterprise, global, managed scalability for those who does not want to run the OSS stack. It also gives me opportunity and focus to really improve the key ingredient of robust cloud native metrics in OSS - Prometheus and its standards! Finally, I was always fun of Google products and developer experience. Go, Kubernetes, Android, Chrome, pprof, SRE, even Prometheus -- those OSS projects would not exists if not Google! I am super grateful for the opportunity to check what's the secret sauce for this level of innovation and software quality.
+
+In 2022 I published my [Efficient Go](/book) book which was invented out of the need to teach others the pragmatic efficiency skills I learned in my career. I hope this will trigger even better quality (and cheaper to run) Go projects in the future! (:
 
 I love innovating, mentoring, teaching, speaking at conferences and working with communities, especially around Observability. That's why at some point, we created
 the [CNCF Technical Advisory Group (TAG) for Observability](https://github.com/cncf/sig-observability), where I am performing a technical leadership role.
@@ -27,7 +29,7 @@ the [CNCF Technical Advisory Group (TAG) for Observability](https://github.com/c
 > I also try to mentor others a few times a year and motivate others to mentor in the [CNCF](https://github.com/cncf/mentoring) programs. So if you would like to be a mentor and help to grow the next generation of open source engineers, let me know!
 > I am incredibly grateful to those who helped me to be where I am. Thus IMO, we all need to give back sometimes.
 
-The rest of my time is reserved for my beloved wife & family, gym, ~volleyball~ (ACL+MCL injury) and sometimes not-eco-friendly cars (:
+The rest of my time is reserved for my beloved wife & daughter, gym, ~volleyball~ (ACL+MCL injury) and sometimes not-eco-friendly cars or motorcycles (:
 
 ### Feedback
 
