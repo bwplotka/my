@@ -6,12 +6,14 @@
 base = ""
 publish = "web/public"
 # NOTE: Sleep at then is to make sure logs are not truncated on error.
-command = "(env && make web HUGO=$(which hugo)) || (sleep 30; false)"
+command = "(echo $(which hugo) && env && make web HUGO=$(which hugo)) || (sleep 30; false)"
+
+[build.environment]
+HUGO_VERSION = "0.88.0"
 
 [context.deploy-preview]
 
 # NOTE: Sleep at then is to make sure logs are not truncated on error.
-command = "(env && make web HUGO=$(which hugo) WEBSITE_BASE_URL=${DEPLOY_PRIME_URL}) || (sleep 30; false)"
+command = "(echo $(which hugo) && env && make web HUGO=$(which hugo) WEBSITE_BASE_URL=${DEPLOY_PRIME_URL}) || (sleep 30; false)"
 
-[build.environment]
-HUGO_VERSION = "0.110.0"
+
