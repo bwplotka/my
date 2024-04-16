@@ -68,10 +68,14 @@ body {
 
         blockquote {
             background-color: #cecece;
-            margin: 1.5em 0 1.5em;
+            margin: 1.5em 0 1.0em;
+            padding: .5em 1.2em .5em;
+            font-size: 0.9em;
+            text-align: center;
             .dark-theme & {
                 background-color: #18041c;
             }
+
 
             &:before {
                font-size: 5em;

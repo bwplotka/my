@@ -25,7 +25,6 @@ We are very grateful that this year's edition was full of smart, diverse and inc
 mentoring through [Google Summer of Code (GSoC)](https://developers.google.com/open-source/gsoc) and [Community Bridge](https://communitybridge.org/) programs.
  
 A longer blog post about learnings and tips that might be useful for other projects which are willing to participate in such mentoring/internships is in progress, so stay tuned!
- 
 However, today we present you the first actionable result of our learnings: **Weekly Thanos Mentoring Office Hours**.
  
 ## Why?
