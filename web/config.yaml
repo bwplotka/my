@@ -5,7 +5,10 @@ theme: "KeepIt"
 publishDir: "public"
 
 enableRobotsTXT: true
-googleAnalytics: "UA-138305173-1"
+
+services:
+  googleAnalytics:
+    ID: G-4DDCXTD3BM
 
 sitemap:
   changefreq: "monthly"
