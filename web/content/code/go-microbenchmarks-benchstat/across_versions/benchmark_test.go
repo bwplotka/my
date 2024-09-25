@@ -47,9 +47,11 @@ var (
 func BenchmarkEncode(b *testing.B) {
 	for _, sampleCase := range sampleCases {
 		b.Run(fmt.Sprintf("sample=%v", sampleCase.samples), func(b *testing.B) {
+			batch := utils.GeneratePrometheusMetricsBatch(sampleCase.config)
+
 			// Commenting out what we used in old.txt
-			// msg := utils.ToV1(utils.GeneratePrometheusMetricsBatch(sampleCase.config), true, true)
-			msg := utils.ToV2(utils.ConvertClassicToCustom(utils.GeneratePrometheusMetricsBatch(sampleCase.config)))
+			//msg := utils.ToV1(batch, true, true)
+			msg := utils.ToV2(utils.ConvertClassicToCustom(batch))
 
 			compr := newCompressor("zstd")
 			marsh := newMarshaller("protobuf")
