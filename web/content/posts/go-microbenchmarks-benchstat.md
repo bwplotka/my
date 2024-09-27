@@ -27,7 +27,7 @@ Let's start by explaining the most popular iterative benchmarking flow, where we
 
 Generally, from a high level point of view, it works by:
 
-1. Creating one a `func BenchmarkXYZ(b *testing.B)` function, with or without [`b.Run(...)`](https://pkg.go.dev/testing#B.Run) cases that benchmarks a portion of your code.
+1. Creating a `func BenchmarkXYZ(b *testing.B)` function, with or without [`b.Run(...)`](https://pkg.go.dev/testing#B.Run) cases that benchmarks a portion of your code.
 2. Running that benchmark, ideally at least 6 times (`-count 6`) so outlier detection can do its work (tell you when your results are widely different, thus less reliable) and save the results to e.g. `old.txt` file.
 3. You can then git commit whatever you had (just to not get lost!), change the code you are benchmarking (e.g. in an attempt to optimize it based on previously gathered profiles) and execute the same benchmark to produce new numbers e.g. in `new.txt` file.
 4. Run `benchstat old.txt new.txt` or `benchstat base=old.txt new=new.txt` (for nice headers) to compare `old.txt` with `new.txt`. You will see the absolute latency, allocations (and any custom metrics you reported) numbers, but also the relative percentages of improvements/regressions for those, and the probability of noise.
