@@ -10,6 +10,8 @@ command = "(echo $(which hugo) && env && make web HUGO=$(which hugo)) || (sleep 
 
 [build.environment]
 HUGO_VERSION = "0.88.0"
+GO_VERSION=1.20
+GIMME_GO_VERSION=1.20
 
 [context.deploy-preview]
 

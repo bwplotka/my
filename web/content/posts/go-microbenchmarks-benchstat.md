@@ -7,7 +7,7 @@ categories:
 featuredImage: "/og-images/gophermetric.png"
 ---
 
-Many have been written and spoken about the [Go built-in (micro-)benchmarking framework](https://pkg.go.dev/testing#hdr-Benchmarks), available with those special `func BenchmarkXYZ(b *testing.B)` testing functions and executed with `go test -bench BenchmarkXYZ` Go command. I wrote about micro-benchmarking in Go extensively in [my "Efficient Go" book (Chapter 8)](/book), but there are also free resources e.g. [generally up-to-date 10y old good Dave's Cheney blog post](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go).
+Many have written and spoken about the [Go built-in (micro-)benchmarking framework](https://pkg.go.dev/testing#hdr-Benchmarks), available with those special `func BenchmarkXYZ(b *testing.B)` testing functions and executed with `go test -bench BenchmarkXYZ` Go command. I wrote about micro-benchmarking in Go extensively in [my "Efficient Go" book (Chapter 8)](/book), but there are also free resources e.g. [generally up-to-date 10y old good Dave's Cheney blog post](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go).
 
 However, not many know about the amazingly useful [`benchstat` tool](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat). It allows readable comparisons (diffs) of results across comparable benchmark runs. I literally cannot imagine analysing micro benchmarks results without `benchstat` and I wished it was a bit more visible and explained in the Go community.
 
@@ -129,11 +129,11 @@ There are reason why this method is a default way people microbenchmark.
 
 There are cases where this flow is not the most optimal. Let's enumerate some limitations:
 
-* It's easy to get lost in changes. Especially if you forget about git versioning properly, it's get easy to track what exactly you benchmark, especially if you notice you ideas are not helping and you need to revert to some local minimum state.
+* It's easy to get lost in changes. Especially if you forget about git versioning properly, it's get easy to track what exactly you benchmark, especially if you notice your ideas are not helping and you need to revert to some local minimum state.
 * It's easy to accidentally change benchmark itself in a different version. This makes it highly unreliably to compare results across those, especially if you don't notice benchmark changes. If you notice them, it's painful to retro-fit new benchmark code with older code you want to benchmark to have proper `old.txt` results.
 * The above issues around getting lost, prohibits or make it even harder to share the true benchmark state with other people. This is a big blocker for bigger projects, where reviews need to ensure reliability of the author's benchmark and claimed results. 
 
-  No one assumes wrong intention, but it's extremely easy to make a little mistake in benchmarking, so replicating benchmarks by multiple people is highly recommended before making decisions. 
+  No one assumes wrong intention, but it's extremely easy to make a little mistake in benchmarking, so replicating benchmarks by multiple people is highly recommended before making decisions. Recently more ways to do this on CI emerged too e.g. [github-action job for benchmarks](https://github.com/benchmark-action/github-action-benchmark) which helps a bit with that, but not with the small iterations you do on your own.
 
 * Micro-benchmarks are NOT about the absolute values, but the relative difference of resource use and latency across benchmark runs. This is because we want to run them locally, for fast development feedback loop and low risk, instead of the actual production environment with all the production dependencies. However, even relative numbers can be unreliable if you run microbenchmark across different hardware, but also if you run on same hardware, but in a different condition (e.g. different browser tabs opened during benchmark!). 
 
@@ -335,7 +335,7 @@ This flow has some negative consequences too.
 
 * Rerunning benchmark with large amount of cases take more time.
 * More complex benchmarking code.
-* TBD more?
+* For continuous production use, it does not make sense to commit that benchmark with all cases, which are no longer being continued. It fits better to capture the benchmark in some remote branch for the future reference though.
 
 ## Summary
 
