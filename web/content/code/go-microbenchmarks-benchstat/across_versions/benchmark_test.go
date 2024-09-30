@@ -39,7 +39,7 @@ var (
 )
 
 /*
-	export bench=new && go test \
+	export bench=v2 && go test \
 		 -run '^$' -bench '^BenchmarkEncode' \
 		 -benchtime 5s -count 6 -cpu 2 -benchmem -timeout 999m \
 	 | tee ${bench}.txt
@@ -49,7 +49,7 @@ func BenchmarkEncode(b *testing.B) {
 		b.Run(fmt.Sprintf("sample=%v", sampleCase.samples), func(b *testing.B) {
 			batch := utils.GeneratePrometheusMetricsBatch(sampleCase.config)
 
-			// Commenting out what we used in old.txt
+			// Commenting out what we used in v1.txt
 			//msg := utils.ToV1(batch, true, true)
 			msg := utils.ToV2(utils.ConvertClassicToCustom(batch))
 
