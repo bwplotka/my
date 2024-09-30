@@ -1,0 +1,23 @@
+goos: darwin
+goarch: arm64
+pkg: go-microbenchmarks-benchstat/across_versions
+BenchmarkEncode/sample=200-2         	   56096	    106978 ns/op	      5670 bytes/message	   65557 B/op	       2 allocs/op
+BenchmarkEncode/sample=200-2         	   56803	    105391 ns/op	      5655 bytes/message	   65557 B/op	       2 allocs/op
+BenchmarkEncode/sample=200-2         	   57469	    106970 ns/op	      5663 bytes/message	   65557 B/op	       2 allocs/op
+BenchmarkEncode/sample=200-2         	   53088	    105403 ns/op	      5653 bytes/message	   65558 B/op	       2 allocs/op
+BenchmarkEncode/sample=200-2         	   56650	    111230 ns/op	      5689 bytes/message	   65557 B/op	       2 allocs/op
+BenchmarkEncode/sample=200-2         	   56776	    108840 ns/op	      5685 bytes/message	   65557 B/op	       2 allocs/op
+BenchmarkEncode/sample=2000-2        	    6213	    902588 ns/op	     34313 bytes/message	  379771 B/op	       2 allocs/op
+BenchmarkEncode/sample=2000-2        	    6506	    892041 ns/op	     34233 bytes/message	  379638 B/op	       2 allocs/op
+BenchmarkEncode/sample=2000-2        	    6415	    906516 ns/op	     34152 bytes/message	  379678 B/op	       2 allocs/op
+BenchmarkEncode/sample=2000-2        	    6464	    891720 ns/op	     34193 bytes/message	  379656 B/op	       2 allocs/op
+BenchmarkEncode/sample=2000-2        	    6406	    922913 ns/op	     34279 bytes/message	  379682 B/op	       2 allocs/op
+BenchmarkEncode/sample=2000-2        	    6558	    897955 ns/op	     34355 bytes/message	  379616 B/op	       2 allocs/op
+BenchmarkEncode/sample=10000-2       	    1825	   3298542 ns/op	    125354 bytes/message	 1386356 B/op	       2 allocs/op
+BenchmarkEncode/sample=10000-2       	    1702	   3300375 ns/op	    122318 bytes/message	 1387086 B/op	       2 allocs/op
+BenchmarkEncode/sample=10000-2       	    1831	   3492565 ns/op	    125500 bytes/message	 1386323 B/op	       2 allocs/op
+BenchmarkEncode/sample=10000-2       	    1809	   3346138 ns/op	    122076 bytes/message	 1386445 B/op	       2 allocs/op
+BenchmarkEncode/sample=10000-2       	    1834	   3226525 ns/op	    128835 bytes/message	 1386306 B/op	       2 allocs/op
+BenchmarkEncode/sample=10000-2       	    1806	   3287647 ns/op	    124555 bytes/message	 1386462 B/op	       2 allocs/op
+PASS
+ok  	go-microbenchmarks-benchstat/across_versions	118.043s

@@ -15,7 +15,6 @@ body {
          margin: 1.1em 0;
          line-height: 1.5em;
      }
-
     .post-content {
         ::-webkit-scrollbar {
             background: #fff;
@@ -65,6 +64,7 @@ body {
                 border-bottom: 1px solid $dark-font-secondary-color;
             }
         }
+
 
         blockquote {
             background-color: #cecece;
