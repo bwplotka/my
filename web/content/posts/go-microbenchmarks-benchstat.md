@@ -7,7 +7,7 @@ categories:
 featuredImage: "/og-images/gophermetrics.png"
 ---
 
-[Go's built-in micro-benchmarking framework](https://pkg.go.dev/testing#hdr-Benchmarks) is extremely useful and widely known. Sill, not many developers are aware of the essential [`benchstat` tool](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) allowing clear comparisons of Go A/B benchmark results across multiple runs. In 2023, `benchstat` received a complete overhaul making it even more powerful: projections, filtering and groupings were introduced allowing robust comparisons across any dimension, defined by your sub-benchmarks (aka "cases"), if you follow [a certain naming format](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md#:~:text=We%20propose%20that%20sub%2Dbenchmarks%20adopt%20the%20convention%20of%20choosing%20names%20that%20are%20key%3Dvalue%20pairs%3B%20that%20slash%2Dprefixed%20key%3Dvalue%20pairs%20in%20the%20benchmark%20name%20are%20treated%20by%20benchmark%20data%20processors%20as%20per%2Dbenchmark%20configuration%20values).
+[Go's built-in micro-benchmarking framework](https://pkg.go.dev/testing#hdr-Benchmarks) is extremely useful and widely known. Sill, not many developers are aware of the additional, yet essential, [`benchstat` tool](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) allowing clear comparisons of Go A/B benchmark results across multiple runs. In 2023, `benchstat` received a complete overhaul making it even more powerful: projections, filtering and groupings were introduced allowing robust comparisons across any dimension, defined by your sub-benchmarks (aka "cases"), if you follow [a certain naming format](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md#:~:text=We%20propose%20that%20sub%2Dbenchmarks%20adopt%20the%20convention%20of%20choosing%20names%20that%20are%20key%3Dvalue%20pairs%3B%20that%20slash%2Dprefixed%20key%3Dvalue%20pairs%20in%20the%20benchmark%20name%20are%20treated%20by%20benchmark%20data%20processors%20as%20per%2Dbenchmark%20configuration%20values).
 
 In this post, we will get you familiar with the `benchstat` tool and some Go benchmarking best practices. If you have read an older version of my ["Efficient Go" book](/book), this article will get you updated on the recent `benchstat` features.
 
@@ -15,43 +15,38 @@ So... get that terminal warmed up by installing `benchstat` with the `go install
 
 ## Old-school Flow: Comparing Efficiency Across Versions
 
-Let's start by explaining the most popular iterative benchmarking flow, where we run the same benchmark on multiple versions of your code.
+Let's start by explaining the most popular iterative benchmarking flow, where we run the same benchmark on multiple versions of your code. Generally, the flow works by:
 
-Generally, the flow works by:
+1. Creating the benchmark test code
 
-### 1. Creating the benchmark test code
+    Creating a benchmark is as simple as creating a `func BenchmarkFoo(b *testing.B)` testing function in you `bar_test.go` file. Inside, you can optionally use multiple [`b.Run(...)`](https://pkg.go.dev/testing#B.Run) cases to benchmark different cases for similar functionality. I wrote about Go benchmarking extensively in [my "Efficient Go" book (Chapter 8)](/book), but there are also free resources e.g. [surprisingly up-to-date 10y old good Dave's Cheney blog post](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go).
 
-  Creating a benchmark is as simple as creating a `func BenchmarkFoo(b *testing.B)` testing function in you `bar_test.go` file. Inside, you can optionally use multiple [`b.Run(...)`](https://pkg.go.dev/testing#B.Run) cases to benchmark different cases for similar functionality. I wrote about Go benchmarking extensively in [my "Efficient Go" book (Chapter 8)](/book), but there are also free resources e.g. [surprisingly up-to-date 10y old good Dave's Cheney blog post](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go).
+2. Running the benchmark for the version A of your code
 
-### 2. Running the benchmark (version A)
+    To run the `BenchmarkFoo` testing function quickly, for the default 1s time, you can use the `go test -bench BenchmarkFoo` command. This is good for testing things out, but typically we use more advanced options like (essential!) multiple runs (`-count`), CPU limits (`-cpu`), profiling (`-memprofile`) and more. In my book I recommend pairing it with `tee` so you stream the output to both `stdout` and file for future reference e.g. `v1.txt`:
+  
+    ```bash
+    export bench=v1 && go test \
+         -run '^$' -bench '^BenchmarkFoo' \
+         -benchtime 5s -count 6 -cpu 2 -benchmem -timeout 999m \
+     | tee ${bench}.txt 
+    ```
+  
+    The resulting output contains absolute results (allocations, latency, custom metrics) from that benchmark run(s).
 
-  To run the `BenchmarkFoo` testing function quickly, for the default 1s time, you can use the `go test -bench BenchmarkFoo` command. This is good for testing things out, but typically we use more advanced options like (essential!) multiple runs (`-count`), CPU limits (`-cpu`), profiling (`-memprofile`) and more. In my book I recommend pairing it with `tee` so you stream the output to both `stdout` and file for future reference e.g. `v1.txt`:
+3. Optimize the code you are benchmarking
 
-  ```bash
-  export bench=v1 && go test \
-       -run '^$' -bench '^BenchmarkFoo' \
-       -benchtime 5s -count 6 -cpu 2 -benchmem -timeout 999m \
-   | tee ${bench}.txt 
-  ```
+    You can then `git commit` whatever you had (just to not get lost!), and change the code you are benchmarking (e.g. in an attempt to optimize it based on previously gathered profiles). 
 
-  The resulting output contains absolute results (allocations, latency, custom metrics) from that benchmark run(s).
+4. Running the benchmark for the version B of your code
 
+    Now it's time to execute the same benchmark to see if your optimization is actually better or worse, while changing the output name to get lost e.g. in the `v2.txt` file.
 
-### 3. Optimize the code you are benchmarking
-
-  You can then `git commit` whatever you had (just to not get lost!), and change the code you are benchmarking (e.g. in an attempt to optimize it based on previously gathered profiles). 
-
-### 4. Running the benchmark (version B)
-
-  Now it's time to execute the same benchmark to see if your optimization is actually better or worse, while changing the output name to get lost e.g. in the `v2.txt` file.
-
-### 5. Analyze the A/B benchmark results
+5. Analyze the A/B benchmark results
    
-  Once we have old and new (A and B) results, it's time to use the [`benchstat` tool](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)! Run `benchstat v1.txt v2.txt` or `benchstat base=v1.txt new=v2.txt` (for nice headers) to compare `v1.txt` with `v2txt`. You will still see the absolute latency, allocations (and any custom metrics you reported) numbers, but what's more important--the relative percentages of improvements/regressions for those, and the probability of noise.
+    Once we have old and new (A and B) results, it's time to use the [`benchstat` tool](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)! Run `benchstat base=v1.txt new=v2.txt` to compare two versions. You will still see the absolute latency, allocations (and any custom metrics you reported) numbers, but what's more important--the relative percentages of improvements/regressions for those, and the probability of noise.
 
-After those steps, you likely know if new changes improved CPU latency or memory consumption or made it worse, or if you have to repeat (or fix!) the benchmark due to noise.
-
-Let's go through a specific example!
+After those steps, you likely know if new changes improved CPU latency or memory consumption or made it worse, or if you have to repeat (or fix!) the benchmark due to noise. Let's go through a specific example!
 
 ### Example
 
