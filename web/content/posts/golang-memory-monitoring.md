@@ -11,6 +11,7 @@ title: What to expect when monitoring memory usage for modern Go applications.
 categories:
 - go
 - infra
+- efficiency
 ---
 
 > EDIT (2020.12.13): From Go 1.16, Go on Linux moves back to using `MADV_DONTNEED` when releasing memory. However, this blog post

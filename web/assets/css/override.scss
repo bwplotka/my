@@ -15,7 +15,8 @@
     left: -10%;
   }
   #toc-auto {
-    min-width: 10%;
+    width: 300px !important;
+    max-width: 300px !important;
   }
 }
 
@@ -31,7 +32,8 @@
     left: -10%;
   }
   #toc-auto {
-    min-width: 10%;
+    width: 200px !important;
+    max-width: 200px !important;
   }
 }
 
@@ -47,6 +49,7 @@
     left: -10%;
   }
   #toc-auto {
-    min-width: 10%;
+    width: 150px !important;
+    max-width: 150px !important;
   }
 }

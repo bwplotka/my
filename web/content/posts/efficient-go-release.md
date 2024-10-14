@@ -6,6 +6,8 @@ aliases: ["/efficient-go","/book"]
 categories:
 - go
 - books
+- efficient-go
+- efficiency
 featuredImage: "/og-images/efficient-go.png"
 ---
 

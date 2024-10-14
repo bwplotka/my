@@ -14,6 +14,7 @@ categories:
 - go
 - open-source
 - efficient-go
+- efficiency
 ---
 
 > TL;DR: I am super excited to announce an exact topic of our book we write together with O'Reilly publisher. "Efficient Go" will consist of 10 chapters! The book is planned to be released near the end of Q1 2022. Stay Tuned! Join our Discord Community using this [link](https://discord.gg/3rCttps74F) or follow [@bwplotka](https://twitter.com/bwplotka) on Twitter if you want to get notified about updates, promotions, opportunities to contribute and events!

@@ -13,6 +13,7 @@ categories:
 - prometheus
 - thanos
 - observability
+- efficiency
 images:
 - "/og-images/prometheus-header.png"
 featuredImage: "/og-images/prometheus-header.png"
