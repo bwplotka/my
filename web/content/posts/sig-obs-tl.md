@@ -1,4 +1,5 @@
 ---
+weight: 200
 authors:
 - name: "Bartek Płotka"
 date: 2020-09-14
@@ -7,7 +8,6 @@ type:
 - post 
 - posts
 title: 📈 Becoming Tech Lead for the CNCF SIG Observability!
-weight: 1
 categories:
 - open-source
 - observability

@@ -1,4 +1,5 @@
 ---
+weight: 200
 authors:
 - name: "Bartek Płotka"
 date: 2020-03-22
@@ -7,7 +8,6 @@ type:
 - post 
 - posts
 title: Flagarize Your Go Configuration Struct!
-weight: 1
 categories:
 - go
 - infra

@@ -1,4 +1,5 @@
 ---
+weight: 10
 authors:
 - name: "Bartek Płotka"
 date: 2019-06-08
@@ -7,7 +8,6 @@ type:
 - post 
 - posts
 title: What to expect when monitoring memory usage for modern Go applications.
-weight: 1
 categories:
 - go
 - infra

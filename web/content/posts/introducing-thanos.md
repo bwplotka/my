@@ -1,4 +1,5 @@
 ---
+weight: 10
 authors:
 - name: "Fabian Reinartz"
   link: "https://fabxc.org"
@@ -10,7 +11,6 @@ type:
 - posts
 title: Introducing Thanos - Prometheus at Scale
 readingTime: 15
-weight: 1
 categories:
 - thanos
 - observability

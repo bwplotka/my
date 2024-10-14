@@ -1,4 +1,5 @@
 ---
+weight: 100
 title: "My book is about to be published!"
 date: "2022-08-31"
 categories:

@@ -1,4 +1,5 @@
 ---
+weight: 100
 title: "My 'Efficient Go' Book with O'Reilly is Released 🎉"
 date: "2022-11-18"
 aliases: ["/efficient-go","/book"]

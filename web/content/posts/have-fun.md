@@ -1,4 +1,5 @@
 ---
+weight: 10
 authors:
 - name: "Bartek Płotka"
 date: 2021-09-24
@@ -7,7 +8,6 @@ type:
 - post
 - posts
 title: How To Achieve More and Go Through Boring Stuff
-weight: 1
 categories:
 - psychology
 images:

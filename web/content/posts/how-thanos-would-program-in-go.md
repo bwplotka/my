@@ -1,4 +1,5 @@
 ---
+weight: 10
 authors:
 - name: "Bartek Płotka"
 date: 2020-04-13
@@ -7,7 +8,6 @@ type:
 - post 
 - posts
 title: How Thanos Would Program in Go
-weight: 1
 categories:
 - go
 - observability

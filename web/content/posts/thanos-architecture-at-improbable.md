@@ -1,4 +1,5 @@
 ---
+weight: 10
 authors:
 - name: "Dominic Green"
   link: "http://github.com/domgreen"
@@ -10,7 +11,6 @@ type:
 - posts
 title: Metric monitoring architecture at Improbable using Thanos
 readingTime: 15
-weight: 1
 categories:
 - thanos
 - observability

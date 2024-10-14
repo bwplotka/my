@@ -1,4 +1,5 @@
 ---
+weight: 10
 authors:
 - name: "Bartek Płotka"
 date: 2019-10-10
@@ -8,7 +9,6 @@ type:
 - posts
 title: "Prometheus Remote Read meets Streaming!"
 readingTime: 20
-weight: 1
 categories:
 - prometheus
 - thanos

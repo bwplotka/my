@@ -1,4 +1,5 @@
 ---
+weight: 100
 title: "Last Day @ Red Hat..."
 date: "2022-12-23"
 categories:

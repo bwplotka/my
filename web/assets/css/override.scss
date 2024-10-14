@@ -6,12 +6,13 @@
 
 @media only screen and (min-width: 1440px) {
   .page {
-  width: 70%;
+  width: 80%;
   }
   .page.single {
     width: 70%;
     max-width: 1000px;
-    margin: 0 10% 0 5%;
+    margin: 0 auto;
+    left: -10%;
   }
   #toc-auto {
     min-width: 10%;
@@ -20,12 +21,14 @@
 
 @media only screen and (max-width: 1440px) {
   .page {
-    width: 70%;
+    width: 80%;
+    max-width: 1000px;
   }
   .page.single {
     width: 70%;
     max-width: 1000px;
-    margin: 0 10% 0 5%;
+    margin: 0 auto;
+    left: -10%;
   }
   #toc-auto {
     min-width: 10%;
@@ -34,12 +37,14 @@
 
 @media only screen and (max-width: 1200px) {
   .page {
-    width: 70%;
+    width: 80%;
+    max-width: 800px;
   }
   .page.single {
     width: 70%;
     max-width: 800px;
-    margin: 0 10% 0 5%;
+    margin: 0 auto;
+    left: -10%;
   }
   #toc-auto {
     min-width: 10%;
