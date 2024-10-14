@@ -1,4 +1,5 @@
 ---
+weight: 900
 date: 2018-01-28
 linktitle: "Make cross cluster communication simple: kEdge"
 type:

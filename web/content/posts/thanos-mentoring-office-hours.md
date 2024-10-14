@@ -1,4 +1,5 @@
 ---
+weight: 900
 authors:
 - name: "Bartek Płotka"
 date: 2020-09-03
@@ -7,7 +8,6 @@ type:
 - post 
 - posts
 title: Thanos Announces Weekly Mentoring Office Hours
-weight: 1
 categories:
 - open-source
 images:

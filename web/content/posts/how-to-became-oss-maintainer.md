@@ -1,4 +1,5 @@
 ---
+weight: 10
 authors:
 - name: "Bartek Płotka"
 date: 2020-02-11
@@ -7,7 +8,6 @@ type:
 - post 
 - posts
 title: "How to Become an Amazing OSS Project Maintainer, Survive, And Have Fun on The Way!"
-weight: 1
 categories:
 - open-source
 - observability

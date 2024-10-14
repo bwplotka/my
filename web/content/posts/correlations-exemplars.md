@@ -1,4 +1,5 @@
 ---
+weight: 10
 authors:
 - name: "Bartek Płotka"
 date: 2021-05-08
@@ -7,7 +8,6 @@ type:
 - post 
 - posts
 title: "Correlating Signals Efficiently in Modern Observability"
-weight: 1
 categories:
 - open-source
 - observability

@@ -1,5 +1,5 @@
 ---
-weight: 1
+weight: 10
 date: 2020-03-22
 linktitle: Automate Your Documentation With mdox!
 title: Automate Your Documentation With mdox!

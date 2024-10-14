@@ -1,17 +1,33 @@
-<footer class="footer">
-    <div class="copyright">
-        &copy;
-        {{ with .Site.Params.since }}
-        <span itemprop="copyrightYear">{{.}} – {{ now.Year }}</span>
-        {{ end }}
-         {{ if .Site.Params.author }}
-            <span class="author" itemprop="copyrightHolder"><a href="{{ .Site.BaseURL }}">{{ .Site.Params.author  }}</a> | </span>
+{{- if ne .Site.Params.footer.enable false -}}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork">
+                {{- /* Copyright year */ -}}
+                {{- if ne .Site.Params.footer.copyright false -}}
+                    <i class="far fa-copyright fa-fw" aria-hidden="true"></i>
+                    {{- with .Site.Params.footer.since -}}
+                        <span itemprop="copyrightYear">
+                            {{- if lt . now.Year }}{{ . }} - {{ end }}{{ now.Year -}}
+                        </span>
+                    {{- else -}}
+                        <span itemprop="copyrightYear">{{ now.Year }}</span>
+                    {{- end -}}
+                {{- end -}}
 
-         {{ end }}
-		  <span>Crafted with <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a>
+                {{- /* Author */ -}}
+                {{- if ne .Site.Params.footer.author false -}}
+                    <span class="author" itemprop="copyrightHolder">&nbsp;<a href="{{ $.Site.Author.link | default .Site.Home.RelPermalink }}" target="_blank">{{ .Site.Author.name }}</a></span>
+                {{- end -}}
+
+                {{- /* License */ -}}
+                {{- with .Site.Params.footer.license -}}
+                    &nbsp;|&nbsp;<span class="license">{{ . | safeHTML }}</span>
+                {{- end -}}
+
+                <span> | Crafted with <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a>
               | How? Check it <a href="https://github.com/bwplotka/my" target="_blank" rel="external nofollow noopener noreffer">here!</a> </span>
-    </div>
-</footer>
 
-{{ partial "js.html" . }}
-{{ template "_internal/google_analytics_async.html" . }}
+            </div>
+        </div>
+    </footer>
+{{- end -}}

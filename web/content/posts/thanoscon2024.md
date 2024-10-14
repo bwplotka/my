@@ -1,4 +1,5 @@
 ---
+weight: 10
 title: "ThanosCon Retrospective"
 date: "2024-04-14"
 categories:

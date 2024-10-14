@@ -1,6 +1,7 @@
 ---
 title: "Leveraging benchstat Projections in Go Benchmark Analysis!"
 date: "2024-09-30"
+weight: 1
 categories:
 - go
 - efficiency

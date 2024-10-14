@@ -1,9 +1,12 @@
 ---
+weight: 100
 title: "My book is about to be published!"
 date: "2022-08-31"
 categories:
 - go
 - books
+- efficient-go
+- efficiency
 featuredImage: "/og-images/efficient-go.png"
 ---
 

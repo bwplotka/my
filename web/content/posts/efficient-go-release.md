@@ -1,10 +1,13 @@
 ---
+weight: 100
 title: "My 'Efficient Go' Book with O'Reilly is Released 🎉"
 date: "2022-11-18"
 aliases: ["/efficient-go","/book"]
 categories:
 - go
 - books
+- efficient-go
+- efficiency
 featuredImage: "/og-images/efficient-go.png"
 ---
 

@@ -1,4 +1,5 @@
 ---
+weight: 100
 authors:
 - name: "Bartek Płotka"
 date: 2020-06-28
@@ -7,7 +8,6 @@ type:
 - post 
 - posts
 title: Need to Version Go Tools for Your Project? That's a Bingo! 
-weight: 1
 categories:
 - go
 - infra
