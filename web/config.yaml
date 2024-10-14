@@ -1,67 +1,23 @@
-languageCode: "en"
-defaultContentLanguage: "en"
 title: "@bwplotka"
 theme: "KeepIt"
 publishDir: "public"
-
+languageCode: "en"
+defaultContentLanguage: "en"
+languageName: "English"
+gitRepo: https://github.com/bwplotka/my
 enableRobotsTXT: true
-
-services:
-  googleAnalytics:
-    ID: G-4DDCXTD3BM
-
-sitemap:
-  changefreq: "monthly"
-  filename: "sitemap.xml"
-  priority: 0.5
-
-paginate: 12
+images:
+- "/images/profile.jpg"
 enableEmoji: true
-canonifyURLs: true
-blackfriday:
-  hrefTargetBlank: true
-  nofollowLinks: true
-  noreferrerLinks: true
-
-permalinks:
-  posts: "/:year/:filename/"
-
-menu:
-  main:
-  - name: "Blog"
-    url: "/posts/"
-    weight: 1
-  - name: "My Book"
-    url: "/book/"
-    weight: 2
-  - name: "About Me"
-    url: "/about/"
-    weight: 3
-
-params:
-  since: 2019
-  author: "Bartek Płotka"
-  avatar: "/images/profile.jpg"
-  socialShare: true
-  subtitle: true
-  cdn_url: "" # Base CDN URL
-  description: "💪💻🏐"
-  keywords: "bwplotka"
-  license: 'Released under <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
-  social:
-    GitHub: "bwplotka"
-    Linkedin: "bwplotka"
-    Twitter: "bwplotka"
-    Mastodon: "@bwplotka"
-    Email: "bwplotka@gmail.com"
-  share:
-    Twitter: true
-    Facebook: true
-    Linkedin: true
-    Mastodon: true
+#canonifyURLs: true
+#blackfriday:
+#  hrefTargetBlank: true
+#  nofollowLinks: true
+#  noreferrerLinks: true
 
 author:
-  name: "@bwplotka"
+  name: "Bartek Płotka"
+  email: bwplotka@gmail.com
   params:
     publisher:
       name: "bwplotka"
@@ -78,5 +34,139 @@ author:
       width: 127
       height: 40
 
-# Used only for Seo schema.
+  #subtitle: true
+  #cdn_url: "" # Base CDN URL
+  #keywords: "bwplotka"
+
+params:
+  title: "@bwplotka"
+  description: "bwplotka blog 💪💻🏐"
+  defaultTheme: dark
+  header:
+    title:
+      name: "@bwplotka"
+  footer:
+    since: 2019
+    author: true
+    #license: 'Released under <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
+  seo:
+    image: "/images/profile.jpg"
+  social:
+    GitHub: "bwplotka"
+    Linkedin: "bwplotka"
+    Twitter: "bwplotka"
+    Mastodon: "@bwplotka"
+    Email: "bwplotka@gmail.com"
+    Instagram: ""
+    Facebook: ""
+    Telegram: ""
+    Medium: ""
+    Gitlab: ""
+    Youtubelegacy: ""
+    Youtubecustom: ""
+    Youtubechannel: ""
+    Tumblr: ""
+    Quora: ""
+    Keybase: ""
+    Pinterest: ""
+    Reddit: ""
+    Codepen: ""
+    FreeCodeCamp: ""
+    Bitbucket: ""
+    Stackoverflow: ""
+    Weibo: ""
+    Odnoklassniki: ""
+    VK: ""
+    Flickr: ""
+    Xing: ""
+    Snapchat: ""
+    Soundcloud: ""
+    Spotify: ""
+    Bandcamp: ""
+    Paypal: ""
+    Fivehundredpx: ""
+    Mix: ""
+    Goodreads: ""
+    Lastfm: ""
+    Foursquare: ""
+    Hackernews: ""
+    Kickstarter: ""
+    Patreon: ""
+    Steam: ""
+    Twitch: ""
+    Strava: ""
+    Skype: ""
+    Whatsapp: ""
+    Zhihu: ""
+    Douban: ""
+    Angellist: ""
+    Slidershare: ""
+    Jsfiddle: ""
+    Deviantart: ""
+    Behance: ""
+    Dribbble: ""
+    Wordpress: ""
+    Vine: ""
+    Googlescholar: ""
+    Researchgate: ""
+    Thingiverse: ""
+    Devto: ""
+    Gitea: ""
+    XMPP: ""
+    Matrix: ""
+    Bilibili: ""
+    RSS: ""
+  home:
+    profile:
+      avatarURL:  "/images/profile.jpg"
+      gravatarEmail: ""
+  cookieconsent:
+    enable: false
+  analytics:
+    enable: true
+    google:
+      id: G-4DDCXTD3BM
+  page:
+    share:
+      Twitter: true
+      Facebook: true
+      Linkedin: true
+      Mastodon: true
+      Weibo: true
+      HackerNews: true
+      Line: false
+#services:
+#  googleAnalytics:
+#    ID: G-4DDCXTD3BM
+
+
+sitemap:
+  changefreq: "monthly"
+  filename: "sitemap.xml"
+  priority: 0.5
+
+
+
+permalinks:
+  posts: "/:year/:filename/"
+
+menu:
+  main:
+  - name: "Blog"
+    url: "/posts/"
+    weight: 1
+  - name: "My Book"
+    url: "/book/"
+    weight: 2
+  - name: "About Me"
+    url: "/about/"
+    weight: 3
+
 copyright: "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License."
+
+# Markup related configuration in Hugo
+markup:
+  # Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
+  highlight:
+  # false is a necessary configuration (https://github.com/Fastbyte01/KeepIt/issues/158)
+    noClasses: false
