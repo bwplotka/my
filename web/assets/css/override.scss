@@ -12,11 +12,11 @@
     width: 70%;
     max-width: 1000px;
     margin: 0 auto;
-    left: -10%;
   }
   #toc-auto {
     width: 300px !important;
     max-width: 300px !important;
+    right: 0 !important;
   }
 }
 
@@ -29,11 +29,11 @@
     width: 70%;
     max-width: 1000px;
     margin: 0 auto;
-    left: -10%;
   }
   #toc-auto {
     width: 200px !important;
     max-width: 200px !important;
+    right: 0 !important;
   }
 }
 
@@ -43,13 +43,25 @@
     max-width: 800px;
   }
   .page.single {
-    width: 70%;
+    width: 100%;
     max-width: 800px;
     margin: 0 auto;
-    left: -10%;
   }
   #toc-auto {
     width: 150px !important;
     max-width: 150px !important;
+    right: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .page {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 680px) {
+  .page {
+    width: 100%;
   }
 }
