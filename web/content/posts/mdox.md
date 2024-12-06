@@ -3,10 +3,11 @@ weight: 10
 date: 2020-03-22
 linktitle: Automate Your Documentation With mdox!
 title: Automate Your Documentation With mdox!
-date: 2021-08-30
 authors:
 - name: "Bartek Płotka"
+  link: https://bwplotka.dev
 - name: "Saswata Mukherjee"
+  link: https://github.com/saswatamcode
 featuredImage: "/og-images/mdox_initial.gif"
 type:
 - post
