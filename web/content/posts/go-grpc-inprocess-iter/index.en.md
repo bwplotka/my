@@ -1,6 +1,6 @@
 ---
 title: "Optimizing in-process gRPC with Go 1.23 Iterators and Coroutines"
-date: "2024-12-23"
+date: "2024-12-19"
 weight: 1
 categories:
 - go
