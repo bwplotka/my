@@ -4,6 +4,15 @@
   font-size: 1rem;
 }
 
+.lazyloaded {
+  object-fit: contain !important;
+  margin-top: 10px;
+}
+
+.content p {
+  margin: 1em 0 !important;
+}
+
 @media only screen and (min-width: 1440px) {
   .page {
   width: 80%;
