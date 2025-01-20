@@ -1,6 +1,6 @@
 ---
 title: "Optimizing in-process gRPC with Go 1.23 Iterators and Coroutines"
-date: "2025-01-18"
+date: "2025-01-20"
 weight: 1
 categories:
 - go
@@ -16,7 +16,7 @@ A few years back I have been exploring solutions for [the in-process gRPC](https
 
 This created a perfect opportunity to share, in a co-authored blog post, what Filip and I learned about the new iterators, new `coroutines` (not `goroutines`!) and what options you have for the production in-process gRPC logic. Given our limited time, why not explore all in one blog post, what could go wrong? (: 
 
-## gRPC calls in Go
+## gRPC in Go
 
 [gRPC](https://grpc.io/) is a popular open-source Remote Procedure Call (RPC) framework with a few unique elements like a tight [protobuf](https://protobuf.dev/) integration, HTTP/2 use and a native bi-directional streaming capabilities. Before we move to the advanced `in-process` gRPC problem space, let's define [an example gRPC service](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/dev/bwplotka/list/v0/list.proto#L7C1-L9C2) that "lists" strings in form a gRPC server stream:
 
@@ -97,7 +97,7 @@ Long story short, we have, currently, five practical options:
 2. A process calling its own gRPC server on the [Unix](https://en.wikipedia.org/wiki/Unix_domain_socket) socket.
 3. Using the brilliant [`grpchan/inprocgrpc`](https://pkg.go.dev/github.com/fullstorydev/grpchan@v1.1.1/inprocgrpc) gRPC channel implementation. The [gRPC channel](https://grpc.io/docs/what-is-grpc/core-concepts/#channels) can be thought of as an abstraction over TCP transport that could be swapped with a custom implementation.
 4. We can implement custom client that uses a single Go channel and another goroutine to integrate `Send(...)` with `Recv()`.
-5. Since Go 1.23, we can use an exciting new `iter` package to pull (receive) the `Send(...)` calls, which we wanted to explore further in this blog post!
+5. Since Go 1.23, we can use an exciting new [iter](https://pkg.go.dev/iter) package to pull (receive) the `Send(...)` calls, which we wanted to explore further in this blog post!
 
 If you can't wait to learn the pros and cons of each, feel free to fast-forward to the [Summary](#summary-whats-the-best-option). Otherwise, let's jump into new iterators and how they help with our in-process gRPC challenge! 💪
 
@@ -156,11 +156,11 @@ for {
 
 Note that `iter.Pull2` returns a `stop` function which can be called at any time in order to terminate the iterator. Although consuming iterators this way can be more flexible, it is important to make sure the iterator is either fully exhausted, or `stop` is called once the caller is no longer interested in the next value. Otherwise, the iterator function would never terminate, leading to resource leaks.
 
-### gRPC in-process implementation with `iter`.
+### Implementation with `iter`
 
 Using these concepts, we [rewrote the in-process client implementation](https://github.com/thanos-io/thanos/pull/7796/files#diff-3e3656359cc24ff074e50571d47b0b7fa4229f2be8fc0511b126d91c94fa4883) to use a coroutine instead of a goroutine and a channel. The iterator function opens a local server stream which is push based as it relies on the `Send` method from the gRPC framework. The client, on the other hand, has a `Recv` method, making it pull based. As described above, we could bridge this gap elegantly by using `iter.Pull2`, converting a push based to a pull based iterator and handing it off to the client. Our initial implementation had a subtle bug where the client would not call `stop` when a query was cancelled. This lead to readers remaining open indefinitely, causing deadlocks in certain situations. It was a great lesson illustrating the drawbacks of consuming iterators outside the happy path, namely by using the `range` keyword.
 
-To show the usability of `iter` package for in-process gRPC, see the implementation for our example `ListStrings`. The `newServerAsClient` allows calling `ListStrings` server with the client gRPC interface. All with the relatively simple code ([playground](https://go.dev/play/p/MEz1qN63p72)):
+To show the usability of `iter` package for in-process gRPC, see the implementation for our example `ListStrings`. The `newServerAsClient` allows calling `ListStrings` server with the client gRPC interface. All with the relatively simple code (also see [playground](https://go.dev/play/p/MEz1qN63p72)):
 
 ```go
 func newServerAsClient(srv ListStringsServer) ListStringsClient {
@@ -218,30 +218,47 @@ func (y *yielder) Recv() (*ListResponse, error) {
 }
 ```
 
-## Summary: What's the best option?
+## What's the best option?
 
-In engineering, there is rarely a single best option, so let's take a look on all [five options](#five-options) and their strenghts.
+With all of this, is `iter` the best option for `in-process` gRPC use case? It was the best for us for now, but in engineering, there is rarely a single, general best option, so let's take a look on all [five options](#five-options) and their strengths.
 
-| Option                 | Example `ListStrings`                                                                                                                               | `ListStrings` benchmark | Pros                                                                                                                                                                                                                                                                     | Cons                                                                                                                                                         |
-|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| (1) localhost          | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L121) |                         | * Best compatibility (full gRPC logic).<br>* Simple to implement.                                                                                                                                                                                                        | * Expensive.<br>* Messages leak out of the process.                                                                                                          |
-| (2) unix socket        | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L138) |                         | * Best compatibility (full gRPC logic).<br>* A tiny bit less overhead than localhost.<br>* Simple to implement.                                                                                                                                                          | * Still expensive.<br>* Messages leak out of the process.<br>* Not perfectly portable e.g. older versions of Windows.                                        |
-| (3) inprocgrpc.Channel | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L166) |                         | * Proto definition agnostic.<br>* Avoids the expensive proto serialization.<br>* Fully in-process, avoids HTTP serving/client overhead.<br>* Supports all the timeouts, trailers and metadata (think HTTP headers) that gRPC framework offers.<br>* Simple to implement. | * Overhead of cloning the messages for generic correctness.                                                                                                  |
-| (4) goroutine          | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L229) |                         | * Almost the most efficient.                                                                                                                                                                                                                                             | * Hard to make it fully generic.<br>* Hard to suport proper gRPC trailers and metadata.<br>* Easy to make concurrency mistakes (leak goroutines, deadlocks). |
-| (5) iter + coroutine   | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L298) |                         | * The most efficient.<br>* Relatively simple implementation.                                                                                                                                                                                                             | * Hard to make it fully generic.<br>* Hard to support proper gRPC trailers and metadata.                                                                     |
+| Option                 | `ListStrings`                                                                                                                                       | Pros                                                                                                                                                                                                                   | Cons                                                                                                                                      |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| 1. localhost           | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L121) | Proto definition agnostic, best compatibility (full gRPC logic), simple to use.                                                                                                                                        | Expensive, messages leak out of the process.                                                                                              |
+| 2. unix socket         | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L138) | Proto definition agnostic, best compatibility (full gRPC logic), a tiny bit less overhead than localhost, simple to use.                                                                                               | Still expensive, messages leak out of the process, not perfectly portable e.g. older versions of Windows.                                 |
+| 3. grpchannel          | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L166) | Proto definition agnostic, avoids the expensive proto serialization, fully in-process, avoids HTTP serving/client overhead, supports all the timeouts, trailers and metadata that gRPC framework offer, simple to use. | Overhead, especially on default message cloning.                                                                                          |
+| 4. channel + goroutine | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L229) | Almost the most efficient.                                                                                                                                                                                             | Hard to make it fully generic, and to support gRPC trailers and metadata, easy to make concurrency mistakes (leak goroutines, deadlocks). |
+| 5. iter + coroutine    | [implementation](https://github.com/bwplotka/benchmarks/blob/9dd13b9e17bb935053a723ec4c88a6272759754b/benchmarks/local-grpc/benchmark_test.go#L298) | The most efficient, relatively simple implementation.                                                                                                                                                                  | Hard to make it fully generic, hard to support proper gRPC trailers and metadata.                                                         |
 
-TBD: Verdict (it depends: there's no the best!)
+To verify the general efficiency of each solution we [micro-benchmarked](https://github.com/bwplotka/benchmarks/tree/38a20655422b0152a4953edc288c1edfcca25500/benchmarks/local-grpc) each `ListStrings` implementation by streaming 10k strings (10 MB in total). Results show `iter` solutions being the fastest, even with slightly (negligible) more constant allocations than our custom goroutine implementation:
 
-## Resources and credits
+```bash
+benchstat -col /impl -filter "/respSize:1 /impl:(localhost OR unixsocket OR grpchannel-nocpy OR chan OR iter)" ./bench01-2025.txt
+goos: darwin
+goarch: arm64
+pkg: github.com/bwplotka/benchmarks/benchmarks/local-grpc
+cpu: Apple M1 Pro
+                   │  localhost   │          unixsocket           │          grpchannel-nocpy          │                chan                │                iter                │
+                   │    sec/op    │    sec/op     vs base         │   sec/op     vs base               │   sec/op     vs base               │   sec/op     vs base               │
+Local/respSize=1-2   10.333m ± 7%   9.800m ± 31%  ~ (p=0.132 n=6)   5.862m ± 5%  -43.27% (p=0.002 n=6)   4.500m ± 8%  -56.45% (p=0.002 n=6)   2.222m ± 3%  -78.50% (p=0.002 n=6)
 
-TBD: Yolo list, curate it.
+                   │   localhost    │              unixsocket              │           grpchannel-nocpy           │                chan                │               iter                │
+                   │      B/op      │      B/op       vs base              │     B/op       vs base               │    B/op     vs base                │    B/op     vs base               │
+Local/respSize=1-2   7479835.0 ± 0%   7055631.0 ± 0%  -5.67% (p=0.002 n=6)   482182.5 ± 0%  -93.55% (p=0.002 n=6)   320.0 ± 0%  -100.00% (p=0.002 n=6)   504.0 ± 0%  -99.99% (p=0.002 n=6)
 
-* [Benchmark](https://github.com/bwplotka/benchmarks/tree/main/benchmarks/local-grpc).
-* https://github.com/grpc/grpc-go/issues/906
-* https://github.com/thanos-io/thanos/pull/7796
-* https://go.dev/blog/range-functions
-* https://docs.google.com/presentation/d/1NuGOFDfb5sN-povUCouvGx05OtyFXdLFlANMZgGPLfg/edit#slide=id.g31a4995a9ac_0_376
-* https://pkg.go.dev/github.com/fullstorydev/grpchan/inprocgrpc
-* https://go.dev/src/runtime/coro.go
+                   │    localhost    │              unixsocket               │           grpchannel-nocpy            │                chan                │                iter                │
+                   │    allocs/op    │    allocs/op     vs base              │   allocs/op     vs base               │ allocs/op   vs base                │  allocs/op   vs base               │
+Local/respSize=1-2   160279.000 ± 0%   160952.500 ± 0%  +0.42% (p=0.002 n=6)   10034.000 ± 0%  -93.74% (p=0.002 n=6)   4.000 ± 0%  -100.00% (p=0.002 n=6)   15.000 ± 0%  -99.99% (p=0.002 n=6)
+```
 
-As always, thanks to all reviewers (e.g. A, B) and [Maria Letta for the beautiful Gopher illustrations](https://github.com/MariaLetta/free-gophers-pack).
+### Summary
+
+To sum up, the [`grpchan/inprocgrpc` (3)](https://pkg.go.dev/github.com/fullstorydev/grpchan@v1.1.1/inprocgrpc) option is a pretty solid and feature-complete solution that is proto agnostic and supports a majority of gRPC internal mechanisms. To squeeze a bit more performance out of it, you can implement [a custom no-op cloner](https://github.com/bwplotka/benchmarks/blob/38a20655422b0152a4953edc288c1edfcca25500/benchmarks/local-grpc/benchmark_test.go#L175) to avoid expensive copying of your messages -- it's often trivial to implement callers and servers that don't reuse messages which makes copying not necessary.
+
+However, if your gRPC service is data-sensitive and in the hot path, you can consider implementing an in-process gRPC with the new [iter (5)](https://pkg.go.dev/iter) package which seems to be the most efficient solution as of now. This is why we chose `iter` solution for the Thanos project at the moment. The implementation is relatively simple, although more involved than the [`grpchan/inprocgrpc`](https://pkg.go.dev/github.com/fullstorydev/grpchan@v1.1.1/inprocgrpc).
+
+We hope this post gave you some insights around the `iter` Go package and inspire you to build amazing things with it! Feel free to reach us you have questions, feedback and want to share what amazing you build with this knowledge!
+
+Thanks to [Maria Letta for the beautiful Gopher illustrations](https://github.com/MariaLetta/free-gophers-pack) and Go community for epic `iter` package and the related resources (e.g. [range-functions post](https://go.dev/blog/range-functions), [Russ Cox's series of blog posts](https://research.swtch.com/coro))
+
+See ya!
