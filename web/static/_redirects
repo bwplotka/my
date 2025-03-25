@@ -1,2 +1,6 @@
-# Redirect default Netlify subdomain to primary domain
+# Redirect default Netlify subdomain to primary domain.
 https://bwplotka.netlify.com/* https://bwplotka.dev/:splat 301!
+
+# Fun semconv KubeCon demo.
+https://bwplotka.dev/semconv/latest/* https://raw.githubusercontent.com/bwplotka/metric-rename-demo/refs/heads/diff/my-org/semconv/v1.1.0/:splat" 302!
+https://bwplotka.dev/semconv/* https://raw.githubusercontent.com/bwplotka/metric-rename-demo/refs/heads/diff/my-org/semconv/:splat" 302!
