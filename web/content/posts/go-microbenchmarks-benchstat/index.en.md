@@ -51,7 +51,7 @@ After those steps, you likely know if new changes improved CPU latency or memory
 
 ### Example
 
-To showcase this, I wrote a quick [example benchmark](https://github.com/bwplotka/my/blob/main/web/content/code/go-microbenchmarks-benchstat/across_versions/benchmark_test.go#L47) ported from [the real microbenchmark](https://github.com/bwplotka/benchmarks/tree/main/benchmarks/metrics-streaming#metric-streaming) I did when preparing for the [PromCon talk about Remote Write 2.0](https://www.youtube.com/watch?v=1sGmdQk22Ho).
+To showcase this, I wrote a quick [example benchmark](https://github.com/bwplotka/my/blob/main/web/content/posts/go-microbenchmarks-benchstat/across_versions/benchmark_test.go#L47) ported from [the real microbenchmark](https://github.com/bwplotka/benchmarks/tree/main/benchmarks/metrics-streaming#metric-streaming) I did when preparing for the [PromCon talk about Remote Write 2.0](https://www.youtube.com/watch?v=1sGmdQk22Ho).
 
 The main benchmark goal is to compare the encoding efficiency of the Remote Write 1.0 protocol to the 2.0 version for different sample sizes, ideally across different compressions and two different Go protobuf encoders (marshallers). If we use "different versions" flow it may look like this:
 
