@@ -247,7 +247,7 @@ var (
 )
 ```
 
-In this flow, we can just execute the `export bench=allcases ...` CLI command once to produce [allcases](https://github.com/bwplotka/my/blob/main/web/content/code/go-microbenchmarks-benchstat/across_cases/allcases.txt) file.
+In this flow, we can just execute the `export bench=allcases ...` CLI command once to produce [`allcases.txt`](https://github.com/bwplotka/my/blob/main/web/content/posts/go-microbenchmarks-benchstat/across_cases/allcases.txt) file.
 
 Now here is where the `benchstat` projection magic comes in. We can use new [syntax](https://pkg.go.dev/golang.org/x/perf/benchproc/syntax) to control what dimensions we want to compare across, what things we want to filter out or group by!
 
