@@ -4,3 +4,5 @@ bin
 web/public
 web/resources/_gen
 .envrc
+.DS_Store
+

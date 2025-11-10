@@ -6,24 +6,24 @@ Source for [bwplotka.dev](https://bwplotka.dev) personal website including blog 
 
 Once cloned, make sure to run `git submodule update --init --recursive`
 
-### What it includes?
+## What it includes?
 
 * Overview page
 * Blog posts framework
   * YOLO comments reusing Github Issues (yes ^^)
 
-git submodule update --init --recursive
+`git submodule update --init --recursive`
 
-### What open source tools I used to build this?
+## What open source tools I used to build this?
 
 * [Hugo](https://gohugo.io/overview/introduction/)
 * Theme [KeepIt](https://github.com/Fastbyte01/KeepIt)
-* Improve favs & facebook linking: https://realfavicongenerator.net
+* Improve favs & facebook linking: <https://realfavicongenerator.net>
 * Netlify :heart: and it's free tier for open source projects!
 * Tiny amount of jquery
-* Awesome Github client for JS: https://octokit.github.io/rest.js/
+* Awesome Github client for JS: <https://octokit.github.io/rest.js/>
 
-### What YOLO comments means?
+### What YOLO comments means
 
 Features:
 
