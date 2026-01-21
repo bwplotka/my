@@ -1,6 +1,6 @@
 module go-microbenchmarks-benchstat
 
-go 1.22.6
+go 1.23.0
 
 require (
 	github.com/bwplotka/benchmarks/benchmarks/metrics-streaming v0.0.0-20240924124209-b01a8df4595a
@@ -64,7 +64,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.27.0 // indirect
-	golang.org/x/oauth2 v0.21.0 // indirect
+	golang.org/x/oauth2 v0.27.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
