@@ -1,82 +1,120 @@
 {{- $profile := .Site.Params.home.profile -}}
-<div class="home-profile">
-    {{- $avatar := $profile.avatarURL -}}
+<section class="hero-3d-stage" aria-label="Introduction and 3D Book Showcase">
+    {{- /* Left Column: Minimal Spatial Bio Card */ -}}
+    <div class="hero-3d-bio" id="bio-card">
+        <div class="bio-header-row">
+            {{- $avatar := $profile.avatarURL | default "/images/profile.jpg" -}}
+            <a href="{{ "/about/" | relLangURL }}" class="bio-avatar-link" title="About Bartek Płotka">
+                <img src="{{ $avatar }}" alt="Bartek Płotka" class="bio-avatar-img" loading="eager" />
+            </a>
+            <div class="bio-title-group">
+                <div class="bio-status-pill">
+                    <span class="status-dot"></span>
+                    <span>PRINCIPAL ENGINEER @ GOOGLE · LONDON, UK</span>
+                </div>
+                <h1 class="bio-name">Bartłomiej <span class="bio-name-accent">(Bartek)</span> Płotka</h1>
+                <div class="bio-role-line">Observability, Go Efficiency &amp; Open Source Systems</div>
+            </div>
+        </div>
 
-    {{- with $profile.gravatarEmail -}}
-    {{ $profile.gravatarEmail }}wdfwf
-        {{- $avatar = md5 . | printf "https://www.gravatar.com/avatar/%v?s=240&d=mp" -}}
-    {{- end -}}
-    {{- if $avatar -}}
-        <div class="home-avatar">
-            {{- $url := "/about" | relLangURL -}}
-            <a href="{{ $url }}"{{ with .Title | default .Name }} title="{{ . }}"{{ end }}{{ if (urls.Parse $url).Host }} rel="noopener noreffer" target="_blank"{{ end }}>
-                {{- dict "Src" $avatar | partial "plugin/image.html" -}}
+        <p class="bio-lead">
+            Building globally scaled observability at <strong>Google Cloud</strong>. Author of O'Reilly's <a href="/book"><em>Efficient Go</em></a>, co-creator of <a href="https://thanos.io" target="_blank" rel="noopener">Thanos</a>, and <a href="https://prometheus.io" target="_blank" rel="noopener">Prometheus</a> maintainer.
+        </p>
+
+        <div class="node-grid" role="list" aria-label="Core Projects & Roles">
+            <a href="https://prometheus.io" target="_blank" rel="noopener" class="sys-node" role="listitem">
+                <span class="sys-node-tag tag-amber">PROMETHEUS</span>
+                <span class="sys-node-val">Core Maintainer</span>
+            </a>
+            <a href="https://thanos.io" target="_blank" rel="noopener" class="sys-node" role="listitem">
+                <span class="sys-node-tag tag-cyan">THANOS.IO</span>
+                <span class="sys-node-val">Co-Founder</span>
+            </a>
+            <a href="/book" class="sys-node" role="listitem">
+                <span class="sys-node-tag tag-emerald">O'REILLY BOOK</span>
+                <span class="sys-node-val">Efficient Go</span>
+            </a>
+            <a href="https://github.com/cncf/tag-observability" target="_blank" rel="noopener" class="sys-node" role="listitem">
+                <span class="sys-node-tag tag-purple">CNCF TAG</span>
+                <span class="sys-node-val">Obs Tech Lead</span>
             </a>
         </div>
-    {{- end -}}
 
-    <div class="home-subtitle">
-        <b>Bartłomiej (Bartek) Płotka</b>
-        <p>| Senior SWE Tech Lead @ Google | Ex-Principal SWE @ Red Hat | Ex-SRE/SWE at Improbable | </p>
-        <p>| <a href="/book">"Efficient Go" O'Reilly Book Author</a> | <a href="https://thanos.io">Thanos</a> co-author | <a href="https://prometheus.io">Prometheus</a> maintainer 📈 |</p>
-        <p>| CNCF <a href="https://github.com/cncf/tag-observability#tech-lead">TAG Observability Tech Lead</a> | Go, Distributed Systems and OSS enthusiast | </p>
-        <p>| <a href="posts/">Blogger</a> | Gym & Motorcycles 💪🏽 |</p>
-    </div>
+        <div class="bio-footer-bar">
+            <div class="bio-cta-group">
+                <a href="/book" class="btn-3d btn-3d-primary">
+                    <i class="fas fa-book-open" aria-hidden="true"></i> Efficient Go
+                </a>
+                <a href="/about/" class="btn-3d btn-3d-secondary">
+                    About &amp; 36+ Talks →
+                </a>
+            </div>
 
-    {{- if $profile.social -}}
-        <div class="links">
-            {{- $socialMap := resources.Get "data/social.yml" | transform.Unmarshal -}}
-            {{- $socialArr := slice -}}
-            {{- range $key, $value := .Site.Params.social -}}
-                {{- $social := $key | lower | index $socialMap | default dict -}}
-                {{- if $value -}}
-                    {{- if reflect.IsMap $value -}}
-                        {{- with $value.weight -}}
-                            {{- $social = dict "Weight" . | merge $social -}}
+            {{- if $profile.social -}}
+                <div class="links bio-social-links">
+                    {{- $socialMap := resources.Get "data/social.yml" | transform.Unmarshal -}}
+                    {{- $socialArr := slice -}}
+                    {{- range $key, $value := .Site.Params.social -}}
+                        {{- $social := $key | lower | index $socialMap | default dict -}}
+                        {{- if $value -}}
+                            {{- if reflect.IsMap $value -}}
+                                {{- with $value.weight -}}{{- $social = dict "Weight" . | merge $social -}}{{- end -}}
+                                {{- with $value.prefix -}}{{- $social = dict "Prefix" . | merge $social -}}{{- end -}}
+                                {{- with $value.template -}}{{- $social = dict "Template" . | merge $social -}}{{- end -}}
+                                {{- with $value.id -}}{{- $social = dict "Id" . | merge $social -}}{{- end -}}
+                                {{- with $value.url -}}{{- $social = dict "Url" . | merge $social -}}{{- end -}}
+                                {{- with $value.title -}}{{- $social = dict "Title" . | merge $social -}}{{- end -}}
+                                {{- with $value.newtab -}}{{- $social = dict "Newtab" . | merge $social -}}{{- end -}}
+                                {{- with $value.icon -}}{{- $social = dict "Icon" . | merge $social -}}{{- end -}}
+                            {{- else if ne $value true -}}
+                                {{- $social = dict "Id" $value | merge $social -}}
+                            {{- end -}}
+                            {{- if $social.Icon.Simpleicons -}}
+                                {{- $prefix := ($.Scratch.Get "cdn" | default dict).simpleIconsPrefix -}}
+                                {{- $social = dict "Prefix" $prefix | dict "Icon" | merge $social -}}
+                            {{- end -}}
+                            {{- $socialArr = $socialArr | append $social -}}
                         {{- end -}}
-                        {{- with $value.prefix -}}
-                            {{- $social = dict "Prefix" . | merge $social -}}
-                        {{- end -}}
-                        {{- with $value.template -}}
-                            {{- $social = dict "Template" . | merge $social -}}
-                        {{- end -}}
-                        {{- with $value.id -}}
-                            {{- $social = dict "Id" . | merge $social -}}
-                        {{- end -}}
-                        {{- with $value.url -}}
-                            {{- $social = dict "Url" . | merge $social -}}
-                        {{- end -}}
-                        {{- with $value.title -}}
-                            {{- $social = dict "Title" . | merge $social -}}
-                        {{- end -}}
-                        {{- with $value.newtab -}}
-                            {{- $social = dict "Newtab" . | merge $social -}}
-                        {{- end -}}
-                        {{- with $value.icon -}}
-                            {{- $social = dict "Icon" . | merge $social -}}
-                        {{- end -}}
-                    {{- else if ne $value true -}}
-                        {{- $social = dict "Id" $value | merge $social -}}
                     {{- end -}}
-                    {{- if $social.Icon.Simpleicons -}}
-                        {{- $prefix := ($.Scratch.Get "cdn" | default dict).simpleIconsPrefix -}}
-                        {{- $social = dict "Prefix" $prefix | dict "Icon" | merge $social -}}
+                    {{- range sort $socialArr "Weight" -}}
+                        {{- partial "plugin/social.html" . -}}
                     {{- end -}}
-                    {{- $socialArr = $socialArr | append $social -}}
-                {{- end -}}
-            {{- end -}}
-            {{- range sort $socialArr "Weight" -}}
-                {{- partial "plugin/social.html" . -}}
+                </div>
             {{- end -}}
         </div>
-    {{- end -}}
+    </div>
 
-    {{- with $profile.disclaimer -}}
-        <h3 class="home-disclaimer">
-            {{- . | safeHTML -}}
-        </h3>
-    {{- end -}}
-</div>
-<div style=" max-width: fit-content; margin: 40px auto;">
-    <b>Featured on my <a href="/posts">Blog</a></b>
-</div>
+    {{- /* Right Column: Interactive CSS 3D Hardcover Book Stage */ -}}
+    <div class="book-stage-3d" id="book-stage">
+        <div class="pedestal" aria-hidden="true"></div>
+
+        <div class="float-badge badge-top" aria-hidden="true">
+            <span class="fb-label">O'REILLY MEDIA</span>
+            <strong class="fb-val fb-amber">Efficient Go</strong>
+        </div>
+
+        <div class="float-badge badge-bottom-left" aria-hidden="true">
+            <span class="fb-label">go test -bench</span>
+            <strong class="fb-val fb-emerald">benchstat -67.7%</strong>
+        </div>
+
+        <div class="float-badge badge-bottom-right" aria-hidden="true">
+            <span class="fb-label">Go 1.23 iter.Seq</span>
+            <strong class="fb-val fb-cyan">0 allocs/stream</strong>
+        </div>
+
+        <a href="/book" class="book-3d-link" title="Explore Efficient Go (O'Reilly)">
+            <div class="book-3d" id="book-3d">
+                <div class="book-front">
+                    <img src="/images/cover.png" alt="Efficient Go by Bartłomiej Płotka — O'Reilly Book Cover" loading="eager" />
+                </div>
+                <div class="book-spine" aria-hidden="true">
+                    <span>BARTŁOMIEJ PŁOTKA · EFFICIENT GO · O'REILLY</span>
+                </div>
+                <div class="book-pages" aria-hidden="true"></div>
+                <div class="book-back" aria-hidden="true"></div>
+            </div>
+        </a>
+        <div class="book-stage-caption">INTERACTIVE 3D STAGE · CLICK BOOK TO EXPLORE</div>
+    </div>
+</section>

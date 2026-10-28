@@ -1,0 +1,289 @@
+<section class="pprof-explorer-wrap" aria-label="Interactive pprof Topic Flamegraph">
+    <div class="pprof-panel">
+        {{- /* Top Terminal & Mode Switcher Bar */ -}}
+        <div class="pprof-bar">
+            <div class="pprof-bar-left">
+                <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="pprof-cmd">go tool pprof -http=:8080 <span class="pprof-cmd-target" id="pprof-target-label">bwplotka.dev/posts.pb.gz</span></span>
+            </div>
+
+            <div class="pprof-mode-tabs" role="tablist" aria-label="Flamegraph Profile Target">
+                <button type="button" class="pprof-tab active" id="tab-btn-posts" data-mode="posts" role="tab" aria-selected="true">
+                    <i class="fas fa-feather-alt" aria-hidden="true"></i> Blog Posts <span class="tab-count">22</span>
+                </button>
+                <button type="button" class="pprof-tab" id="tab-btn-talks" data-mode="talks" role="tab" aria-selected="false">
+                    <i class="fas fa-microphone-alt" aria-hidden="true"></i> Public Talks <span class="tab-count">36</span>
+                </button>
+            </div>
+
+            <div class="pprof-bar-right">
+                <span class="pprof-active-pill" id="fg-status-pill">stack: root (100%)</span>
+                <button type="button" class="pprof-reset-btn" id="fg-reset-btn" hidden>Reset Zoom</button>
+            </div>
+        </div>
+
+        {{- /* Flamegraph Stack Canvas: Mode 1 = Blog Posts */ -}}
+        <div class="fg-canvas" id="fg-canvas-posts" role="tabpanel" aria-labelledby="tab-btn-posts">
+            <div class="fg-row">
+                <div class="f-bar f-root active-frame" style="width: 100%;" data-fg-filter="all" data-fg-label="root (100% · All 22 Posts)">
+                    <span class="f-name">root // bwplotka.dev/posts — click any stack frame to filter articles below</span>
+                    <span class="f-pct">100% (22 posts)</span>
+                </div>
+            </div>
+            <div class="fg-row">
+                <div class="f-bar f-go" style="width: 41%;" data-fg-filter="go-efficiency" data-fg-label="go.efficiency & benchmarking (41% · 9 posts)">
+                    <span class="f-name">go.efficiency &amp; benchmarking</span>
+                    <span class="f-pct">41% (9)</span>
+                </div>
+                <div class="f-bar f-obs" style="width: 23%;" data-fg-filter="observability" data-fg-label="observability & prometheus (23% · 5 posts)">
+                    <span class="f-name">observability &amp; prometheus</span>
+                    <span class="f-pct">23% (5)</span>
+                </div>
+                <div class="f-bar f-thn" style="width: 18%;" data-fg-filter="thanos" data-fg-label="thanos.io & distributed_systems (18% · 4 posts)">
+                    <span class="f-name">thanos.io &amp; dist_sys</span>
+                    <span class="f-pct">18% (4)</span>
+                </div>
+                <div class="f-bar f-oss" style="width: 18%;" data-fg-filter="oss" data-fg-label="open_source, tooling & career (18% · 4 posts)">
+                    <span class="f-name">oss, tooling &amp; career</span>
+                    <span class="f-pct">18% (4)</span>
+                </div>
+            </div>
+            <div class="fg-row">
+                <div class="f-bar f-go-sub" style="width: 11%;" data-fg-filter="sub-bench" data-fg-label="go/benchstat (microbenchmarks)">
+                    <span class="f-name">benchstat</span>
+                </div>
+                <div class="f-bar f-go-sub" style="width: 10%;" data-fg-filter="sub-grpc" data-fg-label="go/grpc-iter (Go 1.23 iter)">
+                    <span class="f-name">gRPC iter.Seq</span>
+                </div>
+                <div class="f-bar f-go-sub" style="width: 11%;" data-fg-filter="sub-book" data-fg-label="go/efficient-go-book (O'Reilly)">
+                    <span class="f-name">Efficient Go Book</span>
+                </div>
+                <div class="f-bar f-go-sub" style="width: 9%;" data-fg-filter="sub-gotools" data-fg-label="go/tooling (bingo & flagarize)">
+                    <span class="f-name">bingo &amp; flags</span>
+                </div>
+                <div class="f-bar f-obs-sub" style="width: 13%;" data-fg-filter="sub-prom" data-fg-label="obs/prometheus (Remote Read & Go Mem)">
+                    <span class="f-name">Prom &amp; Go Mem</span>
+                </div>
+                <div class="f-bar f-obs-sub" style="width: 10%;" data-fg-filter="sub-exemplars" data-fg-label="obs/exemplars (Correlations & SIG-Obs)">
+                    <span class="f-name">Exemplars &amp; SIG</span>
+                </div>
+                <div class="f-bar f-thn-sub" style="width: 10%;" data-fg-filter="sub-thanos-arch" data-fg-label="thanos/architecture (Global Scale)">
+                    <span class="f-name">Thanos Arch</span>
+                </div>
+                <div class="f-bar f-thn-sub" style="width: 8%;" data-fg-filter="sub-thanos-comm" data-fg-label="thanos/community (ThanosCon & kEdge)">
+                    <span class="f-name">ThanosCon</span>
+                </div>
+                <div class="f-bar f-oss-sub" style="width: 9%;" data-fg-filter="sub-dev-tools" data-fg-label="oss/workflow (lazygit & mdox)">
+                    <span class="f-name">lazygit &amp; mdox</span>
+                </div>
+                <div class="f-bar f-oss-sub" style="width: 9%;" data-fg-filter="sub-career" data-fg-label="oss/maintainer (Maintainer & Career)">
+                    <span class="f-name">OSS &amp; Career</span>
+                </div>
+            </div>
+        </div>
+
+        {{- /* Flamegraph Stack Canvas: Mode 2 = Public Talks */ -}}
+        <div class="fg-canvas" id="fg-canvas-talks" role="tabpanel" aria-labelledby="tab-btn-talks" hidden>
+            <div class="fg-row">
+                <div class="f-bar f-root active-frame" style="width: 100%;" data-talk-filter="all" data-talk-label="root (100% · All 36 Public Talks)">
+                    <span class="f-name">root // bwplotka.dev/talks — click any stack frame to filter conference talks (2018–2024)</span>
+                    <span class="f-pct">100% (36 talks)</span>
+                </div>
+            </div>
+            <div class="fg-row">
+                <div class="f-bar f-obs" style="width: 36%;" data-talk-filter="prometheus" data-talk-label="prometheus.tsdb, remote_write_2.0 & gmp (36% · 13 talks)">
+                    <span class="f-name">prometheus.tsdb, remote_write_2.0 &amp; gmp</span>
+                    <span class="f-pct">36% (13)</span>
+                </div>
+                <div class="f-bar f-thn" style="width: 33%;" data-talk-filter="thanos" data-talk-label="thanos.io, cortex & global_monitoring (33% · 12 talks)">
+                    <span class="f-name">thanos.io, cortex &amp; global_monitoring</span>
+                    <span class="f-pct">33% (12)</span>
+                </div>
+                <div class="f-bar f-go" style="width: 19%;" data-talk-filter="go" data-talk-label="efficient_go, runtime_metrics & benchstat (19% · 7 talks)">
+                    <span class="f-name">efficient_go &amp; benchmarking</span>
+                    <span class="f-pct">19% (7)</span>
+                </div>
+                <div class="f-bar f-oss" style="width: 12%;" data-talk-filter="oss" data-talk-label="cncf.tag_observability & oss (12% · 4 talks)">
+                    <span class="f-name">cncf.tag_obs &amp; oss</span>
+                    <span class="f-pct">12% (4)</span>
+                </div>
+            </div>
+            <div class="fg-row">
+                <div class="f-bar f-obs-sub" style="width: 19%;" data-talk-filter="prometheus-rw2" data-talk-label="prom/remote-write-2.0 (Prom 3.0 & RW 2.0)">
+                    <span class="f-name">Prom 3.0 &amp; Remote Write 2.0</span>
+                </div>
+                <div class="f-bar f-obs-sub" style="width: 17%;" data-talk-filter="prometheus-core" data-talk-label="prom/core (PromQL, Counters, K8s Operators)">
+                    <span class="f-name">PromQL, Counters &amp; Operators</span>
+                </div>
+                <div class="f-bar f-thn-sub" style="width: 18%;" data-talk-filter="thanos-scale" data-talk-label="thanos/scale (Global Scale & Deep Dive)">
+                    <span class="f-name">Thanos Global Scale</span>
+                </div>
+                <div class="f-bar f-thn-sub" style="width: 15%;" data-talk-filter="thanos-corr" data-talk-label="thanos/correlations (Cortex, Exemplars & OaaS)">
+                    <span class="f-name">Correlations &amp; Cortex</span>
+                </div>
+                <div class="f-bar f-go-sub" style="width: 19%;" data-talk-filter="go" data-talk-label="go/efficiency (Runtime Metrics, Micro/Macro Bench)">
+                    <span class="f-name">Go Runtime Metrics &amp; Bench</span>
+                </div>
+                <div class="f-bar f-oss-sub" style="width: 12%;" data-talk-filter="oss" data-talk-label="oss/community (TAG Observability & Thanos 5yr Lessons)">
+                    <span class="f-name">TAG Obs &amp; OSS</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{- /* Talks Preview Grid (shown when Public Talks tab is selected on the flamegraph) */ -}}
+    <div class="talks-explorer-panel" id="home-talks-panel" hidden>
+        <div class="section-bar talks-section-bar">
+            <h2 class="section-bar-title">
+                <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
+                Featured Conference Keynotes &amp; Talks <span class="section-count" id="talks-visible-count">(Showing 12 highlights of 36)</span>
+            </h2>
+            <a href="/about/#public-talks" class="section-bar-link">Full 2018–2024 Talks Archive (36) →</a>
+        </div>
+        <div class="talks-grid" id="home-talks-grid">
+            <article class="talk-card" data-talk-cat="go">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-go">go.efficiency</span>
+                    <span class="talk-date">12.2024 · Gdańsk, PL</span>
+                </div>
+                <h3 class="talk-title">Go Micro-Benchmarking &amp; Efficiency Assessment</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">Golang Speaker's Corner</span>
+                    <a href="https://docs.google.com/presentation/d/1NuGOFDfb5sN-povUCouvGx05OtyFXdLFlANMZgGPLfg/edit#slide=id.p" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="prometheus prometheus-rw2">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-obs">prometheus.rw2</span>
+                    <span class="talk-date">11.2024 · Salt Lake City, US</span>
+                </div>
+                <h3 class="talk-title">Unlocking Cost Savings &amp; New Possibilities: Guide to Prometheus Remote Write 2.0</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">KubeCon NA 2024 &amp; PromCon 2024</span>
+                    <a href="https://docs.google.com/presentation/d/1JLV-AX5MYgtN9vhx8d8aw1twLbrp9sO_jGYppi1EZ38/edit#slide=id.p" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="prometheus prometheus-rw2">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-obs">prometheus.3.0</span>
+                    <span class="talk-date">11.2024 · Salt Lake City, US</span>
+                </div>
+                <h3 class="talk-title">Celebrating Prometheus 3.0: All You Need To Know!</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">KubeCon NA 2024</span>
+                    <a href="https://docs.google.com/presentation/d/1ixSPS0EBs9ex8Tcm7ctDZEUMVNd8VbMB/edit#slide=id.p2" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="prometheus prometheus-core">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-obs">prometheus.gmp</span>
+                    <span class="talk-date">09.2024 · Berlin, DE</span>
+                </div>
+                <h3 class="talk-title">Learnings from Running Prometheus on Google Cloud Scale</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">PromCon 2024</span>
+                    <a href="https://docs.google.com/presentation/d/194tMl_kj5k23XIWzRK3_69b4vSooZwL1qxe__tKUTz8/edit" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="go">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-go">go.runtime</span>
+                    <span class="talk-date">08.2024 · London, UK</span>
+                </div>
+                <h3 class="talk-title">The Key to Go Efficiency is Just a Few Go Runtime Metrics Away!</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">GopherConUK 2024</span>
+                    <a href="https://docs.google.com/presentation/d/1cvUk-CEwQxSWQvTBQHMyq0o3aFpdcDUrjMgee71P2HE/edit#slide=id.p" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="thanos thanos-scale">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-thn">thanos.io</span>
+                    <span class="talk-date">03.2024 · Paris, FR</span>
+                </div>
+                <h3 class="talk-title">ThanosCon24 + 6 Learnings from Building Thanos Project</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">KubeCon EU 2024</span>
+                    <a href="https://docs.google.com/presentation/d/1Dxozjv3oNpXaLSd_3g8Jwz1227AAjJ1Mriw8N633NB0/edit" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="oss">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-oss">cncf.tag_obs</span>
+                    <span class="talk-date">03.2024 · Paris, FR</span>
+                </div>
+                <h3 class="talk-title">Observability TAG: A Review and the Rise of Gen-AI Observability</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">KubeCon EU 2024</span>
+                    <a href="https://docs.google.com/presentation/d/14sAk6WYXPJtotN-_i8u8B6pYZaxn_A3vKi69h9hH0yM/edit#slide=id.p3" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="prometheus prometheus-core">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-obs">prometheus.tsdb</span>
+                    <span class="talk-date">09.2023 · Berlin, DE</span>
+                </div>
+                <h3 class="talk-title">When My Counter Restarted? Addressing Decade-Old Counter Limitation With Created Timestamp</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">PromCon 2023</span>
+                    <a href="https://docs.google.com/presentation/d/1aeJFQA2Kqj036KCRnHR9ugkVD-IxRpdWSRIqixMDeqw/edit#slide=id.gc6f73a04f_0_0" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="go">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-go">go.benchmarks</span>
+                    <span class="talk-date">09.2023 · London, UK</span>
+                </div>
+                <h3 class="talk-title">The Art of Macro Benchmarking using Cloud Native Observability</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">OpenSourceDay London &amp; Observable</span>
+                    <a href="https://docs.google.com/presentation/d/1DHdlJz--_RDW4jNHBvEh6x0GZlI2FrJFDOPjKZnM_JE/edit#slide=id.p" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="oss">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-oss">oss.leadership</span>
+                    <span class="talk-date">02.2023 · London, UK</span>
+                </div>
+                <h3 class="talk-title">Building Sustainable Open Source: 7 Key Lessons After 5 Years of Leading Thanos</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">State of Open Con 2023</span>
+                    <a href="https://docs.google.com/presentation/d/16FOOwAMeaDJ0SdjVxWvu50cjOs2yNt_8yYZIzYvzSVM/edit?usp=sharing" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="go">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-go">efficient.go</span>
+                    <span class="talk-date">02.2023 · Brussels, BE</span>
+                </div>
+                <h3 class="talk-title">Five Steps to Make Your Go Code Faster &amp; More Efficient</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">FOSDEM Go Dev Room</span>
+                    <a href="https://docs.google.com/presentation/d/1MD_Vlb9d32aMDPu9MOlyVO796mK1Y6GrRcXOl63C7g4/edit#slide=id.p" target="_blank" rel="noopener" class="talk-link">Slides ↗</a>
+                </div>
+            </article>
+
+            <article class="talk-card" data-talk-cat="thanos thanos-corr">
+                <div class="talk-meta">
+                    <span class="talk-badge badge-thn">thanos.exemplars</span>
+                    <span class="talk-date">04.2022 · Valencia, ES</span>
+                </div>
+                <h3 class="talk-title">Story of Correlation: Integrating Thanos Metrics with Observability Signals</h3>
+                <div class="talk-footer">
+                    <span class="talk-event">KubeCon EU 2022</span>
+                    <a href="https://www.youtube.com/watch?v=rWFb01GW0mQ" target="_blank" rel="noopener" class="talk-link">Video ↗</a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>

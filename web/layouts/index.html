@@ -1,0 +1,214 @@
+{{- define "content" -}}
+    {{- $params := .Scratch.Get "params" -}}
+    {{- $profile := .Site.Params.home.profile -}}
+    {{- $posts := .Site.Params.home.posts -}}
+
+    <div class="page home"{{ if ne $posts.enable false }} data-home="posts"{{ end }}>
+        {{- /* 1. Signature Hero + 3D Book Stage */ -}}
+        {{- if ne $profile.enable false -}}
+            {{- partial "home/profile.html" . -}}
+        {{- end -}}
+
+        {{- /* 2. Interactive pprof Flamegraph Explorer (Blog Posts & Public Talks) */ -}}
+        {{- partial "home/flamegraph.html" . -}}
+
+        {{- /* Optional Homepage Markdown Content */ -}}
+        {{- if .Content -}}
+            <div class="single">
+                <div class="content" id="content">
+                    {{- dict "Content" .Content "Ruby" $params.ruby "Fraction" $params.fraction "Fontawesome" $params.fontawesome | partial "function/content.html" | safeHTML -}}
+                </div>
+            </div>
+        {{- end -}}
+
+        {{- /* 3. Blog Post Cards Grid */ -}}
+        {{- if ne $posts.enable false | and .Site.RegularPages -}}
+            {{- $pages := where .Site.RegularPages "Type" "posts" -}}
+            {{- if .Site.Params.page.hiddenFromHomePage -}}
+                {{- $pages = where $pages "Params.hiddenfromhomepage" false -}}
+            {{- else -}}
+                {{- $pages = where $pages "Params.hiddenfromhomepage" "!=" true -}}
+            {{- end -}}
+            {{- with $posts.paginate | default .Site.Params.paginate -}}
+                {{- $pages = $.Paginate $pages . -}}
+            {{- else -}}
+                {{- $pages = .Paginate $pages -}}
+            {{- end -}}
+
+            <section class="home-posts-section" id="home-posts-section" aria-label="Engineering Blog Posts">
+                <div class="section-bar">
+                    <h2 class="section-bar-title">
+                        <i class="fas fa-terminal" aria-hidden="true"></i>
+                        Engineering Deep Dives <span class="section-count" id="posts-visible-count">({{ len $pages.Pages }} articles)</span>
+                    </h2>
+                    <a href="{{ "/posts/" | relLangURL }}" class="section-bar-link">Timeline Archive →</a>
+                </div>
+
+                <div class="cards-3d-grid" id="home-posts-grid">
+                    {{- range $pages.Pages -}}
+                        {{- .Render "summary" -}}
+                    {{- end -}}
+                </div>
+
+                {{- partial "paginator.html" . -}}
+            </section>
+        {{- end -}}
+    </div>
+
+    {{- /* Lightweight Vanilla JS for 3D Stage Tilt & pprof Flamegraph Filtering */ -}}
+    <script type="text/javascript">
+    (function() {
+        // 1. 3D Book & Bio Card Cursor-Reactive Tilt
+        var bookStage = document.getElementById('book-stage');
+        var book3d = document.getElementById('book-3d');
+        var bioCard = document.getElementById('bio-card');
+
+        if (bookStage && book3d && window.matchMedia('(pointer: fine)').matches) {
+            bookStage.addEventListener('mousemove', function(e) {
+                var r = bookStage.getBoundingClientRect();
+                var x = (e.clientX - r.left) / r.width - 0.5;
+                var y = (e.clientY - r.top) / r.height - 0.5;
+                var rotY = -24 + (x * 26);
+                var rotX = 8 - (y * 18);
+                book3d.style.transform = 'rotateY(' + rotY.toFixed(1) + 'deg) rotateX(' + rotX.toFixed(1) + 'deg) translateZ(14px)';
+            });
+            bookStage.addEventListener('mouseleave', function() {
+                book3d.style.transform = 'rotateY(-24deg) rotateX(8deg) rotateZ(-1deg)';
+            });
+        }
+
+        if (bioCard && window.matchMedia('(pointer: fine)').matches) {
+            bioCard.addEventListener('mousemove', function(e) {
+                var r = bioCard.getBoundingClientRect();
+                var x = (e.clientX - r.left) / r.width - 0.5;
+                var y = (e.clientY - r.top) / r.height - 0.5;
+                bioCard.style.transform = 'perspective(1200px) rotateY(' + (x * 4).toFixed(2) + 'deg) rotateX(' + (-y * 3).toFixed(2) + 'deg)';
+            });
+            bioCard.addEventListener('mouseleave', function() {
+                bioCard.style.transform = 'none';
+            });
+        }
+
+        // 2. Interactive pprof Flamegraph (Posts & Talks)
+        var tabPosts = document.getElementById('tab-btn-posts');
+        var tabTalks = document.getElementById('tab-btn-talks');
+        var canvasPosts = document.getElementById('fg-canvas-posts');
+        var canvasTalks = document.getElementById('fg-canvas-talks');
+        var talksPanel = document.getElementById('home-talks-panel');
+        var postsSection = document.getElementById('home-posts-section');
+        var targetLabel = document.getElementById('pprof-target-label');
+        var statusPill = document.getElementById('fg-status-pill');
+        var resetBtn = document.getElementById('fg-reset-btn');
+        var postsCountEl = document.getElementById('posts-visible-count');
+        var talksCountEl = document.getElementById('talks-visible-count');
+
+        var postCards = Array.prototype.slice.call(document.querySelectorAll('#home-posts-grid .post-3d-card'));
+        var talkCards = Array.prototype.slice.call(document.querySelectorAll('#home-talks-grid .talk-card'));
+        var postBars = Array.prototype.slice.call(document.querySelectorAll('#fg-canvas-posts .f-bar'));
+        var talkBars = Array.prototype.slice.call(document.querySelectorAll('#fg-canvas-talks .f-bar'));
+
+        var currentMode = 'posts';
+
+        function applyPostsFilter(filterKey, label) {
+            var visible = 0;
+            postCards.forEach(function(card) {
+                var groups = (card.getAttribute('data-fg-groups') || 'all').split(/\s+/);
+                var match = (filterKey === 'all') || (groups.indexOf(filterKey) !== -1);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            postBars.forEach(function(bar) {
+                var bf = bar.getAttribute('data-fg-filter');
+                var isRoot = (bf === 'all');
+                var active = (bf === filterKey);
+                bar.classList.toggle('active-frame', active);
+                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !active && !isRoot);
+            });
+            if (statusPill) statusPill.textContent = 'stack: ' + (label || filterKey);
+            if (resetBtn) resetBtn.hidden = (filterKey === 'all');
+            if (postsCountEl) {
+                postsCountEl.textContent = filterKey === 'all'
+                    ? '(' + visible + ' articles)'
+                    : '(' + visible + ' matching "' + filterKey + '")';
+            }
+        }
+
+        function applyTalksFilter(filterKey, label) {
+            var visible = 0;
+            talkCards.forEach(function(card) {
+                var cats = (card.getAttribute('data-talk-cat') || '').split(/\s+/);
+                var match = (filterKey === 'all') || (cats.indexOf(filterKey) !== -1);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            talkBars.forEach(function(bar) {
+                var tf = bar.getAttribute('data-talk-filter');
+                var isRoot = (tf === 'all');
+                var active = (tf === filterKey);
+                bar.classList.toggle('active-frame', active);
+                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !active && !isRoot);
+            });
+            if (statusPill) statusPill.textContent = 'stack: ' + (label || filterKey);
+            if (resetBtn) resetBtn.hidden = (filterKey === 'all');
+            if (talksCountEl) {
+                talksCountEl.textContent = filterKey === 'all'
+                    ? '(Showing ' + visible + ' highlights of 36)'
+                    : '(' + visible + ' talks matching "' + filterKey + '")';
+            }
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            var isPosts = (mode === 'posts');
+            if (tabPosts) {
+                tabPosts.classList.toggle('active', isPosts);
+                tabPosts.setAttribute('aria-selected', isPosts ? 'true' : 'false');
+            }
+            if (tabTalks) {
+                tabTalks.classList.toggle('active', !isPosts);
+                tabTalks.setAttribute('aria-selected', !isPosts ? 'true' : 'false');
+            }
+            if (canvasPosts) canvasPosts.hidden = !isPosts;
+            if (canvasTalks) canvasTalks.hidden = isPosts;
+            if (talksPanel) talksPanel.hidden = isPosts;
+            if (targetLabel) {
+                targetLabel.textContent = isPosts ? 'bwplotka.dev/posts.pb.gz' : 'bwplotka.dev/talks.pb.gz';
+            }
+            if (isPosts) {
+                applyPostsFilter('all', 'root (100% · All 22 Posts)');
+            } else {
+                applyTalksFilter('all', 'root (100% · All 36 Public Talks)');
+            }
+        }
+
+        if (tabPosts) tabPosts.addEventListener('click', function() { switchMode('posts'); });
+        if (tabTalks) tabTalks.addEventListener('click', function() { switchMode('talks'); });
+
+        postBars.forEach(function(bar) {
+            bar.addEventListener('click', function() {
+                var fk = bar.getAttribute('data-fg-filter') || 'all';
+                var lbl = bar.getAttribute('data-fg-label') || fk;
+                applyPostsFilter(fk, lbl);
+            });
+        });
+
+        talkBars.forEach(function(bar) {
+            bar.addEventListener('click', function() {
+                var fk = bar.getAttribute('data-talk-filter') || 'all';
+                var lbl = bar.getAttribute('data-talk-label') || fk;
+                applyTalksFilter(fk, lbl);
+            });
+        });
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                if (currentMode === 'posts') {
+                    applyPostsFilter('all', 'root (100% · All 22 Posts)');
+                } else {
+                    applyTalksFilter('all', 'root (100% · All 36 Public Talks)');
+                }
+            });
+        }
+    })();
+    </script>
+{{- end -}}

@@ -1,0 +1,101 @@
+{{- $params := .Params | merge .Site.Params.page -}}
+{{- $rel := .RelPermalink -}}
+{{- $cats := .Params.categories | default slice -}}
+
+{{- /* Determine pprof flamegraph group tags and stack badge */ -}}
+{{- $fgGroups := "all" -}}
+{{- $stackBadge := "stack: engineering" -}}
+{{- $badgeClass := "badge-cyan" -}}
+
+{{- if in $rel "benchstat" -}}
+    {{- $fgGroups = "all go-efficiency sub-bench" -}}
+    {{- $stackBadge = "stack: go/benchstat" -}}
+    {{- $badgeClass = "badge-amber" -}}
+{{- else if in $rel "grpc" -}}
+    {{- $fgGroups = "all go-efficiency sub-grpc" -}}
+    {{- $stackBadge = "stack: go/grpc-iter" -}}
+    {{- $badgeClass = "badge-cyan" -}}
+{{- else if or (in $rel "efficient-go") (in $cats "books") -}}
+    {{- $fgGroups = "all go-efficiency sub-book" -}}
+    {{- $stackBadge = "stack: go/efficient-go" -}}
+    {{- $badgeClass = "badge-amber" -}}
+{{- else if or (in $rel "bingo") (in $rel "flagarize") -}}
+    {{- $fgGroups = "all go-efficiency sub-gotools" -}}
+    {{- $stackBadge = "stack: go/tooling" -}}
+    {{- $badgeClass = "badge-cyan" -}}
+{{- else if or (in $rel "prometheus-remote-read") (in $rel "golang-memory") (in $rel "how-thanos-would-program") -}}
+    {{- $fgGroups = "all observability sub-prom" -}}
+    {{- $stackBadge = "stack: obs/prometheus" -}}
+    {{- $badgeClass = "badge-amber" -}}
+{{- else if or (in $rel "correlations-exemplars") (in $rel "sig-obs-tl") -}}
+    {{- $fgGroups = "all observability sub-exemplars" -}}
+    {{- $stackBadge = "stack: obs/exemplars" -}}
+    {{- $badgeClass = "badge-cyan" -}}
+{{- else if or (in $rel "introducing-thanos") (in $rel "thanos-architecture") -}}
+    {{- $fgGroups = "all thanos sub-thanos-arch" -}}
+    {{- $stackBadge = "stack: thanos/arch" -}}
+    {{- $badgeClass = "badge-cyan" -}}
+{{- else if or (in $rel "thanoscon") (in $rel "kedge") -}}
+    {{- $fgGroups = "all thanos sub-thanos-comm" -}}
+    {{- $stackBadge = "stack: thanos/infra" -}}
+    {{- $badgeClass = "badge-purple" -}}
+{{- else if or (in $rel "lazygit") (in $rel "mdox") -}}
+    {{- $fgGroups = "all oss sub-dev-tools" -}}
+    {{- $stackBadge = "stack: oss/workflow" -}}
+    {{- $badgeClass = "badge-emerald" -}}
+{{- else if or (in $rel "maintainer") (in $rel "mentoring") (in $rel "bye-red-hat") (in $rel "have-fun") -}}
+    {{- $fgGroups = "all oss sub-career" -}}
+    {{- $stackBadge = "stack: oss/career" -}}
+    {{- $badgeClass = "badge-emerald" -}}
+{{- else if or (in $cats "efficiency") (in $cats "go") -}}
+    {{- $fgGroups = "all go-efficiency" -}}
+    {{- $stackBadge = "stack: go/efficiency" -}}
+    {{- $badgeClass = "badge-amber" -}}
+{{- else if or (in $cats "observability") (in $cats "prometheus") -}}
+    {{- $fgGroups = "all observability" -}}
+    {{- $stackBadge = "stack: observability" -}}
+    {{- $badgeClass = "badge-amber" -}}
+{{- else if or (in $cats "thanos") (in $cats "infra") -}}
+    {{- $fgGroups = "all thanos" -}}
+    {{- $stackBadge = "stack: thanos/sys" -}}
+    {{- $badgeClass = "badge-cyan" -}}
+{{- else -}}
+    {{- $fgGroups = "all oss" -}}
+    {{- $stackBadge = "stack: open-source" -}}
+    {{- $badgeClass = "badge-emerald" -}}
+{{- end -}}
+
+<article class="single summary post-3d-card" data-fg-groups="{{ $fgGroups }}" itemscope itemtype="http://schema.org/Article">
+    <div class="card-3d-top">
+        <span class="card-stack-badge {{ $badgeClass }}">{{ $stackBadge }}</span>
+        {{- with .Site.Params.dateFormat | default "2006-01-02" | .PublishDate.Format -}}
+            <time class="card-date" datetime="{{ . }}">{{ . }}</time>
+        {{- end -}}
+    </div>
+
+    <h2 class="single-title card-3d-title" itemprop="name headline">
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h2>
+
+    <p class="card-3d-excerpt">
+        {{- $excerpt := .Description | default (.Plain | htmlUnescape) -}}
+        {{- $excerpt | truncate 145 -}}
+    </p>
+
+    <div class="card-3d-footer">
+        <div class="card-cats">
+            {{- range first 3 $cats -}}
+                {{- $category := partialCached "function/path.html" . . | printf "/categories/%v" | $.Site.GetPage -}}
+                {{- if $category -}}
+                    <a href="{{ $category.RelPermalink }}" class="card-cat-chip">#{{ $category.Title }}</a>
+                {{- else -}}
+                    <span class="card-cat-chip">#{{ . }}</span>
+                {{- end -}}
+            {{- end -}}
+        </div>
+        <div class="card-read-meta">
+            <span class="card-read-time">{{ .ReadingTime }} min</span>
+            <a href="{{ .RelPermalink }}" class="card-read-link" aria-label="Read {{ .Title }}">Read →</a>
+        </div>
+    </div>
+</article>
