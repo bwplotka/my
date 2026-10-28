@@ -159,7 +159,7 @@ permalinks:
 menu:
   main:
   - name: "Blog"
-    url: "/posts/"
+    url: "/#explorer-section"
     weight: 1
   - name: "My Book"
     url: "/book/"

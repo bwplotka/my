@@ -40,7 +40,6 @@
                     <h2 class="section-bar-title">
                         Blog Posts <span class="section-count" id="posts-visible-count">({{ len $pages.Pages }} articles)</span>
                     </h2>
-                    <a href="{{ "/posts/" | relLangURL }}" class="section-bar-link">Timeline Archive →</a>
                 </div>
 
                 <div class="cards-3d-grid" id="home-posts-grid">
@@ -444,10 +443,9 @@
 
         function scrollToExplorerAndCards() {
             if (!explorerSection) return;
-            var targetTop = explorerSection.getBoundingClientRect().top + window.pageYOffset - 70;
-            window.scrollTo({
-                top: Math.max(0, targetTop),
-                behavior: 'smooth'
+            explorerSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
         }
 
@@ -490,6 +488,23 @@
             resetBtn.addEventListener('click', function() {
                 switchMode(currentMode);
             });
+        }
+
+        // Intercept header "Blog" links (/ #explorer-section) so clicking "Blog" on home switches to posts mode & scrolls
+        Array.prototype.slice.call(document.querySelectorAll('a[href$="#explorer-section"]')).forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                switchMode('posts');
+                scrollToExplorerAndCards();
+                if (history.replaceState) {
+                    history.replaceState(null, '', '#explorer-section');
+                }
+            });
+        });
+
+        if (window.location.hash === '#explorer-section' || window.location.hash === '#blog' || window.location.hash === '#posts') {
+            switchMode('posts');
+            setTimeout(scrollToExplorerAndCards, 60);
         }
     })();
     </script>
