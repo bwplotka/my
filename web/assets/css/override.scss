@@ -295,10 +295,17 @@ body[theme=dark] {
 }
 
 .bio-lead {
-  font-size: 1.02rem;
-  line-height: 1.68;
+  font-size: 0.98rem;
+  line-height: 1.65;
   color: var(--text-secondary);
-  margin: 0 0 1.6rem !important;
+  margin: 0 0 1.35rem !important;
+
+  .bio-sep {
+    color: var(--accent-amber-bright);
+    font-weight: 700;
+    margin: 0 0.35rem;
+    opacity: 0.85;
+  }
 
   a {
     color: var(--text-primary);
@@ -389,10 +396,10 @@ body[theme=dark] {
   }
 }
 
-// Interactive 3D Hardcover Book Stage (Front + Back Flip + Easter Egg)
+// Interactive 3D Hardcover Book Stage (Mouse Drag with Velocity + Back-Cover Easter Egg)
 .book-stage-3d {
   position: relative;
-  height: 380px;
+  height: 310px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -403,9 +410,9 @@ body[theme=dark] {
 
 .pedestal {
   position: absolute;
-  bottom: 36px;
-  width: 250px;
-  height: 250px;
+  bottom: 14px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(249, 115, 22, 0.14) 0%, transparent 70%);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -414,20 +421,26 @@ body[theme=dark] {
 
 .book-3d-wrapper {
   z-index: 2;
-  cursor: pointer;
+  cursor: grab;
   outline: none;
   perspective: 1300px;
+  touch-action: none;
+
+  &.is-dragging {
+    cursor: grabbing;
+  }
 }
 
 .book-3d {
   position: relative;
-  width: 204px;
-  height: 274px;
+  width: 194px;
+  height: 260px;
   transform-style: preserve-3d;
   transform: rotateY(-24deg) rotateX(8deg);
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 
-  &.is-flipped {
+  &.is-flipped,
+  &.is-back-visible {
     .book-front {
       opacity: 0;
       pointer-events: none;
@@ -451,7 +464,6 @@ body[theme=dark] {
   box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.18), 0 20px 42px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   opacity: 1;
-  transition: opacity 0.2s ease 0.14s;
 
   img {
     width: 100%;
@@ -459,6 +471,7 @@ body[theme=dark] {
     object-fit: cover;
     display: block;
     margin: 0 !important;
+    pointer-events: none;
   }
 }
 
@@ -512,7 +525,6 @@ body[theme=dark] {
   text-align: left;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease 0.14s;
 }
 
 .book-back-header {

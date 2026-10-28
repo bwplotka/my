@@ -57,52 +57,129 @@
     <script type="text/javascript">
     (function() {
         // ====================================================================
-        // 1. 3D Book Click-to-Flip (Front <-> Back) & Cursor Tilt + Easter Egg
+        // 1. 3D Book Mouse-Drag Rotation with Velocity Inertia & Easter Egg
         // ====================================================================
         var bookStage = document.getElementById('book-stage');
         var bookTrigger = document.getElementById('book-3d-trigger');
         var book3d = document.getElementById('book-3d');
-        var flipBtn = document.getElementById('book-flip-btn');
         var sandBtn = document.getElementById('trigger-book-sand-btn');
-        var isBackShowing = false;
 
-        function updateBookTransform(offsetX, offsetY) {
+        var rotY = -24;
+        var rotX = 8;
+        var velY = 0;
+        var velX = 0;
+        var isDragging = false;
+        var dragDist = 0;
+        var lastX = 0;
+        var lastY = 0;
+        var inertiaRaf = null;
+        var wasBackVisible = false;
+        var lastEggTime = 0;
+
+        function applyBookRotation() {
             if (!book3d) return;
-            var ox = offsetX || 0;
-            var oy = offsetY || 0;
-            var baseRotY = isBackShowing ? 162 : -24;
-            var baseRotX = isBackShowing ? 4 : 8;
-            var rotY = baseRotY + (ox * 20);
-            var rotX = baseRotX - (oy * 14);
-            book3d.style.transform = 'rotateY(' + rotY.toFixed(1) + 'deg) rotateX(' + rotX.toFixed(1) + 'deg)';
+            var normY = ((rotY % 360) + 360) % 360;
+            var backVisible = (normY > 90 && normY < 270);
+            book3d.classList.toggle('is-back-visible', backVisible);
+            book3d.classList.toggle('is-flipped', backVisible);
+            book3d.style.transform = 'rotateY(' + rotY.toFixed(2) + 'deg) rotateX(' + rotX.toFixed(2) + 'deg)';
+
+            if (backVisible && !wasBackVisible) {
+                var now = performance.now();
+                if (now - lastEggTime > 2200) {
+                    lastEggTime = now;
+                    startBookSandShower();
+                }
+            }
+            wasBackVisible = backVisible;
         }
 
-        function toggleBookFlip() {
-            isBackShowing = !isBackShowing;
-            if (book3d) {
-                book3d.classList.toggle('is-flipped', isBackShowing);
+        function stepInertia() {
+            if (isDragging) {
+                inertiaRaf = null;
+                return;
             }
-            updateBookTransform(0, 0);
-            if (isBackShowing) {
-                startBookSandShower();
+            rotY += velY;
+            rotX = Math.max(-42, Math.min(42, rotX + velX));
+            velY *= 0.945;
+            velX *= 0.90;
+            rotX += (8 - rotX) * 0.06;
+            applyBookRotation();
+
+            if (Math.abs(velY) > 0.08 || Math.abs(velX) > 0.08 || Math.abs(rotX - 8) > 0.25) {
+                inertiaRaf = requestAnimationFrame(stepInertia);
+            } else {
+                inertiaRaf = null;
+            }
+        }
+
+        function startInertia() {
+            if (!inertiaRaf) {
+                inertiaRaf = requestAnimationFrame(stepInertia);
             }
         }
 
         if (bookTrigger) {
-            bookTrigger.addEventListener('click', function(e) {
+            bookTrigger.addEventListener('pointerdown', function(e) {
                 if (e.target && (e.target.tagName === 'A' || e.target.id === 'trigger-book-sand-btn')) return;
-                toggleBookFlip();
+                isDragging = true;
+                dragDist = 0;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                velY = 0;
+                velX = 0;
+                bookTrigger.classList.add('is-dragging');
+                if (bookTrigger.setPointerCapture) {
+                    try { bookTrigger.setPointerCapture(e.pointerId); } catch (_) {}
+                }
             });
+
+            bookTrigger.addEventListener('pointermove', function(e) {
+                if (!isDragging) return;
+                var dx = e.clientX - lastX;
+                var dy = e.clientY - lastY;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                dragDist += Math.hypot(dx, dy);
+
+                var deltaY = dx * 0.78;
+                var deltaX = -dy * 0.45;
+                rotY += deltaY;
+                rotX = Math.max(-42, Math.min(42, rotX + deltaX));
+                velY = deltaY;
+                velX = deltaX * 0.6;
+                applyBookRotation();
+            });
+
+            function endPointerDrag(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                bookTrigger.classList.remove('is-dragging');
+                if (dragDist < 6) {
+                    // Quick click without dragging: give a smooth angular velocity spin to flip sides.
+                    velY = 14.5;
+                }
+                startInertia();
+            }
+
+            bookTrigger.addEventListener('pointerup', endPointerDrag);
+            bookTrigger.addEventListener('pointercancel', endPointerDrag);
+
             bookTrigger.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    toggleBookFlip();
+                    velY = 14.5;
+                    startInertia();
+                } else if (e.key === 'ArrowRight') {
+                    velY += 6;
+                    startInertia();
+                } else if (e.key === 'ArrowLeft') {
+                    velY -= 6;
+                    startInertia();
                 }
             });
         }
-        if (flipBtn) {
-            flipBtn.addEventListener('click', toggleBookFlip);
-        }
+
         if (sandBtn) {
             sandBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -110,17 +187,11 @@
             });
         }
 
-        if (bookStage && book3d && window.matchMedia('(pointer: fine)').matches) {
-            bookStage.addEventListener('mousemove', function(e) {
-                var r = bookStage.getBoundingClientRect();
-                var x = (e.clientX - r.left) / r.width - 0.5;
-                var y = (e.clientY - r.top) / r.height - 0.5;
-                updateBookTransform(x, y);
-            });
-            bookStage.addEventListener('mouseleave', function() {
-                updateBookTransform(0, 0);
-            });
-        }
+        window._setBookAngle = function(ry, rx) {
+            rotY = ry;
+            rotX = (typeof rx === 'number') ? rx : 6;
+            applyBookRotation();
+        };
 
         // ====================================================================
         // 2. Falling Mini-Books Sand Shower Easter Egg

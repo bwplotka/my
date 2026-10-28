@@ -10,12 +10,12 @@
                 </a>
                 <div class="bio-title-group">
                     <h1 class="bio-name">Bartłomiej (Bartek) Płotka</h1>
-                    <div class="bio-role-line">Principal SWE @ Google Cloud · London, UK</div>
+                    <div class="bio-role-line">SWE TL @ Google Cloud</div>
                 </div>
             </div>
 
             <p class="bio-lead">
-                Focusing on Go performance, cloud-native observability, and open source. Author of O'Reilly's <a href="/book"><em>Efficient Go</em></a>, co-creator of <a href="https://thanos.io" target="_blank" rel="noopener">Thanos</a>, <a href="https://prometheus.io" target="_blank" rel="noopener">Prometheus</a> maintainer, and <a href="https://github.com/cncf/tag-observability" target="_blank" rel="noopener">CNCF TAG Observability</a> Tech Lead.
+                <a href="https://prometheus.io" target="_blank" rel="noopener">Prometheus</a> Steering Committee &amp; Maintainer <span class="bio-sep">|</span> Author of <a href="/book">&ldquo;Efficient Go&rdquo;</a> book <span class="bio-sep">|</span> Co-Founder of CNCF <a href="https://thanos.io" target="_blank" rel="noopener">Thanos</a> <span class="bio-sep">|</span> Host of &ldquo;Optimize All The Things&rdquo; Podcast
             </p>
 
             <div class="bio-footer-bar">
@@ -65,14 +65,14 @@
             </div>
         </div>
 
-        {{- /* Right Column: Interactive 3D Hardcover Book (Click to Flip Front/Back + Easter Egg) */ -}}
+        {{- /* Right Column: Interactive 3D Hardcover Book (Mouse Drag with Velocity + Back-Cover Easter Egg) */ -}}
         <div class="book-stage-3d" id="book-stage">
             <div class="pedestal" aria-hidden="true"></div>
 
-            <div class="book-3d-wrapper" id="book-3d-trigger" role="button" tabindex="0" aria-label="Click to rotate Efficient Go 3D book and inspect the back cover">
+            <div class="book-3d-wrapper" id="book-3d-trigger" role="button" tabindex="0" aria-label="Drag to rotate Efficient Go 3D book in 360 degrees">
                 <div class="book-3d" id="book-3d">
                     <div class="book-front">
-                        <img src="/images/cover.png" alt="Efficient Go by Bartłomiej Płotka — O'Reilly Book Cover" loading="eager" />
+                        <img src="/images/cover.png" alt="Efficient Go by Bartłomiej Płotka — O'Reilly Book Cover" draggable="false" loading="eager" />
                     </div>
                     <div class="book-spine" aria-hidden="true">
                         <span>BARTŁOMIEJ PŁOTKA · EFFICIENT GO · O'REILLY</span>
@@ -97,13 +97,6 @@
                         <div class="book-back-footer">ISBN 978-1-098-10571-6</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="book-stage-controls">
-                <button type="button" class="book-flip-pill" id="book-flip-btn">
-                    <i class="fas fa-sync-alt" aria-hidden="true"></i> Click Book to Flip (Front / Back)
-                </button>
-                <a href="/book" class="book-details-link">Book Page →</a>
             </div>
         </div>
     </div>
