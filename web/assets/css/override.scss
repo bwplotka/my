@@ -225,14 +225,15 @@ body[theme=dark] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2.5rem 0 1.75rem;
+  gap: 1.1rem;
+  padding: 1.25rem 0 1rem;
   box-sizing: border-box;
 }
 
 .hero-3d-stage {
   display: grid;
-  grid-template-columns: 1.2fr 0.9fr;
-  gap: 2.5rem;
+  grid-template-columns: 1.25fr 0.85fr;
+  gap: 2.2rem;
   align-items: center;
   margin: auto 0;
 }
@@ -243,7 +244,7 @@ body[theme=dark] {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 2.25rem 2.4rem;
+  padding: 1.75rem 2.1rem;
   box-shadow: var(--card-shadow);
   text-align: left;
 }
@@ -695,8 +696,13 @@ body[theme=dark] {
 // 6. Clean 2-Level pprof Flamegraph Controller + Details Bar Below
 // ============================================================================
 .pprof-explorer-wrap {
-  padding-top: 1.5rem;
-  margin: 0 0 2rem;
+  padding-top: 0.25rem;
+  margin: 0;
+  scroll-margin-top: 4.5rem;
+}
+
+.cards-section-anchor {
+  scroll-margin-top: 4.5rem;
 }
 
 .pprof-panel {

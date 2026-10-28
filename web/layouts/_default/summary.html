@@ -8,28 +8,28 @@
 
 {{- if or (in $rel "benchstat") (in $rel "grpc") (in $rel "efficient-go") (in $cats "books") (in $rel "bingo") (in $rel "flagarize") -}}
     {{- $fgGroups = "all go-efficiency" -}}
-    {{- $stackBadge = "go.efficiency" -}}
+    {{- $stackBadge = "Go & Efficiency" -}}
 {{- else if or (in $rel "prometheus-remote-read") (in $rel "golang-memory") (in $rel "how-thanos-would-program") (in $rel "correlations-exemplars") (in $rel "sig-obs-tl") -}}
     {{- $fgGroups = "all observability" -}}
-    {{- $stackBadge = "observability" -}}
+    {{- $stackBadge = "Prometheus & Observability" -}}
 {{- else if or (in $rel "introducing-thanos") (in $rel "thanos-architecture") (in $rel "thanoscon") (in $rel "kedge") -}}
     {{- $fgGroups = "all thanos" -}}
-    {{- $stackBadge = "thanos.io" -}}
+    {{- $stackBadge = "Thanos & Distributed Systems" -}}
 {{- else if or (in $rel "lazygit") (in $rel "mdox") (in $rel "maintainer") (in $rel "mentoring") (in $rel "bye-red-hat") (in $rel "have-fun") -}}
     {{- $fgGroups = "all oss" -}}
-    {{- $stackBadge = "open_source" -}}
+    {{- $stackBadge = "Open Source & Tooling" -}}
 {{- else if or (in $cats "efficiency") (in $cats "go") -}}
     {{- $fgGroups = "all go-efficiency" -}}
-    {{- $stackBadge = "go.efficiency" -}}
+    {{- $stackBadge = "Go & Efficiency" -}}
 {{- else if or (in $cats "observability") (in $cats "prometheus") -}}
     {{- $fgGroups = "all observability" -}}
-    {{- $stackBadge = "observability" -}}
+    {{- $stackBadge = "Prometheus & Observability" -}}
 {{- else if or (in $cats "thanos") (in $cats "infra") -}}
     {{- $fgGroups = "all thanos" -}}
-    {{- $stackBadge = "thanos.io" -}}
+    {{- $stackBadge = "Thanos & Distributed Systems" -}}
 {{- else -}}
     {{- $fgGroups = "all oss" -}}
-    {{- $stackBadge = "open_source" -}}
+    {{- $stackBadge = "Open Source & Tooling" -}}
 {{- end -}}
 
 {{- /* Resolve Featured / Preview Image for Every Card */ -}}

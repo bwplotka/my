@@ -1,4 +1,4 @@
-<section class="pprof-explorer-wrap" id="explorer-section" aria-label="Interactive Topic Flamegraph Controller">
+<div class="pprof-explorer-wrap" id="explorer-section" aria-label="Interactive Topic Flamegraph Controller">
     <div class="pprof-panel">
         {{- /* Top Terminal & Mode Switcher Bar */ -}}
         <div class="pprof-bar">
@@ -17,44 +17,44 @@
             </div>
         </div>
 
-        {{- /* Mode 1: Blog Posts Flamegraph (2 clean rows, no per-post boxes) */ -}}
+        {{- /* Mode 1: Blog Posts Flamegraph (2 clean rows, clear topic names) */ -}}
         <div class="fg-canvas" id="fg-canvas-posts" role="tabpanel" aria-labelledby="tab-btn-posts">
             <div class="fg-row">
                 <button type="button" class="f-bar f-root active-frame" style="width: 100%;"
                     data-fg-filter="all"
                     data-fg-title="All Blog Posts (22 articles · 100%)"
-                    data-fg-desc="Showing all 22 engineering articles across Go efficiency, Prometheus, Thanos, and open source.">
-                    <span class="f-name">root // all blog posts (click a category frame below to filter articles)</span>
+                    data-fg-desc="Showing all 22 engineering articles across Go &amp; Efficiency, Prometheus &amp; Observability, Thanos, and Open Source.">
+                    <span class="f-name">All Blog Posts — click any topic frame below to filter &amp; scroll to articles</span>
                     <span class="f-pct">100% (22)</span>
                 </button>
             </div>
             <div class="fg-row">
                 <button type="button" class="f-bar f-tone-1" style="width: 41%;"
                     data-fg-filter="go-efficiency"
-                    data-fg-title="go.efficiency &amp; benchmarking (9 articles · 41%)"
+                    data-fg-title="Go, Performance &amp; Benchmarking (9 articles · 41%)"
                     data-fg-desc="Microbenchmarks with benchstat projections, in-process gRPC with Go 1.23 iterators, O'Reilly Efficient Go book, and Go tooling (bingo, flagarize).">
-                    <span class="f-name">go.efficiency &amp; benchmarking</span>
+                    <span class="f-name">Go, Performance &amp; Benchmarking</span>
                     <span class="f-pct">41% (9)</span>
                 </button>
                 <button type="button" class="f-bar f-tone-2" style="width: 23%;"
                     data-fg-filter="observability"
-                    data-fg-title="observability &amp; prometheus (5 articles · 23%)"
-                    data-fg-desc="Prometheus streaming Remote Read, Go runtime memory monitoring, signal correlation with exemplars, and CNCF SIG Observability.">
-                    <span class="f-name">observability &amp; prometheus</span>
+                    data-fg-title="Prometheus &amp; Observability (5 articles · 23%)"
+                    data-fg-desc="Prometheus streaming Remote Read, Go runtime memory monitoring, signal correlation with exemplars, and CNCF TAG Observability.">
+                    <span class="f-name">Prometheus &amp; Observability</span>
                     <span class="f-pct">23% (5)</span>
                 </button>
                 <button type="button" class="f-bar f-tone-3" style="width: 18%;"
                     data-fg-filter="thanos"
-                    data-fg-title="thanos.io &amp; distributed_systems (4 articles · 18%)"
-                    data-fg-desc="Global-scale Prometheus monitoring architecture with Thanos, ThanosCon retrospective, and cross-cluster gRPC/HTTP routing with kEdge.">
-                    <span class="f-name">thanos.io &amp; distributed_systems</span>
+                    data-fg-title="Thanos &amp; Distributed Systems (4 articles · 18%)"
+                    data-fg-desc="Global-scale Prometheus monitoring architecture with CNCF Thanos, ThanosCon retrospective, and cross-cluster gRPC/HTTP routing with kEdge.">
+                    <span class="f-name">Thanos &amp; Distributed Systems</span>
                     <span class="f-pct">18% (4)</span>
                 </button>
                 <button type="button" class="f-bar f-tone-4" style="width: 18%;"
                     data-fg-filter="oss"
-                    data-fg-title="open_source, workflow &amp; career (4 articles · 18%)"
+                    data-fg-title="Open Source, Tooling &amp; Career (4 articles · 18%)"
                     data-fg-desc="Developer workflow tools (lazygit, mdox), open-source maintainer sustainability, mentoring, and engineering career reflections.">
-                    <span class="f-name">open_source, workflow &amp; career</span>
+                    <span class="f-name">Open Source, Tooling &amp; Career</span>
                     <span class="f-pct">18% (4)</span>
                 </button>
             </div>
@@ -67,37 +67,37 @@
                     data-talk-filter="all"
                     data-talk-title="All Public Talks &amp; Keynotes (36 talks · 2018–2024)"
                     data-talk-desc="Showing conference keynotes, deep dives, and lightning talks across KubeCon, PromCon, GopherCon, and FOSDEM with slides and video links.">
-                    <span class="f-name">root // all conference talks (click a topic frame below to filter talks &amp; links)</span>
+                    <span class="f-name">All Public Talks — click any topic frame below to filter &amp; scroll to talks</span>
                     <span class="f-pct">100% (36)</span>
                 </button>
             </div>
             <div class="fg-row">
                 <button type="button" class="f-bar f-tone-1" style="width: 36%;"
                     data-talk-filter="prometheus"
-                    data-talk-title="prometheus, remote_write_2.0 &amp; tsdb (13 talks · 36%)"
+                    data-talk-title="Prometheus, Remote Write 2.0 &amp; TSDB (13 talks · 36%)"
                     data-talk-desc="Talks covering Prometheus 3.0, Remote Write 2.0 cost savings, Counter Created Timestamps, PromQL redesign, and Google Cloud Managed Prometheus.">
-                    <span class="f-name">prometheus, remote_write &amp; tsdb</span>
+                    <span class="f-name">Prometheus, Remote Write &amp; TSDB</span>
                     <span class="f-pct">36% (13)</span>
                 </button>
                 <button type="button" class="f-bar f-tone-2" style="width: 33%;"
                     data-talk-filter="thanos"
-                    data-talk-title="thanos.io, cortex &amp; global_monitoring (12 talks · 33%)"
+                    data-talk-title="Thanos, Cortex &amp; Global Monitoring (12 talks · 33%)"
                     data-talk-desc="Deep dives into Thanos distributed architecture, multi-cluster telemetry, exemplar correlations, and collaboration between Thanos and Cortex.">
-                    <span class="f-name">thanos.io &amp; global_monitoring</span>
+                    <span class="f-name">Thanos &amp; Global Monitoring</span>
                     <span class="f-pct">33% (12)</span>
                 </button>
                 <button type="button" class="f-bar f-tone-3" style="width: 19%;"
                     data-talk-filter="go"
-                    data-talk-title="efficient_go, runtime_metrics &amp; benchmarking (7 talks · 19%)"
+                    data-talk-title="Go Efficiency, Runtime Metrics &amp; Benchmarking (7 talks · 19%)"
                     data-talk-desc="Practical Go optimization talks: micro-benchmarking with benchstat, macro-benchmarking with observability, and key Go runtime metrics.">
-                    <span class="f-name">efficient_go &amp; benchmarking</span>
+                    <span class="f-name">Go Efficiency &amp; Benchmarking</span>
                     <span class="f-pct">19% (7)</span>
                 </button>
                 <button type="button" class="f-bar f-tone-4" style="width: 12%;"
                     data-talk-filter="oss"
-                    data-talk-title="cncf_tag_observability &amp; oss_leadership (4 talks · 12%)"
+                    data-talk-title="CNCF TAG Observability &amp; Open Source Leadership (4 talks · 12%)"
                     data-talk-desc="CNCF TAG Observability reviews, Gen-AI observability landscape, and lessons from 5+ years of leading sustainable open-source projects.">
-                    <span class="f-name">cncf_tag &amp; oss_leadership</span>
+                    <span class="f-name">CNCF &amp; Open Source Leadership</span>
                     <span class="f-pct">12% (4)</span>
                 </button>
             </div>
@@ -107,14 +107,26 @@
         <div class="fg-details-bar" id="fg-details-bar">
             <div class="fg-details-text">
                 <strong class="fg-details-title" id="fg-details-title">All Blog Posts (22 articles · 100%)</strong>
-                <span class="fg-details-desc" id="fg-details-desc">Showing all 22 engineering articles across Go efficiency, Prometheus, Thanos, and open source.</span>
+                <span class="fg-details-desc" id="fg-details-desc">Showing all 22 engineering articles across Go &amp; Efficiency, Prometheus &amp; Observability, Thanos, and Open Source.</span>
             </div>
             <button type="button" class="pprof-reset-btn" id="fg-reset-btn" hidden>
                 Reset Filter (Show All)
             </button>
         </div>
     </div>
+</div>
 
+    {{- /* Scroll Down Indicator at Bottom of Main Home Screen */ -}}
+    <a href="#cards-section" class="scroll-down-cue" id="scroll-down-cue" aria-label="Scroll down to filtered blog posts and public talks">
+        <span class="scroll-cue-text">Click any pprof frame above or scroll down for cards</span>
+        <span class="scroll-cue-arrow"><i class="fas fa-chevron-down" aria-hidden="true"></i></span>
+    </a>
+</section>
+
+{{- /* Fullscreen Overlay Canvas for the Falling Mini-Books Sand Easter Egg */ -}}
+<canvas id="book-sand-canvas" aria-hidden="true"></canvas>
+
+<div id="cards-section" class="cards-section-anchor">
     {{- /* Public Talks Controlled View (Shown when Public Talks tab is active; hides Blog Posts!) */ -}}
     <div class="talks-explorer-panel" id="home-talks-panel" hidden>
         <div class="section-bar">
@@ -127,7 +139,7 @@
         <div class="talks-grid" id="home-talks-grid">
             <article class="talk-card" data-talk-cat="go">
                 <div class="talk-top">
-                    <span class="talk-topic">efficient_go &amp; benchmarking</span>
+                    <span class="talk-topic">Go Efficiency &amp; Benchmarking</span>
                     <span class="talk-date">12.2024 · Gdańsk, PL</span>
                 </div>
                 <h3 class="talk-title">Go Micro-Benchmarking &amp; Efficiency Assessment</h3>
@@ -142,7 +154,7 @@
 
             <article class="talk-card" data-talk-cat="prometheus">
                 <div class="talk-top">
-                    <span class="talk-topic">prometheus &amp; remote_write</span>
+                    <span class="talk-topic">Prometheus &amp; Remote Write</span>
                     <span class="talk-date">11.2024 · Salt Lake City, US</span>
                 </div>
                 <h3 class="talk-title">Unlocking Cost Savings &amp; New Possibilities: Guide to Prometheus Remote Write 2.0</h3>
@@ -158,7 +170,7 @@
 
             <article class="talk-card" data-talk-cat="prometheus">
                 <div class="talk-top">
-                    <span class="talk-topic">prometheus &amp; remote_write</span>
+                    <span class="talk-topic">Prometheus 3.0</span>
                     <span class="talk-date">11.2024 · Salt Lake City, US</span>
                 </div>
                 <h3 class="talk-title">Celebrating Prometheus 3.0: All You Need To Know!</h3>
@@ -173,7 +185,7 @@
 
             <article class="talk-card" data-talk-cat="prometheus">
                 <div class="talk-top">
-                    <span class="talk-topic">prometheus &amp; gmp</span>
+                    <span class="talk-topic">Prometheus &amp; Cloud Scale</span>
                     <span class="talk-date">09.2024 · Berlin, DE</span>
                 </div>
                 <h3 class="talk-title">Learnings from Running Prometheus on Google Cloud Scale</h3>
@@ -188,7 +200,7 @@
 
             <article class="talk-card" data-talk-cat="go">
                 <div class="talk-top">
-                    <span class="talk-topic">efficient_go &amp; runtime</span>
+                    <span class="talk-topic">Go Efficiency &amp; Runtime</span>
                     <span class="talk-date">08.2024 · London, UK</span>
                 </div>
                 <h3 class="talk-title">The Key to Go Efficiency is Just a Few Go Runtime Metrics Away!</h3>
@@ -203,7 +215,7 @@
 
             <article class="talk-card" data-talk-cat="thanos">
                 <div class="talk-top">
-                    <span class="talk-topic">thanos.io &amp; architecture</span>
+                    <span class="talk-topic">Thanos &amp; Architecture</span>
                     <span class="talk-date">03.2024 · Paris, FR</span>
                 </div>
                 <h3 class="talk-title">ThanosCon24 + 6 Learnings from Building Thanos Project</h3>
@@ -218,7 +230,7 @@
 
             <article class="talk-card" data-talk-cat="oss">
                 <div class="talk-top">
-                    <span class="talk-topic">cncf_tag &amp; oss</span>
+                    <span class="talk-topic">CNCF &amp; Open Source</span>
                     <span class="talk-date">03.2024 · Paris, FR</span>
                 </div>
                 <h3 class="talk-title">Observability TAG: A Review and the Rise of Gen-AI Observability</h3>
@@ -233,7 +245,7 @@
 
             <article class="talk-card" data-talk-cat="prometheus">
                 <div class="talk-top">
-                    <span class="talk-topic">prometheus &amp; operators</span>
+                    <span class="talk-topic">Prometheus &amp; Operators</span>
                     <span class="talk-date">03.2024 · Paris, FR</span>
                 </div>
                 <h3 class="talk-title">Prometheus Operators in the Wild &amp; Scaling Metric Collection</h3>
@@ -249,7 +261,7 @@
 
             <article class="talk-card" data-talk-cat="prometheus">
                 <div class="talk-top">
-                    <span class="talk-topic">prometheus &amp; tsdb</span>
+                    <span class="talk-topic">Prometheus &amp; TSDB</span>
                     <span class="talk-date">09.2023 · Berlin, DE</span>
                 </div>
                 <h3 class="talk-title">When My Counter Restarted? Addressing Decade-Old Counter Limitation With Created Timestamp</h3>
@@ -264,7 +276,7 @@
 
             <article class="talk-card" data-talk-cat="go">
                 <div class="talk-top">
-                    <span class="talk-topic">efficient_go &amp; benchmarking</span>
+                    <span class="talk-topic">Go Efficiency &amp; Benchmarking</span>
                     <span class="talk-date">09.2023 · London, UK</span>
                 </div>
                 <h3 class="talk-title">The Art of Macro Benchmarking using Cloud Native Observability</h3>
@@ -279,7 +291,7 @@
 
             <article class="talk-card" data-talk-cat="oss">
                 <div class="talk-top">
-                    <span class="talk-topic">cncf_tag &amp; oss_leadership</span>
+                    <span class="talk-topic">CNCF &amp; Open Source Leadership</span>
                     <span class="talk-date">02.2023 · London, UK</span>
                 </div>
                 <h3 class="talk-title">Building Sustainable Open Source: 7 Key Lessons After 5 Years of Leading Thanos</h3>
@@ -294,7 +306,7 @@
 
             <article class="talk-card" data-talk-cat="go">
                 <div class="talk-top">
-                    <span class="talk-topic">efficient_go &amp; benchmarking</span>
+                    <span class="talk-topic">Go Efficiency &amp; Benchmarking</span>
                     <span class="talk-date">02.2023 · Brussels, BE</span>
                 </div>
                 <h3 class="talk-title">Five Steps to Make Your Go Code Faster &amp; More Efficient</h3>
@@ -309,7 +321,7 @@
 
             <article class="talk-card" data-talk-cat="prometheus">
                 <div class="talk-top">
-                    <span class="talk-topic">prometheus &amp; promql</span>
+                    <span class="talk-topic">Prometheus &amp; PromQL</span>
                     <span class="talk-date">11.2022 · Munich, DE</span>
                 </div>
                 <h3 class="talk-title">Opening Pandora's Box: Redesigning PromQL for Scalable Computation</h3>
@@ -324,7 +336,7 @@
 
             <article class="talk-card" data-talk-cat="thanos">
                 <div class="talk-top">
-                    <span class="talk-topic">thanos.io &amp; correlations</span>
+                    <span class="talk-topic">Thanos &amp; Correlations</span>
                     <span class="talk-date">04.2022 · Valencia, ES</span>
                 </div>
                 <h3 class="talk-title">Story of Correlation: Integrating Thanos Metrics with Observability Signals</h3>
@@ -339,7 +351,7 @@
 
             <article class="talk-card" data-talk-cat="thanos">
                 <div class="talk-top">
-                    <span class="talk-topic">thanos.io &amp; cortex</span>
+                    <span class="talk-topic">Thanos &amp; Cortex</span>
                     <span class="talk-date">11.2019 · San Diego &amp; Munich</span>
                 </div>
                 <h3 class="talk-title">Thanos Deep Dive &amp; Two Households, Both Alike in Dignity: Cortex and Thanos</h3>
@@ -355,7 +367,7 @@
 
             <article class="talk-card" data-talk-cat="thanos">
                 <div class="talk-top">
-                    <span class="talk-topic">thanos.io &amp; global_monitoring</span>
+                    <span class="talk-topic">Thanos &amp; Global Monitoring</span>
                     <span class="talk-date">02.2019 · Los Angeles &amp; Brussels</span>
                 </div>
                 <h3 class="talk-title">Thanos: Transforming Prometheus to a Global Scale in Seven Simple Steps</h3>
@@ -370,4 +382,4 @@
             </article>
         </div>
     </div>
-</section>
+</div>

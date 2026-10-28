@@ -440,8 +440,29 @@
             }
         }
 
-        if (tabPosts) tabPosts.addEventListener('click', function() { switchMode('posts'); });
-        if (tabTalks) tabTalks.addEventListener('click', function() { switchMode('talks'); });
+        var explorerSection = document.getElementById('explorer-section');
+
+        function scrollToExplorerAndCards() {
+            if (!explorerSection) return;
+            var targetTop = explorerSection.getBoundingClientRect().top + window.pageYOffset - 70;
+            window.scrollTo({
+                top: Math.max(0, targetTop),
+                behavior: 'smooth'
+            });
+        }
+
+        if (tabPosts) {
+            tabPosts.addEventListener('click', function() {
+                switchMode('posts');
+                scrollToExplorerAndCards();
+            });
+        }
+        if (tabTalks) {
+            tabTalks.addEventListener('click', function() {
+                switchMode('talks');
+                scrollToExplorerAndCards();
+            });
+        }
 
         postBars.forEach(function(bar) {
             bar.addEventListener('click', function() {
@@ -450,6 +471,7 @@
                     bar.getAttribute('data-fg-title'),
                     bar.getAttribute('data-fg-desc')
                 );
+                scrollToExplorerAndCards();
             });
         });
 
@@ -460,6 +482,7 @@
                     bar.getAttribute('data-talk-title'),
                     bar.getAttribute('data-talk-desc')
                 );
+                scrollToExplorerAndCards();
             });
         });
 
