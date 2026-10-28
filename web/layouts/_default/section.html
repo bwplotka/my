@@ -1,0 +1,89 @@
+{{- define "title" }}
+    {{- .Params.Title | default (T .Section) | default .Section | dict "Some" | T "allSome" }} - {{ .Site.Title -}}
+{{- end -}}
+
+{{- define "content" -}}
+    <div class="page archive">
+        <div class="archive-header-card">
+            <div class="archive-header-top">
+                <div>
+                    <span class="archive-kicker">TIMELINE ARCHIVE</span>
+                    <h1 class="single-title archive-main-title">
+                        {{- .Params.Title | default (T .Section) | default .Section | dict "Some" | T "allSome" -}}
+                    </h1>
+                </div>
+                <span class="archive-total-badge">{{ len .Pages }} Articles</span>
+            </div>
+            <div class="archive-filter-bar" role="toolbar" aria-label="Filter posts by category">
+                <button type="button" class="archive-chip active" data-cat-filter="all">All ({{ len .Pages }})</button>
+                <button type="button" class="archive-chip" data-cat-filter="go">#go</button>
+                <button type="button" class="archive-chip" data-cat-filter="efficiency">#efficiency</button>
+                <button type="button" class="archive-chip" data-cat-filter="observability">#observability</button>
+                <button type="button" class="archive-chip" data-cat-filter="thanos">#thanos</button>
+                <button type="button" class="archive-chip" data-cat-filter="open-source">#open-source</button>
+                <button type="button" class="archive-chip" data-cat-filter="infra">#infra</button>
+            </div>
+        </div>
+
+        {{- if .Pages -}}
+            {{- $pages := .Pages.GroupByDate "2006" -}}
+            {{- range $pages -}}
+                <section class="archive-year-section" data-year="{{ .Key }}">
+                    <h2 class="group-title archive-year-title">
+                        <span class="year-dot"></span>
+                        <span>{{ .Key }}</span>
+                        <span class="year-count">{{ len .Pages }}</span>
+                    </h2>
+                    <div class="archive-timeline-list">
+                        {{- range .Pages -}}
+                            {{- $cats := .Params.categories | default slice -}}
+                            <article class="archive-item archive-card-row" data-cats="{{ delimit $cats " " }}">
+                                <div class="archive-row-left">
+                                    <time class="archive-item-date" datetime="{{ .Date.Format "2006-01-02" }}">
+                                        {{- $.Site.Params.section.dateFormat | default "01-02" | .Date.Format -}}
+                                    </time>
+                                    <a href="{{ .RelPermalink }}" class="archive-item-link">
+                                        {{- .Title -}}
+                                    </a>
+                                </div>
+                                <div class="archive-row-right">
+                                    <div class="archive-row-cats">
+                                        {{- range first 3 $cats -}}
+                                            <span class="archive-mini-tag">#{{ . }}</span>
+                                        {{- end -}}
+                                    </div>
+                                    <span class="archive-read-time">{{ .ReadingTime }} min</span>
+                                </div>
+                            </article>
+                        {{- end -}}
+                    </div>
+                </section>
+            {{- end -}}
+        {{- end -}}
+    </div>
+
+    <script type="text/javascript">
+    (function() {
+        var chips = Array.prototype.slice.call(document.querySelectorAll('.archive-filter-bar .archive-chip'));
+        var rows = Array.prototype.slice.call(document.querySelectorAll('.archive-card-row'));
+        var sections = Array.prototype.slice.call(document.querySelectorAll('.archive-year-section'));
+        if (!chips.length) return;
+
+        chips.forEach(function(chip) {
+            chip.addEventListener('click', function() {
+                var cat = chip.getAttribute('data-cat-filter') || 'all';
+                chips.forEach(function(c) { c.classList.toggle('active', c === chip); });
+                rows.forEach(function(r) {
+                    var rc = (r.getAttribute('data-cats') || '').split(/\s+/);
+                    var show = (cat === 'all') || (rc.indexOf(cat) !== -1);
+                    r.style.display = show ? '' : 'none';
+                });
+                sections.forEach(function(sec) {
+                    var visibleInYear = sec.querySelectorAll('.archive-card-row:not([style*="display: none"])').length;
+                    sec.style.display = visibleInYear > 0 ? '' : 'none';
+                });
+            });
+        });
+    })();
+    </script>
+{{- end -}}

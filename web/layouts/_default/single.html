@@ -1,0 +1,123 @@
+{{- define "title" }}{{ .Title | default "About Bartek Płotka" }} - {{ .Site.Title }}{{ end -}}
+
+{{- define "content" -}}
+    {{- $params := .Scratch.Get "params" -}}
+    <article class="page single special">
+        {{- with .Title -}}
+            <h1 class="single-title">{{ . }}</h1>
+        {{- end -}}
+
+        {{- with $params.subtitle -}}
+            <h2 class="single-subtitle">{{ . }}</h2>
+        {{- end -}}
+
+        <div class="content" id="content">
+            {{- dict "Content" .Content "Ruby" $params.ruby "Fraction" $params.fraction "Fontawesome" $params.fontawesome | partial "function/content.html" | safeHTML -}}
+        </div>
+
+        {{- partial "comment.html" . -}}
+    </article>
+
+    {{- /* Enhance /about Open Source project lists and Public Talks tables */ -}}
+    <script type="text/javascript">
+    (function() {
+        // 1. Transform Open Source comma-separated link paragraphs into visual project badges
+        var ossHeading = document.getElementById('open-source');
+        if (ossHeading) {
+            var el = ossHeading.nextElementSibling;
+            while (el && !/^H[23]$/.test(el.tagName)) {
+                if (el.tagName === 'P' && (el.textContent.indexOf('More popular ones:') === 0 || el.textContent.indexOf('Other:') === 0)) {
+                    var isPrimary = el.textContent.indexOf('More popular ones:') === 0;
+                    var links = Array.prototype.slice.call(el.querySelectorAll('a'));
+                    if (links.length) {
+                        var wrap = document.createElement('div');
+                        wrap.className = 'oss-badge-group';
+                        var label = document.createElement('span');
+                        label.className = 'oss-group-label';
+                        label.textContent = isPrimary ? 'FEATURED OSS PROJECTS' : 'ADDITIONAL LIBRARIES & TOOLS';
+                        wrap.appendChild(label);
+                        var grid = document.createElement('div');
+                        grid.className = 'oss-badges-row';
+                        links.forEach(function(a) {
+                            a.className = 'oss-project-pill ' + (isPrimary ? 'oss-pill-primary' : 'oss-pill-secondary');
+                            a.target = '_blank';
+                            a.rel = 'noopener';
+                            grid.appendChild(a);
+                        });
+                        wrap.appendChild(grid);
+                        var next = el.nextElementSibling;
+                        el.parentNode.replaceChild(wrap, el);
+                        el = next;
+                        continue;
+                    }
+                }
+                el = el.nextElementSibling;
+            }
+        }
+
+        // 2. Interactive Public Talks filter bar
+        var talksHeading = document.getElementById('public-talks');
+        if (!talksHeading) return;
+
+        var bar = document.createElement('div');
+        bar.className = 'talks-table-filter-bar';
+        bar.innerHTML =
+            '<div class="ttf-chips">' +
+                '<button type="button" class="ttf-chip active" data-q="">All Talks (36)</button>' +
+                '<button type="button" class="ttf-chip" data-q="prometheus|promql|remote write|counter">Prometheus &amp; PromQL</button>' +
+                '<button type="button" class="ttf-chip" data-q="thanos|cortex">Thanos &amp; Multi-Cluster</button>' +
+                '<button type="button" class="ttf-chip" data-q="go |benchmark|efficiency|clouds">Go &amp; Benchmarking</button>' +
+                '<button type="button" class="ttf-chip" data-q="tag|sig|sustainable|contribfest">CNCF TAG &amp; OSS</button>' +
+            '</div>' +
+            '<input type="search" class="ttf-search" placeholder="Filter talks by title, event (KubeCon, PromCon), or city..." aria-label="Search talks" />';
+
+        var nextEl = talksHeading.nextElementSibling;
+        if (nextEl && nextEl.tagName === 'P') {
+            nextEl.parentNode.insertBefore(bar, nextEl.nextSibling);
+        } else {
+            talksHeading.parentNode.insertBefore(bar, nextEl);
+        }
+
+        var content = document.getElementById('content');
+        var tables = Array.prototype.slice.call(content.querySelectorAll('table'));
+        var chips = Array.prototype.slice.call(bar.querySelectorAll('.ttf-chip'));
+        var searchInput = bar.querySelector('.ttf-search');
+        var activePattern = '';
+
+        function filterTables() {
+            var q = (searchInput.value || '').trim().toLowerCase();
+            var re = activePattern ? new RegExp(activePattern, 'i') : null;
+
+            tables.forEach(function(tbl) {
+                var rows = Array.prototype.slice.call(tbl.querySelectorAll('tbody tr'));
+                var visibleCount = 0;
+                rows.forEach(function(tr) {
+                    var txt = tr.textContent || '';
+                    var matchChip = !re || re.test(txt);
+                    var matchSearch = !q || txt.toLowerCase().indexOf(q) !== -1;
+                    var show = matchChip && matchSearch;
+                    tr.style.display = show ? '' : 'none';
+                    if (show) visibleCount++;
+                });
+                var wrapEl = tbl.parentElement && tbl.parentElement.classList.contains('table-wrapper') ? tbl.parentElement : tbl;
+                wrapEl.style.display = visibleCount > 0 ? '' : 'none';
+                var prev = wrapEl.previousElementSibling;
+                if (prev && /^H[34]$/.test(prev.tagName)) {
+                    prev.style.display = visibleCount > 0 ? '' : 'none';
+                }
+            });
+        }
+
+        chips.forEach(function(chip) {
+            chip.addEventListener('click', function() {
+                chips.forEach(function(c) { c.classList.toggle('active', c === chip); });
+                activePattern = chip.getAttribute('data-q') || '';
+                filterTables();
+            });
+        });
+        if (searchInput) {
+            searchInput.addEventListener('input', filterTables);
+        }
+    })();
+    </script>
+{{- end -}}
