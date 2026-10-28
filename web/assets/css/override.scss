@@ -15,8 +15,8 @@ html {
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-muted: #64748b;
-  --border-subtle: rgba(15, 23, 42, 0.1);
-  --border-highlight: rgba(234, 88, 12, 0.42);
+  --border-subtle: rgba(15, 23, 42, 0.11);
+  --border-highlight: rgba(234, 88, 12, 0.45);
   --accent-amber: #ea580c;
   --accent-amber-bright: #f97316;
   --accent-amber-soft: rgba(234, 88, 12, 0.12);
@@ -24,30 +24,33 @@ html {
   --iso-extrude-hover: rgba(234, 88, 12, 0.35);
   --card-shadow: 6px 6px 0 var(--iso-extrude), 0 14px 32px -8px rgba(15, 23, 42, 0.08);
   --card-hover-shadow: 10px 10px 0 var(--iso-extrude-hover), 0 22px 44px -10px rgba(15, 23, 42, 0.16);
-  --grid-line: rgba(15, 23, 42, 0.05);
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', Menlo, Consolas, monospace;
+  --grid-line: rgba(15, 23, 42, 0.06);
+  --grid-accent: rgba(234, 88, 12, 0.08);
+  --font-sans: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
 }
 
 body[theme=dark] {
-  --bg-deep: #090b10;
-  --bg-surface: rgba(16, 20, 29, 0.88);
-  --bg-surface-solid: #10141d;
-  --bg-elevated: #171c28;
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
+  --bg-deep: #131926;
+  --bg-surface: rgba(27, 36, 54, 0.88);
+  --bg-surface-solid: #1b2436;
+  --bg-elevated: #232f46;
+  --text-primary: #f8fafc;
+  --text-secondary: #d8e2ef;
   --text-muted: #94a3b8;
-  --border-subtle: rgba(255, 255, 255, 0.09);
-  --border-highlight: rgba(251, 146, 60, 0.48);
+  --border-subtle: rgba(255, 255, 255, 0.13);
+  --border-highlight: rgba(251, 146, 60, 0.52);
   --accent-amber: #ea580c;
   --accent-amber-bright: #fb923c;
-  --accent-amber-soft: rgba(249, 115, 22, 0.14);
-  --iso-extrude: rgba(255, 255, 255, 0.07);
-  --iso-extrude-hover: rgba(249, 115, 22, 0.38);
-  --card-shadow: 7px 7px 0 var(--iso-extrude), 0 18px 40px -12px rgba(0, 0, 0, 0.7);
-  --card-hover-shadow: 11px 11px 0 var(--iso-extrude-hover), 0 26px 52px -12px rgba(0, 0, 0, 0.85);
-  --grid-line: rgba(255, 255, 255, 0.04);
+  --accent-amber-soft: rgba(249, 115, 22, 0.16);
+  --iso-extrude: rgba(255, 255, 255, 0.09);
+  --iso-extrude-hover: rgba(249, 115, 22, 0.42);
+  --card-shadow: 7px 7px 0 var(--iso-extrude), 0 18px 40px -12px rgba(4, 8, 18, 0.65);
+  --card-hover-shadow: 11px 11px 0 var(--iso-extrude-hover), 0 26px 52px -12px rgba(4, 8, 18, 0.8);
+  --grid-line: rgba(148, 163, 184, 0.085);
+  --grid-accent: rgba(251, 146, 60, 0.11);
+  background: radial-gradient(ellipse 95% 65% at 50% 0%, #222e47 0%, #151c2c 58%, #101623 100%) fixed !important;
 }
 
 // ============================================================================
@@ -88,27 +91,37 @@ body[theme=dark] {
   width: 220%;
   height: 200%;
   left: -60%;
-  top: -25%;
+  top: -20%;
   background-image:
+    linear-gradient(to right, var(--grid-accent) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-accent) 1px, transparent 1px),
     linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-  background-size: 60px 60px;
-  transform: rotateX(64deg) translateZ(-120px);
-  mask-image: radial-gradient(ellipse 65% 55% at 50% 42%, #000 15%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 65% 55% at 50% 42%, #000 15%, transparent 75%);
+  background-size: 240px 240px, 240px 240px, 48px 48px, 48px 48px;
+  transform: rotateX(62deg) translateZ(-100px);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 45%, #000 25%, transparent 82%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 45%, #000 25%, transparent 82%);
 }
 
-.glow-orb-1,
+.glow-orb-1 {
+  position: absolute;
+  width: 680px;
+  height: 680px;
+  top: -120px;
+  right: 4%;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, rgba(234, 88, 12, 0.05) 45%, transparent 70%);
+  filter: blur(50px);
+}
+
 .glow-orb-2 {
   position: absolute;
-  width: 560px;
-  height: 560px;
-  background: radial-gradient(circle, rgba(249, 115, 22, 0.065) 0%, transparent 68%);
+  width: 640px;
+  height: 640px;
+  top: 160px;
+  left: 2%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.09) 0%, rgba(99, 102, 241, 0.04) 45%, transparent 70%);
   filter: blur(55px);
 }
-
-.glow-orb-1 { top: -140px; right: 8%; }
-.glow-orb-2 { top: 200px; left: 5%; }
 
 .wrapper {
   position: relative;
@@ -290,9 +303,11 @@ body[theme=dark] {
 }
 
 .bio-role-line {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--accent-amber-bright);
+  letter-spacing: 0.01em;
 }
 
 .bio-lead {
@@ -1174,13 +1189,15 @@ body[theme=dark] {
 }
 
 .fg-details-title {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
   color: var(--accent-amber-bright);
 }
 
 .fg-details-desc {
-  font-size: 0.84rem;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
   color: var(--text-secondary);
 }
 
@@ -1189,10 +1206,10 @@ body[theme=dark] {
   border: 1px solid var(--border-highlight);
   background: var(--accent-amber-soft);
   color: var(--accent-amber-bright);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
   font-weight: 600;
-  padding: 0.34rem 0.75rem;
+  padding: 0.36rem 0.8rem;
   border-radius: 7px;
   cursor: pointer;
 
