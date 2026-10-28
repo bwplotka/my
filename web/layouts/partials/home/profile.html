@@ -1,120 +1,119 @@
 {{- $profile := .Site.Params.home.profile -}}
-<section class="hero-3d-stage" aria-label="Introduction and 3D Book Showcase">
-    {{- /* Left Column: Minimal Spatial Bio Card */ -}}
-    <div class="hero-3d-bio" id="bio-card">
-        <div class="bio-header-row">
-            {{- $avatar := $profile.avatarURL | default "/images/profile.jpg" -}}
-            <a href="{{ "/about/" | relLangURL }}" class="bio-avatar-link" title="About Bartek Płotka">
-                <img src="{{ $avatar }}" alt="Bartek Płotka" class="bio-avatar-img" loading="eager" />
-            </a>
-            <div class="bio-title-group">
-                <div class="bio-status-pill">
-                    <span class="status-dot"></span>
-                    <span>PRINCIPAL ENGINEER @ GOOGLE · LONDON, UK</span>
+<section class="hero-viewport" aria-label="Introduction and Interactive 3D Book">
+    <div class="hero-3d-stage">
+        {{- /* Left Column: Calm, Minimal Bio Card */ -}}
+        <div class="hero-3d-bio" id="bio-card">
+            <div class="bio-header-row">
+                {{- $avatar := $profile.avatarURL | default "/images/profile.jpg" -}}
+                <a href="{{ "/about/" | relLangURL }}" class="bio-avatar-link" title="About Bartek Płotka">
+                    <img src="{{ $avatar }}" alt="Bartek Płotka" class="bio-avatar-img" loading="eager" />
+                </a>
+                <div class="bio-title-group">
+                    <h1 class="bio-name">Bartłomiej (Bartek) Płotka</h1>
+                    <div class="bio-role-line">Principal SWE @ Google Cloud · London, UK</div>
                 </div>
-                <h1 class="bio-name">Bartłomiej <span class="bio-name-accent">(Bartek)</span> Płotka</h1>
-                <div class="bio-role-line">Observability, Go Efficiency &amp; Open Source Systems</div>
-            </div>
-        </div>
-
-        <p class="bio-lead">
-            Building globally scaled observability at <strong>Google Cloud</strong>. Author of O'Reilly's <a href="/book"><em>Efficient Go</em></a>, co-creator of <a href="https://thanos.io" target="_blank" rel="noopener">Thanos</a>, and <a href="https://prometheus.io" target="_blank" rel="noopener">Prometheus</a> maintainer.
-        </p>
-
-        <div class="node-grid" role="list" aria-label="Core Projects & Roles">
-            <a href="https://prometheus.io" target="_blank" rel="noopener" class="sys-node" role="listitem">
-                <span class="sys-node-tag tag-amber">PROMETHEUS</span>
-                <span class="sys-node-val">Core Maintainer</span>
-            </a>
-            <a href="https://thanos.io" target="_blank" rel="noopener" class="sys-node" role="listitem">
-                <span class="sys-node-tag tag-cyan">THANOS.IO</span>
-                <span class="sys-node-val">Co-Founder</span>
-            </a>
-            <a href="/book" class="sys-node" role="listitem">
-                <span class="sys-node-tag tag-emerald">O'REILLY BOOK</span>
-                <span class="sys-node-val">Efficient Go</span>
-            </a>
-            <a href="https://github.com/cncf/tag-observability" target="_blank" rel="noopener" class="sys-node" role="listitem">
-                <span class="sys-node-tag tag-purple">CNCF TAG</span>
-                <span class="sys-node-val">Obs Tech Lead</span>
-            </a>
-        </div>
-
-        <div class="bio-footer-bar">
-            <div class="bio-cta-group">
-                <a href="/book" class="btn-3d btn-3d-primary">
-                    <i class="fas fa-book-open" aria-hidden="true"></i> Efficient Go
-                </a>
-                <a href="/about/" class="btn-3d btn-3d-secondary">
-                    About &amp; 36+ Talks →
-                </a>
             </div>
 
-            {{- if $profile.social -}}
-                <div class="links bio-social-links">
-                    {{- $socialMap := resources.Get "data/social.yml" | transform.Unmarshal -}}
-                    {{- $socialArr := slice -}}
-                    {{- range $key, $value := .Site.Params.social -}}
-                        {{- $social := $key | lower | index $socialMap | default dict -}}
-                        {{- if $value -}}
-                            {{- if reflect.IsMap $value -}}
-                                {{- with $value.weight -}}{{- $social = dict "Weight" . | merge $social -}}{{- end -}}
-                                {{- with $value.prefix -}}{{- $social = dict "Prefix" . | merge $social -}}{{- end -}}
-                                {{- with $value.template -}}{{- $social = dict "Template" . | merge $social -}}{{- end -}}
-                                {{- with $value.id -}}{{- $social = dict "Id" . | merge $social -}}{{- end -}}
-                                {{- with $value.url -}}{{- $social = dict "Url" . | merge $social -}}{{- end -}}
-                                {{- with $value.title -}}{{- $social = dict "Title" . | merge $social -}}{{- end -}}
-                                {{- with $value.newtab -}}{{- $social = dict "Newtab" . | merge $social -}}{{- end -}}
-                                {{- with $value.icon -}}{{- $social = dict "Icon" . | merge $social -}}{{- end -}}
-                            {{- else if ne $value true -}}
-                                {{- $social = dict "Id" $value | merge $social -}}
+            <p class="bio-lead">
+                Focusing on Go performance, cloud-native observability, and open source. Author of O'Reilly's <a href="/book"><em>Efficient Go</em></a>, co-creator of <a href="https://thanos.io" target="_blank" rel="noopener">Thanos</a>, <a href="https://prometheus.io" target="_blank" rel="noopener">Prometheus</a> maintainer, and <a href="https://github.com/cncf/tag-observability" target="_blank" rel="noopener">CNCF TAG Observability</a> Tech Lead.
+            </p>
+
+            <div class="bio-footer-bar">
+                <div class="bio-cta-group">
+                    <a href="#explorer-section" class="btn-3d btn-3d-primary">
+                        Explore Blog &amp; Talks ↓
+                    </a>
+                    <a href="/book" class="btn-3d btn-3d-secondary">
+                        Efficient Go Book
+                    </a>
+                    <a href="/about/" class="btn-3d btn-3d-secondary">
+                        About Me
+                    </a>
+                </div>
+
+                {{- if $profile.social -}}
+                    <div class="links bio-social-links">
+                        {{- $socialMap := resources.Get "data/social.yml" | transform.Unmarshal -}}
+                        {{- $socialArr := slice -}}
+                        {{- range $key, $value := .Site.Params.social -}}
+                            {{- $social := $key | lower | index $socialMap | default dict -}}
+                            {{- if $value -}}
+                                {{- if reflect.IsMap $value -}}
+                                    {{- with $value.weight -}}{{- $social = dict "Weight" . | merge $social -}}{{- end -}}
+                                    {{- with $value.prefix -}}{{- $social = dict "Prefix" . | merge $social -}}{{- end -}}
+                                    {{- with $value.template -}}{{- $social = dict "Template" . | merge $social -}}{{- end -}}
+                                    {{- with $value.id -}}{{- $social = dict "Id" . | merge $social -}}{{- end -}}
+                                    {{- with $value.url -}}{{- $social = dict "Url" . | merge $social -}}{{- end -}}
+                                    {{- with $value.title -}}{{- $social = dict "Title" . | merge $social -}}{{- end -}}
+                                    {{- with $value.newtab -}}{{- $social = dict "Newtab" . | merge $social -}}{{- end -}}
+                                    {{- with $value.icon -}}{{- $social = dict "Icon" . | merge $social -}}{{- end -}}
+                                {{- else if ne $value true -}}
+                                    {{- $social = dict "Id" $value | merge $social -}}
+                                {{- end -}}
+                                {{- if $social.Icon.Simpleicons -}}
+                                    {{- $prefix := ($.Scratch.Get "cdn" | default dict).simpleIconsPrefix -}}
+                                    {{- $social = dict "Prefix" $prefix | dict "Icon" | merge $social -}}
+                                {{- end -}}
+                                {{- $socialArr = $socialArr | append $social -}}
                             {{- end -}}
-                            {{- if $social.Icon.Simpleicons -}}
-                                {{- $prefix := ($.Scratch.Get "cdn" | default dict).simpleIconsPrefix -}}
-                                {{- $social = dict "Prefix" $prefix | dict "Icon" | merge $social -}}
-                            {{- end -}}
-                            {{- $socialArr = $socialArr | append $social -}}
                         {{- end -}}
-                    {{- end -}}
-                    {{- range sort $socialArr "Weight" -}}
-                        {{- partial "plugin/social.html" . -}}
-                    {{- end -}}
-                </div>
-            {{- end -}}
-        </div>
-    </div>
-
-    {{- /* Right Column: Interactive CSS 3D Hardcover Book Stage */ -}}
-    <div class="book-stage-3d" id="book-stage">
-        <div class="pedestal" aria-hidden="true"></div>
-
-        <div class="float-badge badge-top" aria-hidden="true">
-            <span class="fb-label">O'REILLY MEDIA</span>
-            <strong class="fb-val fb-amber">Efficient Go</strong>
-        </div>
-
-        <div class="float-badge badge-bottom-left" aria-hidden="true">
-            <span class="fb-label">go test -bench</span>
-            <strong class="fb-val fb-emerald">benchstat -67.7%</strong>
-        </div>
-
-        <div class="float-badge badge-bottom-right" aria-hidden="true">
-            <span class="fb-label">Go 1.23 iter.Seq</span>
-            <strong class="fb-val fb-cyan">0 allocs/stream</strong>
-        </div>
-
-        <a href="/book" class="book-3d-link" title="Explore Efficient Go (O'Reilly)">
-            <div class="book-3d" id="book-3d">
-                <div class="book-front">
-                    <img src="/images/cover.png" alt="Efficient Go by Bartłomiej Płotka — O'Reilly Book Cover" loading="eager" />
-                </div>
-                <div class="book-spine" aria-hidden="true">
-                    <span>BARTŁOMIEJ PŁOTKA · EFFICIENT GO · O'REILLY</span>
-                </div>
-                <div class="book-pages" aria-hidden="true"></div>
-                <div class="book-back" aria-hidden="true"></div>
+                        {{- range sort $socialArr "Weight" -}}
+                            {{- partial "plugin/social.html" . -}}
+                        {{- end -}}
+                    </div>
+                {{- end -}}
             </div>
-        </a>
-        <div class="book-stage-caption">INTERACTIVE 3D STAGE · CLICK BOOK TO EXPLORE</div>
+        </div>
+
+        {{- /* Right Column: Interactive 3D Hardcover Book (Click to Flip Front/Back + Easter Egg) */ -}}
+        <div class="book-stage-3d" id="book-stage">
+            <div class="pedestal" aria-hidden="true"></div>
+
+            <div class="book-3d-wrapper" id="book-3d-trigger" role="button" tabindex="0" aria-label="Click to rotate Efficient Go 3D book and inspect the back cover">
+                <div class="book-3d" id="book-3d">
+                    <div class="book-front">
+                        <img src="/images/cover.png" alt="Efficient Go by Bartłomiej Płotka — O'Reilly Book Cover" loading="eager" />
+                    </div>
+                    <div class="book-spine" aria-hidden="true">
+                        <span>BARTŁOMIEJ PŁOTKA · EFFICIENT GO · O'REILLY</span>
+                    </div>
+                    <div class="book-pages" aria-hidden="true"></div>
+                    <div class="book-back">
+                        <div class="book-back-header">O'REILLY® · EFFICIENT GO</div>
+                        <div class="book-back-body">
+                            <div class="easter-egg-badge">🥚 YOU FOUND THE EASTER EGG!</div>
+                            <p class="book-back-quote">
+                                "Don't guess performance. Measure it, profile it, and let <code>benchstat</code> tell the truth."
+                            </p>
+                            <div class="book-back-actions">
+                                <button type="button" class="book-egg-btn" id="trigger-book-sand-btn">
+                                    📕 Rain Mini Books Again
+                                </button>
+                                <a href="/book" class="book-back-link" onclick="event.stopPropagation();">
+                                    Read Book Details →
+                                </a>
+                            </div>
+                        </div>
+                        <div class="book-back-footer">ISBN 978-1-098-10571-6</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-stage-controls">
+                <button type="button" class="book-flip-pill" id="book-flip-btn">
+                    <i class="fas fa-sync-alt" aria-hidden="true"></i> Click Book to Flip (Front / Back)
+                </button>
+                <a href="/book" class="book-details-link">Book Page →</a>
+            </div>
+        </div>
     </div>
+
+    {{- /* Scroll Down Indicator at Bottom of First Viewport */ -}}
+    <a href="#explorer-section" class="scroll-down-cue" aria-label="Scroll down to blog posts and talks">
+        <span class="scroll-cue-text">Scroll for Blog Posts &amp; Public Talks</span>
+        <span class="scroll-cue-arrow"><i class="fas fa-chevron-down" aria-hidden="true"></i></span>
+    </a>
 </section>
+
+{{- /* Fullscreen Overlay Canvas for the Falling Mini-Books Sand Easter Egg */ -}}
+<canvas id="book-sand-canvas" aria-hidden="true"></canvas>

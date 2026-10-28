@@ -4,12 +4,12 @@
     {{- $posts := .Site.Params.home.posts -}}
 
     <div class="page home"{{ if ne $posts.enable false }} data-home="posts"{{ end }}>
-        {{- /* 1. Signature Hero + 3D Book Stage */ -}}
+        {{- /* 1. Full-Viewport Hero + Interactive 3D Book Stage + Scroll-Down Cue */ -}}
         {{- if ne $profile.enable false -}}
             {{- partial "home/profile.html" . -}}
         {{- end -}}
 
-        {{- /* 2. Interactive pprof Flamegraph Explorer (Blog Posts & Public Talks) */ -}}
+        {{- /* 2. Unified pprof Flamegraph Explorer (Controls Blog Posts & Public Talks) */ -}}
         {{- partial "home/flamegraph.html" . -}}
 
         {{- /* Optional Homepage Markdown Content */ -}}
@@ -21,7 +21,7 @@
             </div>
         {{- end -}}
 
-        {{- /* 3. Blog Post Cards Grid */ -}}
+        {{- /* 3. Isometric Blog Post Cards Grid (Controlled by the Flamegraph above) */ -}}
         {{- if ne $posts.enable false | and .Site.RegularPages -}}
             {{- $pages := where .Site.RegularPages "Type" "posts" -}}
             {{- if .Site.Params.page.hiddenFromHomePage -}}
@@ -38,8 +38,7 @@
             <section class="home-posts-section" id="home-posts-section" aria-label="Engineering Blog Posts">
                 <div class="section-bar">
                     <h2 class="section-bar-title">
-                        <i class="fas fa-terminal" aria-hidden="true"></i>
-                        Engineering Deep Dives <span class="section-count" id="posts-visible-count">({{ len $pages.Pages }} articles)</span>
+                        Blog Posts <span class="section-count" id="posts-visible-count">({{ len $pages.Pages }} articles)</span>
                     </h2>
                     <a href="{{ "/posts/" | relLangURL }}" class="section-bar-link">Timeline Archive →</a>
                 </div>
@@ -55,41 +54,218 @@
         {{- end -}}
     </div>
 
-    {{- /* Lightweight Vanilla JS for 3D Stage Tilt & pprof Flamegraph Filtering */ -}}
     <script type="text/javascript">
     (function() {
-        // 1. 3D Book & Bio Card Cursor-Reactive Tilt
+        // ====================================================================
+        // 1. 3D Book Click-to-Flip (Front <-> Back) & Cursor Tilt + Easter Egg
+        // ====================================================================
         var bookStage = document.getElementById('book-stage');
+        var bookTrigger = document.getElementById('book-3d-trigger');
         var book3d = document.getElementById('book-3d');
-        var bioCard = document.getElementById('bio-card');
+        var flipBtn = document.getElementById('book-flip-btn');
+        var sandBtn = document.getElementById('trigger-book-sand-btn');
+        var isBackShowing = false;
+
+        function updateBookTransform(offsetX, offsetY) {
+            if (!book3d) return;
+            var ox = offsetX || 0;
+            var oy = offsetY || 0;
+            var baseRotY = isBackShowing ? 162 : -24;
+            var baseRotX = isBackShowing ? 4 : 8;
+            var rotY = baseRotY + (ox * 20);
+            var rotX = baseRotX - (oy * 14);
+            book3d.style.transform = 'rotateY(' + rotY.toFixed(1) + 'deg) rotateX(' + rotX.toFixed(1) + 'deg)';
+        }
+
+        function toggleBookFlip() {
+            isBackShowing = !isBackShowing;
+            if (book3d) {
+                book3d.classList.toggle('is-flipped', isBackShowing);
+            }
+            updateBookTransform(0, 0);
+            if (isBackShowing) {
+                startBookSandShower();
+            }
+        }
+
+        if (bookTrigger) {
+            bookTrigger.addEventListener('click', function(e) {
+                if (e.target && (e.target.tagName === 'A' || e.target.id === 'trigger-book-sand-btn')) return;
+                toggleBookFlip();
+            });
+            bookTrigger.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleBookFlip();
+                }
+            });
+        }
+        if (flipBtn) {
+            flipBtn.addEventListener('click', toggleBookFlip);
+        }
+        if (sandBtn) {
+            sandBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                startBookSandShower();
+            });
+        }
 
         if (bookStage && book3d && window.matchMedia('(pointer: fine)').matches) {
             bookStage.addEventListener('mousemove', function(e) {
                 var r = bookStage.getBoundingClientRect();
                 var x = (e.clientX - r.left) / r.width - 0.5;
                 var y = (e.clientY - r.top) / r.height - 0.5;
-                var rotY = -24 + (x * 26);
-                var rotX = 8 - (y * 18);
-                book3d.style.transform = 'rotateY(' + rotY.toFixed(1) + 'deg) rotateX(' + rotX.toFixed(1) + 'deg) translateZ(14px)';
+                updateBookTransform(x, y);
             });
             bookStage.addEventListener('mouseleave', function() {
-                book3d.style.transform = 'rotateY(-24deg) rotateX(8deg) rotateZ(-1deg)';
+                updateBookTransform(0, 0);
             });
         }
 
-        if (bioCard && window.matchMedia('(pointer: fine)').matches) {
-            bioCard.addEventListener('mousemove', function(e) {
-                var r = bioCard.getBoundingClientRect();
-                var x = (e.clientX - r.left) / r.width - 0.5;
-                var y = (e.clientY - r.top) / r.height - 0.5;
-                bioCard.style.transform = 'perspective(1200px) rotateY(' + (x * 4).toFixed(2) + 'deg) rotateX(' + (-y * 3).toFixed(2) + 'deg)';
-            });
-            bioCard.addEventListener('mouseleave', function() {
-                bioCard.style.transform = 'none';
-            });
+        // ====================================================================
+        // 2. Falling Mini-Books Sand Shower Easter Egg
+        // ====================================================================
+        var sandCanvas = document.getElementById('book-sand-canvas');
+        var coverImg = new Image();
+        coverImg.src = '/images/cover.png';
+        var sandAnimId = null;
+
+        function startBookSandShower() {
+            if (!sandCanvas) return;
+            var ctx = sandCanvas.getContext('2d');
+            var W = window.innerWidth;
+            var H = window.innerHeight;
+            sandCanvas.width = W;
+            sandCanvas.height = H;
+            sandCanvas.style.display = 'block';
+            sandCanvas.style.opacity = '1';
+
+            if (sandAnimId) cancelAnimationFrame(sandAnimId);
+
+            // Heightmap columns across screen bottom so mini-books stack like sand!
+            var cols = Math.max(20, Math.floor(W / 24));
+            var colWidth = W / cols;
+            var pileHeight = new Array(cols).fill(0);
+
+            var count = 180;
+            var particles = [];
+            for (var i = 0; i < count; i++) {
+                var bw = 20 + Math.random() * 12;
+                var bh = bw * 1.32;
+                particles.push({
+                    x: Math.random() * (W - bw),
+                    y: -25 - (i / count) * 900 - Math.random() * 80,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: 2.6 + Math.random() * 3.2,
+                    w: bw,
+                    h: bh,
+                    rot: (Math.random() - 0.5) * 0.45,
+                    vrot: (Math.random() - 0.5) * 0.04,
+                    settled: false
+                });
+            }
+
+            var startTime = performance.now();
+            var duration = 7500;
+
+            function simulateTick() {
+                for (var i = 0; i < particles.length; i++) {
+                    var p = particles[i];
+                    if (!p.settled) {
+                        p.vy += 0.22;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.rot += p.vrot;
+
+                        var col = Math.min(cols - 1, Math.max(0, Math.floor((p.x + p.w * 0.5) / colWidth)));
+                        var floorY = H - p.h - pileHeight[col];
+                        if (p.y >= floorY) {
+                            // Angle-of-repose relaxation so mini-books tumble into smooth sand dunes.
+                            for (var s = 0; s < 4; s++) {
+                                var leftH = col > 0 ? pileHeight[col - 1] : Infinity;
+                                var rightH = col < cols - 1 ? pileHeight[col + 1] : Infinity;
+                                var curH = pileHeight[col];
+                                if (leftH + 8 < curH || rightH + 8 < curH) {
+                                    if (leftH < rightH) {
+                                        col--;
+                                    } else if (rightH < leftH) {
+                                        col++;
+                                    } else {
+                                        col += (Math.random() < 0.5 ? -1 : 1);
+                                    }
+                                    p.x = col * colWidth + (Math.random() - 0.5) * 6;
+                                } else {
+                                    break;
+                                }
+                            }
+                            p.y = H - p.h - pileHeight[col];
+                            p.settled = true;
+                            p.rot = (Math.random() - 0.5) * 0.26;
+                            pileHeight[col] += p.h * 0.26;
+                            if (col > 0) pileHeight[col - 1] += p.h * 0.1;
+                            if (col < cols - 1) pileHeight[col + 1] += p.h * 0.1;
+                        }
+                    }
+                }
+            }
+
+            function drawParticles(fadeAlpha) {
+                var domCoverImg = document.querySelector('.book-front img');
+                var imgSource = (domCoverImg && domCoverImg.complete && domCoverImg.naturalWidth > 0) ? domCoverImg : coverImg;
+                ctx.clearRect(0, 0, W, H);
+                ctx.globalAlpha = fadeAlpha;
+                for (var i = 0; i < particles.length; i++) {
+                    var p = particles[i];
+                    ctx.save();
+                    ctx.translate(p.x + p.w * 0.5, p.y + p.h * 0.5);
+                    ctx.rotate(p.rot);
+
+                    ctx.fillStyle = '#0f172a';
+                    ctx.fillRect(-p.w * 0.5 - 3, -p.h * 0.5 + 2, p.w + 3, p.h);
+
+                    ctx.fillStyle = '#ea580c';
+                    ctx.fillRect(-p.w * 0.5 - 3, -p.h * 0.5, 3, p.h);
+
+                    if (imgSource && imgSource.complete && imgSource.naturalWidth > 0) {
+                        ctx.drawImage(imgSource, -p.w * 0.5, -p.h * 0.5, p.w, p.h);
+                    } else {
+                        ctx.fillStyle = '#f8fafc';
+                        ctx.fillRect(-p.w * 0.5, -p.h * 0.5, p.w, p.h);
+                    }
+                    ctx.strokeStyle = 'rgba(15, 23, 42, 0.35)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(-p.w * 0.5, -p.h * 0.5, p.w, p.h);
+                    ctx.restore();
+                }
+            }
+
+            window._advanceBookSandFrames = function(frames) {
+                for (var f = 0; f < frames; f++) simulateTick();
+                drawParticles(1);
+            };
+
+            function step(now) {
+                var elapsed = now - startTime;
+                var fadeAlpha = elapsed > (duration - 1400)
+                    ? Math.max(0, 1 - (elapsed - (duration - 1400)) / 1400)
+                    : 1;
+                simulateTick();
+                drawParticles(fadeAlpha);
+
+                if (elapsed < duration) {
+                    sandAnimId = requestAnimationFrame(step);
+                } else {
+                    ctx.clearRect(0, 0, W, H);
+                    sandCanvas.style.display = 'none';
+                }
+            }
+
+            sandAnimId = requestAnimationFrame(step);
         }
 
-        // 2. Interactive pprof Flamegraph (Posts & Talks)
+        // ====================================================================
+        // 3. Unified pprof Flamegraph Controller (Blog Posts & Public Talks)
+        // ====================================================================
         var tabPosts = document.getElementById('tab-btn-posts');
         var tabTalks = document.getElementById('tab-btn-talks');
         var canvasPosts = document.getElementById('fg-canvas-posts');
@@ -97,7 +273,8 @@
         var talksPanel = document.getElementById('home-talks-panel');
         var postsSection = document.getElementById('home-posts-section');
         var targetLabel = document.getElementById('pprof-target-label');
-        var statusPill = document.getElementById('fg-status-pill');
+        var detailsTitle = document.getElementById('fg-details-title');
+        var detailsDesc = document.getElementById('fg-details-desc');
         var resetBtn = document.getElementById('fg-reset-btn');
         var postsCountEl = document.getElementById('posts-visible-count');
         var talksCountEl = document.getElementById('talks-visible-count');
@@ -109,7 +286,7 @@
 
         var currentMode = 'posts';
 
-        function applyPostsFilter(filterKey, label) {
+        function applyPostsFilter(filterKey, titleText, descText) {
             var visible = 0;
             postCards.forEach(function(card) {
                 var groups = (card.getAttribute('data-fg-groups') || 'all').split(/\s+/);
@@ -119,21 +296,21 @@
             });
             postBars.forEach(function(bar) {
                 var bf = bar.getAttribute('data-fg-filter');
-                var isRoot = (bf === 'all');
                 var active = (bf === filterKey);
                 bar.classList.toggle('active-frame', active);
-                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !active && !isRoot);
+                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !active && bf !== 'all');
             });
-            if (statusPill) statusPill.textContent = 'stack: ' + (label || filterKey);
+            if (detailsTitle) detailsTitle.textContent = titleText || 'All Blog Posts (22 articles)';
+            if (detailsDesc) detailsDesc.textContent = descText || '';
             if (resetBtn) resetBtn.hidden = (filterKey === 'all');
             if (postsCountEl) {
                 postsCountEl.textContent = filterKey === 'all'
                     ? '(' + visible + ' articles)'
-                    : '(' + visible + ' matching "' + filterKey + '")';
+                    : '(' + visible + ' filtered articles)';
             }
         }
 
-        function applyTalksFilter(filterKey, label) {
+        function applyTalksFilter(filterKey, titleText, descText) {
             var visible = 0;
             talkCards.forEach(function(card) {
                 var cats = (card.getAttribute('data-talk-cat') || '').split(/\s+/);
@@ -143,17 +320,17 @@
             });
             talkBars.forEach(function(bar) {
                 var tf = bar.getAttribute('data-talk-filter');
-                var isRoot = (tf === 'all');
                 var active = (tf === filterKey);
                 bar.classList.toggle('active-frame', active);
-                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !active && !isRoot);
+                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !active && tf !== 'all');
             });
-            if (statusPill) statusPill.textContent = 'stack: ' + (label || filterKey);
+            if (detailsTitle) detailsTitle.textContent = titleText || 'All Public Talks (36 talks)';
+            if (detailsDesc) detailsDesc.textContent = descText || '';
             if (resetBtn) resetBtn.hidden = (filterKey === 'all');
             if (talksCountEl) {
                 talksCountEl.textContent = filterKey === 'all'
-                    ? '(Showing ' + visible + ' highlights of 36)'
-                    : '(' + visible + ' talks matching "' + filterKey + '")';
+                    ? '(' + visible + ' featured talks · 36 total)'
+                    : '(' + visible + ' matching talks)';
             }
         }
 
@@ -170,14 +347,25 @@
             }
             if (canvasPosts) canvasPosts.hidden = !isPosts;
             if (canvasTalks) canvasTalks.hidden = isPosts;
+            if (postsSection) postsSection.hidden = !isPosts;
             if (talksPanel) talksPanel.hidden = isPosts;
             if (targetLabel) {
-                targetLabel.textContent = isPosts ? 'bwplotka.dev/posts.pb.gz' : 'bwplotka.dev/talks.pb.gz';
+                targetLabel.textContent = isPosts ? 'bwplotka.dev/posts' : 'bwplotka.dev/talks';
             }
             if (isPosts) {
-                applyPostsFilter('all', 'root (100% · All 22 Posts)');
+                var rootPostBar = postBars[0];
+                applyPostsFilter(
+                    'all',
+                    rootPostBar ? rootPostBar.getAttribute('data-fg-title') : 'All Blog Posts (22 articles)',
+                    rootPostBar ? rootPostBar.getAttribute('data-fg-desc') : ''
+                );
             } else {
-                applyTalksFilter('all', 'root (100% · All 36 Public Talks)');
+                var rootTalkBar = talkBars[0];
+                applyTalksFilter(
+                    'all',
+                    rootTalkBar ? rootTalkBar.getAttribute('data-talk-title') : 'All Public Talks (36 talks)',
+                    rootTalkBar ? rootTalkBar.getAttribute('data-talk-desc') : ''
+                );
             }
         }
 
@@ -186,27 +374,27 @@
 
         postBars.forEach(function(bar) {
             bar.addEventListener('click', function() {
-                var fk = bar.getAttribute('data-fg-filter') || 'all';
-                var lbl = bar.getAttribute('data-fg-label') || fk;
-                applyPostsFilter(fk, lbl);
+                applyPostsFilter(
+                    bar.getAttribute('data-fg-filter') || 'all',
+                    bar.getAttribute('data-fg-title'),
+                    bar.getAttribute('data-fg-desc')
+                );
             });
         });
 
         talkBars.forEach(function(bar) {
             bar.addEventListener('click', function() {
-                var fk = bar.getAttribute('data-talk-filter') || 'all';
-                var lbl = bar.getAttribute('data-talk-label') || fk;
-                applyTalksFilter(fk, lbl);
+                applyTalksFilter(
+                    bar.getAttribute('data-talk-filter') || 'all',
+                    bar.getAttribute('data-talk-title'),
+                    bar.getAttribute('data-talk-desc')
+                );
             });
         });
 
         if (resetBtn) {
             resetBtn.addEventListener('click', function() {
-                if (currentMode === 'posts') {
-                    applyPostsFilter('all', 'root (100% · All 22 Posts)');
-                } else {
-                    applyTalksFilter('all', 'root (100% · All 36 Public Talks)');
-                }
+                switchMode(currentMode);
             });
         }
     })();
