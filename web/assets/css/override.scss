@@ -397,34 +397,35 @@ body[theme=dark] {
   }
 }
 
-// Interactive 3D Hardcover Book Stage (Mouse Drag with Velocity + Back-Cover Easter Egg)
+// Realistic 6-Face O'Reilly Efficient Go 3D Book (Mouse Drag with Velocity + Easter Egg)
 .book-stage-3d {
   position: relative;
-  height: 310px;
+  height: 332px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  perspective: 1300px;
+  perspective: 1450px;
   user-select: none;
 }
 
 .pedestal {
   position: absolute;
-  bottom: 14px;
-  width: 240px;
-  height: 240px;
+  bottom: 4px;
+  width: 265px;
+  height: 265px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(249, 115, 22, 0.14) 0%, transparent 70%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transform: rotateX(75deg);
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.22) 0%, rgba(15, 23, 42, 0.65) 55%, transparent 72%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transform: rotateX(76deg);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.65);
 }
 
 .book-3d-wrapper {
   z-index: 2;
   cursor: grab;
   outline: none;
-  perspective: 1300px;
+  transform-style: preserve-3d;
   touch-action: none;
 
   &.is-dragging {
@@ -434,8 +435,8 @@ body[theme=dark] {
 
 .book-3d {
   position: relative;
-  width: 194px;
-  height: 260px;
+  width: 228px;
+  height: 300px;
   transform-style: preserve-3d;
   transform: rotateY(-24deg) rotateX(8deg);
   will-change: transform;
@@ -443,12 +444,10 @@ body[theme=dark] {
   &.is-flipped,
   &.is-back-visible {
     .book-front {
-      opacity: 0;
       pointer-events: none;
     }
 
     .book-back {
-      opacity: 1;
       pointer-events: auto;
     }
   }
@@ -458,157 +457,393 @@ body[theme=dark] {
   position: absolute;
   inset: 0;
   background: #ffffff;
-  border-radius: 3px 8px 8px 3px;
-  transform: translateZ(19px);
+  border-radius: 2px 5px 5px 2px;
+  transform: translateZ(14px);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  box-shadow: inset 4px 0 10px rgba(0, 0, 0, 0.18), 0 20px 42px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
-  opacity: 1;
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
+    border-radius: 2px 5px 5px 2px;
     display: block;
     margin: 0 !important;
     pointer-events: none;
   }
 }
 
-.book-spine {
+.book-hinge-crease {
   position: absolute;
   top: 0;
-  left: -19px;
-  width: 38px;
-  height: 100%;
-  background: linear-gradient(90deg, #0d111a 0%, #1e293b 50%, #090d16 100%);
-  transform: rotateY(-90deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  span {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    font-family: var(--font-mono);
-    font-size: 0.56rem;
-    letter-spacing: 0.14em;
-    color: #94a3b8;
-    font-weight: 700;
-  }
-}
-
-.book-pages {
-  position: absolute;
-  top: 4px;
-  right: -17px;
-  width: 34px;
-  height: calc(100% - 8px);
-  background: repeating-linear-gradient(90deg, #f8fafc 0px, #e2e8f0 2px, #cbd5e1 4px);
-  transform: rotateY(90deg);
-}
-
-.book-back {
-  position: absolute;
-  inset: 0;
-  background: #131824;
-  border: 1px solid rgba(251, 146, 60, 0.45);
-  border-radius: 8px 3px 3px 8px;
-  transform: rotateY(180deg) translateZ(19px);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.72);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  text-align: left;
-  opacity: 0;
+  bottom: 0;
+  left: 0;
+  width: 12px;
+  border-radius: 2px 0 0 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(15, 23, 42, 0.22) 0%,
+    rgba(255, 255, 255, 0.45) 35%,
+    rgba(15, 23, 42, 0.08) 65%,
+    transparent 100%
+  );
   pointer-events: none;
 }
 
-.book-back-header {
-  background: #9a3412;
-  color: #ffffff;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 0.55rem 0.85rem;
+.book-gloss-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.06) 32%,
+    transparent 54%,
+    rgba(15, 23, 42, 0.04) 100%
+  );
+  pointer-events: none;
 }
 
-.book-back-body {
-  padding: 0.85rem 0.9rem;
+// Authentic White O'Reilly Spine (matches physical book photo)
+.book-spine {
+  position: absolute;
+  top: 0;
+  left: -14px;
+  width: 28px;
+  height: 100%;
+  background: linear-gradient(90deg, #d4d4d8 0%, #ffffff 16%, #fafafa 84%, #d4d4d8 100%);
+  transform: rotateY(-90deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 14px;
+  box-sizing: border-box;
+  border-top: 1px solid #e4e4e7;
+  border-bottom: 1px solid #d4d4d8;
 }
 
-.easter-egg-badge {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #fb923c;
-  background: rgba(249, 115, 22, 0.14);
-  border: 1px solid rgba(249, 115, 22, 0.35);
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-}
+.spine-top-mark {
+  position: relative;
+  width: 16px;
+  height: 18px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-shrink: 0;
 
-.book-back-quote {
-  font-size: 0.74rem;
-  line-height: 1.45;
-  color: #e2e8f0;
-  margin: 0 !important;
+  .oreilly-o-dot {
+    position: absolute;
+    top: 0;
+    left: 2px;
+    width: 3.5px;
+    height: 3.5px;
+    border-radius: 50%;
+    background: #b91c1c;
+  }
 
-  code {
-    color: #fb923c;
-    font-family: var(--font-mono);
+  .oreilly-o-ring {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2.6px solid #b91c1c;
+    box-sizing: border-box;
   }
 }
 
-.book-back-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
+.spine-title {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #18181b;
+  margin-top: 6px;
+  margin-bottom: auto;
+  white-space: nowrap;
 }
 
-.book-egg-btn {
+.spine-bottom-group {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+
+  .spine-author {
+    font-family: var(--font-sans);
+    font-size: 0.56rem;
+    font-weight: 600;
+    color: #27272a;
+  }
+
+  .spine-publisher {
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #b91c1c;
+
+    sup {
+      font-size: 0.4rem;
+    }
+  }
+}
+
+// Right, Top, and Bottom Paper Page-Block Edges
+.book-pages {
+  position: absolute;
+  top: 2px;
+  right: -13px;
+  width: 26px;
+  height: calc(100% - 4px);
+  background: repeating-linear-gradient(
+    90deg,
+    #f8fafc 0px,
+    #f1f5f9 1.5px,
+    #cbd5e1 3px
+  );
+  transform: rotateY(90deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.book-top-edge {
+  position: absolute;
+  top: -13px;
+  left: 2px;
+  width: calc(100% - 4px);
+  height: 26px;
+  background: repeating-linear-gradient(
+    0deg,
+    #f8fafc 0px,
+    #e2e8f0 2px,
+    #cbd5e1 3.5px
+  );
+  transform: rotateX(90deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.book-bottom-edge {
+  position: absolute;
+  bottom: -13px;
+  left: 2px;
+  width: calc(100% - 4px);
+  height: 26px;
+  background: repeating-linear-gradient(
+    0deg,
+    #e2e8f0 0px,
+    #cbd5e1 2px,
+    #94a3b8 3.5px
+  );
+  transform: rotateX(-90deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+// Authentic White O'Reilly Back Cover (matches physical book photo)
+.book-back {
+  position: absolute;
+  inset: 0;
+  background: #fafafa;
+  color: #18181b;
+  border-radius: 5px 2px 2px 5px;
+  border: 1px solid #d4d4d8;
+  transform: rotateY(180deg) translateZ(14px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 11px 12px 10px;
+  box-sizing: border-box;
+  text-align: left;
+  pointer-events: none;
+}
+
+.bback-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.bback-oreilly {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #b91c1c;
+
+  sup {
+    font-size: 0.42rem;
+  }
+}
+
+.bback-egg-pill {
   appearance: none;
-  border: 1px solid rgba(251, 146, 60, 0.5);
-  background: rgba(234, 88, 12, 0.22);
-  color: #ffffff;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
+  border: 1px solid #ea580c;
+  background: #fff7ed;
+  color: #c2410c;
+  font-family: var(--font-sans);
+  font-size: 0.46rem;
   font-weight: 700;
-  padding: 0.38rem 0.55rem;
-  border-radius: 6px;
+  padding: 2px 5px;
+  border-radius: 999px;
   cursor: pointer;
 
   &:hover {
-    background: rgba(234, 88, 12, 0.4);
+    background: #ffedd5;
   }
 }
 
-.book-back-link {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
+.bback-columns {
+  display: grid;
+  grid-template-columns: 1.12fr 0.88fr;
+  gap: 8px;
+  flex: 1;
+  align-items: start;
+}
+
+.bback-heading {
+  font-family: var(--font-sans);
+  font-size: 0.56rem;
+  font-weight: 800;
+  color: #18181b;
+  margin-bottom: 3px;
+}
+
+.bback-p {
+  font-family: var(--font-sans);
+  font-size: 0.36rem;
+  line-height: 1.32;
+  color: #27272a;
+  margin: 0 0 3.5px !important;
+}
+
+.bback-sub {
+  font-family: var(--font-sans);
+  font-size: 0.37rem;
   font-weight: 700;
-  color: #fb923c !important;
+  color: #18181b;
+  margin-bottom: 2px;
+}
+
+.bback-list {
+  margin: 0 !important;
+  padding-left: 8px !important;
+  list-style: disc;
+
+  li {
+    font-family: var(--font-sans);
+    font-size: 0.35rem;
+    line-height: 1.28;
+    color: #27272a;
+    margin-bottom: 2px;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.34rem;
+    color: #9a3412;
+    background: none;
+    padding: 0;
+  }
+}
+
+.bback-quote-box {
+  background: #e7e5e4;
+  border-radius: 5px;
+  padding: 5.5px 6px;
+  margin-bottom: 4.5px;
+}
+
+.bback-quote-text {
+  font-family: var(--font-sans);
+  font-size: 0.35rem;
+  line-height: 1.3;
+  color: #1c1917;
+  margin: 0 0 3px !important;
+}
+
+.bback-quote-author {
+  font-family: var(--font-sans);
+  font-size: 0.34rem;
+  line-height: 1.25;
+  color: #44403c;
+  text-align: right;
+}
+
+.bback-bio {
+  font-family: var(--font-sans);
+  font-size: 0.34rem;
+  line-height: 1.28;
+  color: #27272a;
+  margin: 0 !important;
+}
+
+.bback-footer {
+  border-top: 1px solid #b91c1c;
+  padding-top: 4px;
+  margin-top: 3px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.bback-barcode-block {
+  font-family: var(--font-mono);
+  font-size: 0.33rem;
+  line-height: 1.25;
+  color: #18181b;
+}
+
+.bback-barcode-bars {
+  margin-top: 2px;
+  width: 68px;
+  height: 16px;
+  background: repeating-linear-gradient(
+    90deg,
+    #18181b 0px,
+    #18181b 1.5px,
+    transparent 1.5px,
+    transparent 3px,
+    #18181b 3px,
+    #18181b 4px,
+    transparent 4px,
+    transparent 6px,
+    #18181b 6px,
+    #18181b 8.5px,
+    transparent 8.5px,
+    transparent 10px
+  );
+}
+
+.bback-footer-right {
+  font-family: var(--font-sans);
+  font-size: 0.34rem;
+  line-height: 1.3;
+  color: #3f3f46;
+  text-align: right;
+}
+
+.bback-book-link {
+  display: inline-block;
+  margin-top: 1px;
+  font-weight: 800;
+  color: #b91c1c !important;
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
   }
-}
-
-.book-back-footer {
-  padding: 0.45rem 0.85rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  color: #94a3b8;
 }
 
 .book-stage-controls {

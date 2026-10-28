@@ -10,7 +10,7 @@
                 </a>
                 <div class="bio-title-group">
                     <h1 class="bio-name">Bartłomiej (Bartek) Płotka</h1>
-                    <div class="bio-role-line">SWE TL @ Google Cloud</div>
+                    <div class="bio-role-line">Senior SWE Tech Lead @ Google</div>
                 </div>
             </div>
 
@@ -65,36 +65,93 @@
             </div>
         </div>
 
-        {{- /* Right Column: Interactive 3D Hardcover Book (Mouse Drag with Velocity + Back-Cover Easter Egg) */ -}}
+        {{- /* Right Column: Realistic 6-Face O'Reilly Efficient Go 3D Book (Mouse Drag with Velocity + Easter Egg) */ -}}
         <div class="book-stage-3d" id="book-stage">
             <div class="pedestal" aria-hidden="true"></div>
 
             <div class="book-3d-wrapper" id="book-3d-trigger" role="button" tabindex="0" aria-label="Drag to rotate Efficient Go 3D book in 360 degrees">
                 <div class="book-3d" id="book-3d">
+                    {{- /* Left Spine: Authentic White O'Reilly Spine */ -}}
+                    <div class="book-spine" aria-hidden="true">
+                        <div class="spine-top-mark">
+                            <span class="oreilly-o-dot"></span>
+                            <span class="oreilly-o-ring"></span>
+                        </div>
+                        <div class="spine-title">Efficient Go</div>
+                        <div class="spine-bottom-group">
+                            <span class="spine-author">Płotka</span>
+                            <span class="spine-publisher">O'REILLY<sup>®</sup></span>
+                        </div>
+                    </div>
+
+                    {{- /* Right, Top & Bottom Paper Block Edges */ -}}
+                    <div class="book-pages" aria-hidden="true"></div>
+                    <div class="book-top-edge" aria-hidden="true"></div>
+                    <div class="book-bottom-edge" aria-hidden="true"></div>
+
+                    {{- /* Front Cover */ -}}
                     <div class="book-front">
                         <img src="/images/cover.png" alt="Efficient Go by Bartłomiej Płotka — O'Reilly Book Cover" draggable="false" loading="eager" />
+                        <div class="book-hinge-crease" aria-hidden="true"></div>
+                        <div class="book-gloss-sheen" aria-hidden="true"></div>
                     </div>
-                    <div class="book-spine" aria-hidden="true">
-                        <span>BARTŁOMIEJ PŁOTKA · EFFICIENT GO · O'REILLY</span>
-                    </div>
-                    <div class="book-pages" aria-hidden="true"></div>
+
+                    {{- /* Back Cover: Authentic White O'Reilly Back Cover + Easter Egg */ -}}
                     <div class="book-back">
-                        <div class="book-back-header">O'REILLY® · EFFICIENT GO</div>
-                        <div class="book-back-body">
-                            <div class="easter-egg-badge">🥚 YOU FOUND THE EASTER EGG!</div>
-                            <p class="book-back-quote">
-                                "Don't guess performance. Measure it, profile it, and let <code>benchstat</code> tell the truth."
-                            </p>
-                            <div class="book-back-actions">
-                                <button type="button" class="book-egg-btn" id="trigger-book-sand-btn">
-                                    📕 Rain Mini Books Again
-                                </button>
-                                <a href="/book" class="book-back-link" onclick="event.stopPropagation();">
-                                    Read Book Details →
-                                </a>
+                        <div class="bback-top">
+                            <span class="bback-oreilly">O'REILLY<sup>®</sup></span>
+                            <button type="button" class="bback-egg-pill" id="trigger-book-sand-btn" title="Trigger falling mini-books sand shower">
+                                🥚 Easter Egg! Rain Books
+                            </button>
+                        </div>
+
+                        <div class="bback-columns">
+                            <div class="bback-col-left">
+                                <div class="bback-heading">Efficient Go</div>
+                                <p class="bback-p">
+                                    With technological advancements, fast markets, and higher complexity of systems, software engineers tend to skip the uncomfortable topic of software efficiency. However, tactical, observability-driven performance optimizations are vital for every product.
+                                </p>
+                                <p class="bback-p">
+                                    Author Bartłomiej Płotka provides the tools and knowledge required to make your systems faster and less resource-hungry using Go.
+                                </p>
+                                <div class="bback-sub">This book shows you how to:</div>
+                                <ul class="bback-list">
+                                    <li>Clarify and negotiate efficiency goals</li>
+                                    <li>Optimize efficiency on various levels</li>
+                                    <li>Use signals like metrics, logging, and continuous profiling via Prometheus, Jaeger, and Parca</li>
+                                    <li>Apply <code>go test</code>, <code>pprof</code>, <code>benchstat</code>, and <code>k6</code> for reliable micro and macro benchmarks</li>
+                                    <li>Efficiently use slices, generics, goroutines, allocation semantics, and GC</li>
+                                </ul>
+                            </div>
+
+                            <div class="bback-col-right">
+                                <div class="bback-quote-box">
+                                    <p class="bback-quote-text">
+                                        &ldquo;<em>Efficient Go</em> is a marvelous and insightful book that changes your outlook on software efficiency with Go. You learn how to make data-driven assessments while optimizing your code base and identifying optimizable patterns. It simply makes it easy for you and makes you want to care about the efficiency of your code as soon as you type it!&rdquo;
+                                    </p>
+                                    <div class="bback-quote-author">
+                                        <strong>&mdash;Saswata Mukherjee</strong><br />Engineer at Red Hat
+                                    </div>
+                                </div>
+                                <p class="bback-bio">
+                                    <strong>Bartłomiej Płotka</strong> is a Senior SWE Tech Lead with a background in observability and SRE, CNCF TAG Observability tech lead, co-founder of Thanos, and core maintainer of Prometheus.
+                                </p>
                             </div>
                         </div>
-                        <div class="book-back-footer">ISBN 978-1-098-10571-6</div>
+
+                        <div class="bback-footer">
+                            <div class="bback-barcode-block">
+                                <div class="bback-price">US $59.99 &nbsp; CAN $74.99</div>
+                                <div class="bback-isbn">ISBN: 978-1-098-10571-6</div>
+                                <div class="bback-barcode-bars" aria-hidden="true"></div>
+                            </div>
+                            <div class="bback-footer-right">
+                                <div>Twitter: @oreillymedia</div>
+                                <div>linkedin.com/company/oreilly-media</div>
+                                <a href="/book" class="bback-book-link" onclick="event.stopPropagation();">Book Page →</a>
+                            </div>
+                        </div>
+                        <div class="book-gloss-sheen" aria-hidden="true"></div>
                     </div>
                 </div>
             </div>
