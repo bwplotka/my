@@ -450,10 +450,10 @@ body[theme=dark] {
 
 .book-3d {
   position: relative;
-  width: 228px;
-  height: 300px;
+  width: 234px;
+  height: 312px;
   transform-style: preserve-3d;
-  transform: rotateY(-24deg) rotateX(8deg);
+  transform: rotateY(26deg) rotateX(8deg);
   will-change: transform;
 
   &.is-flipped,
@@ -661,7 +661,7 @@ body[theme=dark] {
   -webkit-backface-visibility: hidden;
 }
 
-// Authentic White O'Reilly Back Cover (matches physical book photo)
+// Authentic White O'Reilly Back Cover (matches physical book photo via 2x print scale sheet)
 .book-back {
   position: absolute;
   inset: 0;
@@ -672,44 +672,53 @@ body[theme=dark] {
   transform: rotateY(180deg) translateZ(14px);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 11px 12px 10px;
   box-sizing: border-box;
   text-align: left;
   pointer-events: none;
+}
+
+.bback-scale-sheet {
+  width: 200%;
+  height: 200%;
+  transform: scale(0.5);
+  transform-origin: top left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 22px 18px;
+  box-sizing: border-box;
 }
 
 .bback-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
-  margin-bottom: 4px;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .bback-oreilly {
   font-family: var(--font-sans);
-  font-size: 0.68rem;
+  font-size: 21px;
+  line-height: 1;
   font-weight: 800;
   letter-spacing: 0.03em;
   color: #b91c1c;
 
   sup {
-    font-size: 0.42rem;
+    font-size: 12px;
   }
 }
 
 .bback-egg-pill {
   appearance: none;
-  border: 1px solid #ea580c;
+  border: 1.5px solid #ea580c;
   background: #fff7ed;
   color: #c2410c;
   font-family: var(--font-sans);
-  font-size: 0.46rem;
+  font-size: 13px;
   font-weight: 700;
-  padding: 2px 5px;
+  padding: 4px 10px;
   border-radius: 999px;
   cursor: pointer;
 
@@ -721,51 +730,53 @@ body[theme=dark] {
 .bback-columns {
   display: grid;
   grid-template-columns: 1.12fr 0.88fr;
-  gap: 8px;
+  gap: 14px;
   flex: 1;
   align-items: start;
 }
 
 .bback-heading {
   font-family: var(--font-sans);
-  font-size: 0.56rem;
+  font-size: 16px;
+  line-height: 1.2;
   font-weight: 800;
   color: #18181b;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .bback-p {
   font-family: var(--font-sans);
-  font-size: 0.36rem;
-  line-height: 1.32;
+  font-size: 10.2px;
+  line-height: 1.28;
   color: #27272a;
-  margin: 0 0 3.5px !important;
+  margin: 0 0 6px !important;
 }
 
 .bback-sub {
   font-family: var(--font-sans);
-  font-size: 0.37rem;
+  font-size: 10.5px;
+  line-height: 1.25;
   font-weight: 700;
   color: #18181b;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .bback-list {
   margin: 0 !important;
-  padding-left: 8px !important;
+  padding-left: 13px !important;
   list-style: disc;
 
   li {
     font-family: var(--font-sans);
-    font-size: 0.35rem;
-    line-height: 1.28;
+    font-size: 9.8px;
+    line-height: 1.24;
     color: #27272a;
-    margin-bottom: 2px;
+    margin-bottom: 3.5px;
   }
 
   code {
     font-family: var(--font-mono);
-    font-size: 0.34rem;
+    font-size: 9.4px;
     color: #9a3412;
     background: none;
     padding: 0;
@@ -774,76 +785,76 @@ body[theme=dark] {
 
 .bback-quote-box {
   background: #e7e5e4;
-  border-radius: 5px;
-  padding: 5.5px 6px;
-  margin-bottom: 4.5px;
+  border-radius: 8px;
+  padding: 10px 11px;
+  margin-bottom: 8px;
 }
 
 .bback-quote-text {
   font-family: var(--font-sans);
-  font-size: 0.35rem;
-  line-height: 1.3;
+  font-size: 10.2px;
+  line-height: 1.28;
   color: #1c1917;
-  margin: 0 0 3px !important;
+  margin: 0 0 5px !important;
 }
 
 .bback-quote-author {
   font-family: var(--font-sans);
-  font-size: 0.34rem;
-  line-height: 1.25;
+  font-size: 9.8px;
+  line-height: 1.22;
   color: #44403c;
   text-align: right;
 }
 
 .bback-bio {
   font-family: var(--font-sans);
-  font-size: 0.34rem;
-  line-height: 1.28;
+  font-size: 9.8px;
+  line-height: 1.26;
   color: #27272a;
   margin: 0 !important;
 }
 
 .bback-footer {
-  border-top: 1px solid #b91c1c;
-  padding-top: 4px;
-  margin-top: 3px;
+  border-top: 1.5px solid #b91c1c;
+  padding-top: 7px;
+  margin-top: 4px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 6px;
+  gap: 10px;
 }
 
 .bback-barcode-block {
   font-family: var(--font-mono);
-  font-size: 0.33rem;
+  font-size: 9.5px;
   line-height: 1.25;
   color: #18181b;
 }
 
 .bback-barcode-bars {
-  margin-top: 2px;
-  width: 68px;
-  height: 16px;
+  margin-top: 3px;
+  width: 136px;
+  height: 28px;
   background: repeating-linear-gradient(
     90deg,
     #18181b 0px,
-    #18181b 1.5px,
-    transparent 1.5px,
-    transparent 3px,
     #18181b 3px,
-    #18181b 4px,
-    transparent 4px,
+    transparent 3px,
     transparent 6px,
     #18181b 6px,
-    #18181b 8.5px,
-    transparent 8.5px,
-    transparent 10px
+    #18181b 8px,
+    transparent 8px,
+    transparent 12px,
+    #18181b 12px,
+    #18181b 17px,
+    transparent 17px,
+    transparent 20px
   );
 }
 
 .bback-footer-right {
   font-family: var(--font-sans);
-  font-size: 0.34rem;
+  font-size: 9.8px;
   line-height: 1.3;
   color: #3f3f46;
   text-align: right;

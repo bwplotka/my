@@ -98,57 +98,60 @@
 
                     {{- /* Back Cover: Authentic White O'Reilly Back Cover + Easter Egg */ -}}
                     <div class="book-back">
-                        <div class="bback-top">
-                            <span class="bback-oreilly">O'REILLY<sup>®</sup></span>
-                            <button type="button" class="bback-egg-pill" id="trigger-book-sand-btn" title="Trigger falling mini-books sand shower">
-                                🥚 Easter Egg! Rain Books
-                            </button>
-                        </div>
-
-                        <div class="bback-columns">
-                            <div class="bback-col-left">
-                                <div class="bback-heading">Efficient Go</div>
-                                <p class="bback-p">
-                                    With technological advancements, fast markets, and higher complexity of systems, software engineers tend to skip the uncomfortable topic of software efficiency. However, tactical, observability-driven performance optimizations are vital for every product.
-                                </p>
-                                <p class="bback-p">
-                                    Author Bartłomiej Płotka provides the tools and knowledge required to make your systems faster and less resource-hungry using Go.
-                                </p>
-                                <div class="bback-sub">This book shows you how to:</div>
-                                <ul class="bback-list">
-                                    <li>Clarify and negotiate efficiency goals</li>
-                                    <li>Optimize efficiency on various levels</li>
-                                    <li>Use signals like metrics, logging, and continuous profiling via Prometheus, Jaeger, and Parca</li>
-                                    <li>Apply <code>go test</code>, <code>pprof</code>, <code>benchstat</code>, and <code>k6</code> for reliable micro and macro benchmarks</li>
-                                    <li>Efficiently use slices, generics, goroutines, allocation semantics, and GC</li>
-                                </ul>
+                        <div class="bback-scale-sheet">
+                            <div class="bback-top">
+                                <span class="bback-oreilly">O'REILLY<sup>®</sup></span>
+                                <button type="button" class="bback-egg-pill" id="trigger-book-sand-btn" title="Trigger falling mini-books sand shower">
+                                    🥚 Easter Egg! Rain Books
+                                </button>
                             </div>
 
-                            <div class="bback-col-right">
-                                <div class="bback-quote-box">
-                                    <p class="bback-quote-text">
-                                        &ldquo;<em>Efficient Go</em> is a marvelous and insightful book that changes your outlook on software efficiency with Go. You learn how to make data-driven assessments while optimizing your code base and identifying optimizable patterns. It simply makes it easy for you and makes you want to care about the efficiency of your code as soon as you type it!&rdquo;
+                            <div class="bback-columns">
+                                <div class="bback-col-left">
+                                    <div class="bback-heading">Efficient Go</div>
+                                    <p class="bback-p">
+                                        With technological advancements, fast markets, and higher complexity of systems, software engineers tend to skip the uncomfortable topic of software efficiency. However, tactical, observability-driven performance optimizations are vital for every product to save money and ensure business success.
                                     </p>
-                                    <div class="bback-quote-author">
-                                        <strong>&mdash;Saswata Mukherjee</strong><br />Engineer at Red Hat
-                                    </div>
+                                    <p class="bback-p">
+                                        Author Bartłomiej Płotka provides the tools and knowledge required to make your systems faster and less resource-hungry. <em>Efficient Go</em> guides you in achieving better day-to-day efficiency using Go.
+                                    </p>
+                                    <div class="bback-sub">This book shows you how to:</div>
+                                    <ul class="bback-list">
+                                        <li>Clarify and negotiate efficiency goals</li>
+                                        <li>Optimize efficiency on various levels</li>
+                                        <li>Use common resources like CPU and memory effectively</li>
+                                        <li>Assess efficiency using observability signals like metrics, logging, tracing, and continuous profiling via Prometheus, Jaeger, and Parca</li>
+                                        <li>Apply tools like <code>go test</code>, <code>pprof</code>, <code>benchstat</code>, and <code>k6</code> to create reliable micro and macro benchmarks</li>
+                                        <li>Efficiently use Go features like slices, generics, goroutines, allocation semantics, garbage collection, and more!</li>
+                                    </ul>
                                 </div>
-                                <p class="bback-bio">
-                                    <strong>Bartłomiej Płotka</strong> is a Senior SWE Tech Lead with a background in observability and SRE, CNCF TAG Observability tech lead, co-founder of Thanos, and core maintainer of Prometheus.
-                                </p>
-                            </div>
-                        </div>
 
-                        <div class="bback-footer">
-                            <div class="bback-barcode-block">
-                                <div class="bback-price">US $59.99 &nbsp; CAN $74.99</div>
-                                <div class="bback-isbn">ISBN: 978-1-098-10571-6</div>
-                                <div class="bback-barcode-bars" aria-hidden="true"></div>
+                                <div class="bback-col-right">
+                                    <div class="bback-quote-box">
+                                        <p class="bback-quote-text">
+                                            &ldquo;<em>Efficient Go</em> is a marvelous and insightful book that changes your outlook on software efficiency with Go. You learn how to make data-driven assessments while optimizing your code base and identifying optimizable patterns. It simply makes it easy for you and makes you want to care about the efficiency of your code as soon as you type it!&rdquo;
+                                        </p>
+                                        <div class="bback-quote-author">
+                                            <strong>&mdash;Saswata Mukherjee</strong><br />Engineer at Red Hat
+                                        </div>
+                                    </div>
+                                    <p class="bback-bio">
+                                        <strong>Bartłomiej Płotka</strong> is a principal software engineer with a background in observability and SRE. He&rsquo;s a CNCF Ambassador, TAG Observability tech lead, and cofounder of the Thanos project. He&rsquo;s also a core maintainer of other open-source projects written in Go, including Prometheus and bingo.
+                                    </p>
+                                </div>
                             </div>
-                            <div class="bback-footer-right">
-                                <div>Twitter: @oreillymedia</div>
-                                <div>linkedin.com/company/oreilly-media</div>
-                                <a href="/book" class="bback-book-link" onclick="event.stopPropagation();">Book Page →</a>
+
+                            <div class="bback-footer">
+                                <div class="bback-barcode-block">
+                                    <div class="bback-price">US $59.99 &nbsp; CAN $74.99</div>
+                                    <div class="bback-isbn">ISBN: 978-1-098-10571-6</div>
+                                    <div class="bback-barcode-bars" aria-hidden="true"></div>
+                                </div>
+                                <div class="bback-footer-right">
+                                    <div>Twitter: @oreillymedia</div>
+                                    <div>linkedin.com/company/oreilly-media</div>
+                                    <div>youtube.com/oreillymedia · <a href="/book" class="bback-book-link" onclick="event.stopPropagation();">Book Page →</a></div>
+                                </div>
                             </div>
                         </div>
                         <div class="book-gloss-sheen" aria-hidden="true"></div>

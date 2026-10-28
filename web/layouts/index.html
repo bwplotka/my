@@ -63,7 +63,7 @@
         var book3d = document.getElementById('book-3d');
         var sandBtn = document.getElementById('trigger-book-sand-btn');
 
-        var rotY = -24;
+        var rotY = 26;
         var rotX = 8;
         var velY = 0;
         var velX = 0;
@@ -73,7 +73,7 @@
         var lastY = 0;
         var inertiaRaf = null;
         var wasBackVisible = false;
-        var lastEggTime = 0;
+        var lastEggTime = -10000;
 
         function applyBookRotation() {
             if (!book3d) return;
@@ -293,8 +293,11 @@
                     ctx.fillStyle = '#0f172a';
                     ctx.fillRect(-p.w * 0.5 - 3, -p.h * 0.5 + 2, p.w + 3, p.h);
 
-                    ctx.fillStyle = '#ea580c';
+                    ctx.fillStyle = '#f8fafc';
                     ctx.fillRect(-p.w * 0.5 - 3, -p.h * 0.5, 3, p.h);
+                    ctx.fillStyle = '#b91c1c';
+                    ctx.fillRect(-p.w * 0.5 - 3, -p.h * 0.5 + 2, 3, 3);
+                    ctx.fillRect(-p.w * 0.5 - 3, p.h * 0.5 - 5, 3, 3);
 
                     if (imgSource && imgSource.complete && imgSource.naturalWidth > 0) {
                         ctx.drawImage(imgSource, -p.w * 0.5, -p.h * 0.5, p.w, p.h);
