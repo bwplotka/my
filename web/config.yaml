@@ -120,6 +120,9 @@ params:
     profile:
       avatarURL:  "/images/profile.jpg"
       gravatarEmail: ""
+    posts:
+      enable: true
+      paginate: 50
   cookieconsent:
     enable: false
   analytics:
@@ -127,6 +130,9 @@ params:
     google:
       id: G-4DDCXTD3BM
   page:
+    code:
+      copy: true
+      maxShownLines: -1
     share:
       Twitter: true
       Facebook: true
