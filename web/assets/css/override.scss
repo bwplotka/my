@@ -1675,50 +1675,194 @@ body[theme=dark] {
     border: 1px solid var(--border-subtle);
     border-radius: 10px;
     overflow: hidden;
-    margin: 1.25rem 0;
+    margin: 1.35rem 0;
+    background: #0d111a;
 
     .code-header {
       background: var(--bg-elevated);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 0.35rem 0.85rem;
+      border-bottom: none;
+      padding: 0.38rem 0.9rem;
       font-family: var(--font-mono);
-      font-size: 0.74rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      user-select: none;
     }
 
-    .table-wrapper {
-      max-height: none !important;
+    > .table-wrapper {
+      max-height: 0 !important;
+      overflow-y: hidden !important;
       overflow-x: auto;
+      margin: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    &.open {
+      .code-header {
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      > .table-wrapper {
+        max-height: none !important;
+        overflow-y: visible !important;
+      }
+    }
+
+    .code-header.language-benchstat .code-title::after {
+      content: 'Benchstat' !important;
     }
 
     pre {
       font-family: var(--font-mono);
       font-size: 0.84rem;
-      line-height: 1.55;
+      line-height: 1.56;
+      padding: 0.75rem 1rem;
+    }
+
+    pre code {
+      color: #e2e8f0;
+      line-break: normal !important;
+      word-break: normal !important;
     }
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 10px;
-    overflow: hidden;
+  // Inline code inside prose & headings (prevent mid-word line breaks)
+  :not(pre) > code {
+    line-break: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word;
+    background: rgba(15, 23, 42, 0.58);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 5px;
+    padding: 0.08rem 0.38rem;
+    font-size: 0.85em;
+    color: #fdba74;
+  }
+
+  // Modern Engineering Markdown Tables (excludes Chroma code tables)
+  > .table-wrapper,
+  .table-wrapper:not(.chroma > .table-wrapper) {
+    margin: 1.5rem 0;
+    border-radius: 12px;
     border: 1px solid var(--border-subtle);
-    font-size: 0.9rem;
+    background: rgba(17, 24, 39, 0.78);
+    box-shadow: 0 12px 28px -10px rgba(2, 6, 23, 0.5);
+    overflow-x: auto;
 
-    th {
-      background: var(--bg-elevated);
-      color: var(--text-primary);
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 0.65rem 0.85rem;
-    }
+    > table {
+      width: 100%;
+      margin: 0 !important;
+      border: none !important;
+      border-collapse: collapse;
+      background: transparent !important;
+      font-size: 0.92rem;
+      line-height: 1.58;
 
-    td {
-      padding: 0.6rem 0.85rem;
-      border-top: 1px solid var(--border-subtle);
+      thead {
+        background: rgba(15, 23, 42, 0.75) !important;
+      }
+
+      th {
+        text-align: left !important;
+        vertical-align: middle !important;
+        background: transparent !important;
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+        font-size: 0.76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.85rem 1.05rem !important;
+        border: none !important;
+        border-bottom: 1px solid var(--border-highlight) !important;
+        white-space: nowrap;
+
+        code {
+          text-transform: none !important;
+          letter-spacing: 0 !important;
+          font-family: var(--font-mono);
+          font-size: 0.82rem;
+          font-weight: 600;
+          background: rgba(249, 115, 22, 0.14) !important;
+          color: var(--accent-amber-bright) !important;
+          border: 1px solid rgba(251, 146, 60, 0.32);
+          padding: 0.1rem 0.45rem;
+          border-radius: 5px;
+          white-space: nowrap !important;
+          line-break: normal !important;
+          display: inline;
+        }
+      }
+
+      tbody tr {
+        transition: background 0.14s ease;
+
+        &:nth-child(even) {
+          background: rgba(30, 41, 59, 0.28);
+        }
+
+        &:hover {
+          background: rgba(251, 146, 60, 0.07);
+        }
+      }
+
+      td {
+        vertical-align: top !important;
+        text-align: left;
+        padding: 0.85rem 1.05rem !important;
+        border: none !important;
+        border-top: 1px solid rgba(148, 163, 184, 0.14) !important;
+        color: var(--text-secondary);
+
+        &:first-child {
+          font-weight: 600;
+          color: var(--text-primary);
+          white-space: nowrap;
+        }
+
+        a {
+          white-space: nowrap;
+          font-weight: 500;
+        }
+      }
     }
+  }
+
+  // Semantic Benchstat Syntax Highlighting
+  .bs-prompt   { color: #64748b; user-select: none; }
+  .bs-cmd      { color: #38bdf8; font-weight: 700; }
+  .bs-flag     { color: #c084fc; }
+  .bs-str      { color: #34d399; }
+  .bs-arg      { color: #cbd5e1; }
+  .bs-meta-key { color: #94a3b8; }
+  .bs-meta-val { color: #bae6fd; font-weight: 500; }
+  .bs-pipe     { color: #475569; }
+  .bs-col-name { color: #7dd3fc; font-weight: 700; }
+  .bs-unit     { color: #fcd34d; font-weight: 600; }
+  .bs-vs       { color: #94a3b8; }
+  .bs-bench-name { color: #f1f5f9; font-weight: 500; }
+  .bs-geomean  { color: #fbbf24; font-weight: 700; }
+  .bs-val      { color: #ffffff; font-weight: 600; }
+  .bs-var      { color: #64748b; }
+  .bs-tilde    { color: #94a3b8; font-weight: 600; }
+  .bs-pval     { color: #64748b; }
+
+  .bs-delta-good {
+    color: #4ade80;
+    font-weight: 700;
+    background: rgba(34, 197, 94, 0.15);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
+    border-radius: 2px;
+  }
+
+  .bs-delta-bad {
+    color: #fb7185;
+    font-weight: 700;
+    background: rgba(244, 63, 94, 0.15);
+    box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.15);
+    border-radius: 2px;
   }
 }
 

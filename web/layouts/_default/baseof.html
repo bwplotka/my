@@ -57,6 +57,10 @@
   </div>
 
   {{- /* Load JavaScript scripts and CSS */ -}}
+  <script type="text/javascript">
+    window.ClipboardJS = window.ClipboardJS || function() { return { on: function() {} }; };
+    window.autocomplete = window.autocomplete || function() { return { on: function() {}, autocomplete: { setVal: function() {} } }; };
+  </script>
   {{- partial "assets.html" . -}}
   <script type="text/javascript">
     (function() {
@@ -73,6 +77,119 @@
       }
       window.addEventListener('scroll', updateProgress, { passive: true });
       updateProgress();
+
+      function escHtml(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlightBenchstatLine(line) {
+        if (!line.trim()) return escHtml(line);
+
+        // 1. Command line: "$ benchstat ..." or "benchstat -col ..."
+        var cmdMatch = line.match(/^(\s*(?:\$\s*)?)(benchstat\b)(.*)$/);
+        if (cmdMatch) {
+          var prefix = cmdMatch[1] ? '<span class="bs-prompt">' + escHtml(cmdMatch[1]) + '</span>' : '';
+          var cmd = '<span class="bs-cmd">' + escHtml(cmdMatch[2]) + '</span>';
+          var rest = escHtml(cmdMatch[3]).replace(
+            /("[^"]*"|&#34;[^&]*&#34;)|(\s-[a-zA-Z0-9-]+)|\b([a-zA-Z0-9_]+=[^\s"]+)/g,
+            function(m, strTok, flagTok, kvTok) {
+              if (strTok) return '<span class="bs-str">' + strTok + '</span>';
+              if (flagTok) return ' <span class="bs-flag">' + flagTok.trim() + '</span>';
+              if (kvTok) return '<span class="bs-arg">' + kvTok + '</span>';
+              return m;
+            }
+          );
+          return prefix + cmd + rest;
+        }
+
+        // 2. Metadata header line: "goos: darwin", "pkg: ...", "cpu: ..."
+        var metaMatch = line.match(/^([a-zA-Z0-9_]+:)(\s+.*)$/);
+        if (metaMatch) {
+          return '<span class="bs-meta-key">' + escHtml(metaMatch[1]) + '</span><span class="bs-meta-val">' + escHtml(metaMatch[2]) + '</span>';
+        }
+
+        // 3. Table header / column divider line containing box-drawing characters (│, ┼, ─)
+        if (line.indexOf('│') !== -1 || line.indexOf('┼') !== -1) {
+          var parts = line.split(/([│┼─]+)/);
+          return parts.map(function(part) {
+            if (/^[│┼─]+$/.test(part)) {
+              return '<span class="bs-pipe">' + escHtml(part) + '</span>';
+            }
+            if (/\b(sec\/op|B\/op|allocs\/op|bytes\/message|B\/s|ops\/s|vs base)\b/.test(part)) {
+              return escHtml(part)
+                .replace(/\b(sec\/op|B\/op|allocs\/op|bytes\/message|B\/s|ops\/s)\b/g, '<span class="bs-unit">$1</span>')
+                .replace(/\bvs base\b/g, '<span class="bs-vs">vs base</span>');
+            }
+            if (part.trim()) {
+              return '<span class="bs-col-name">' + escHtml(part) + '</span>';
+            }
+            return escHtml(part);
+          }).join('');
+        }
+
+        // 4. Data row or geomean row
+        var rowMatch = line.match(/^(\S.*?)(\s{2,}(?=\d).*)$/);
+        if (rowMatch) {
+          var benchName = rowMatch[1];
+          var metricsPart = rowMatch[2];
+          var nameClass = /^geomean\b/.test(benchName) ? 'bs-geomean' : 'bs-bench-name';
+          var formattedName = '<span class="' + nameClass + '">' + escHtml(benchName) + '</span>';
+          var formattedMetrics = escHtml(metricsPart).replace(
+            /(\(p=[0-9.]+(?:\s+n=\d+)?\))|(±\s*(?:\d+(?:\.\d+)?%|∞|\?))|([+-]\d+(?:\.\d+)?%)|(~)(?=\s*\(p=)|(\b\d+(?:\.\d+)?[nµumkMGTpe]?i?\b)/g,
+            function(m, pval, variance, delta, tilde, val) {
+              if (pval) return '<span class="bs-pval">' + pval + '</span>';
+              if (variance) return '<span class="bs-var">' + variance + '</span>';
+              if (delta) {
+                var cls = delta.charAt(0) === '-' ? 'bs-delta-good' : 'bs-delta-bad';
+                return '<span class="' + cls + '">' + delta + '</span>';
+              }
+              if (tilde) return '<span class="bs-tilde">' + tilde + '</span>';
+              if (val) return '<span class="bs-val">' + val + '</span>';
+              return m;
+            }
+          );
+          return formattedName + formattedMetrics;
+        }
+
+        return escHtml(line);
+      }
+
+      function enhanceBenchstatBlocks() {
+        var codes = document.querySelectorAll('.highlight pre.chroma > code');
+        for (var i = 0; i < codes.length; i++) {
+          var codeEl = codes[i];
+          var txt = codeEl.textContent || '';
+          var isBenchstat = codeEl.getAttribute('data-benchstat-done') === '1' || (/(^|\n)\s*\$?\s*benchstat\b/.test(txt) || (txt.indexOf('goos:') !== -1 && (txt.indexOf('sec/op') !== -1 || txt.indexOf('vs base') !== -1)));
+          if (!isBenchstat) continue;
+
+          if (codeEl.getAttribute('data-benchstat-done') !== '1') {
+            codeEl.setAttribute('data-benchstat-done', '1');
+            codeEl.className = 'language-benchstat';
+            codeEl.setAttribute('data-lang', 'benchstat');
+            var lines = txt.split('\n');
+            codeEl.innerHTML = lines.map(highlightBenchstatLine).join('\n');
+          }
+
+          var chromaBox = codeEl.closest('.chroma');
+          if (chromaBox) {
+            var header = chromaBox.querySelector('.code-header');
+            if (header) {
+              header.classList.remove('language-bash', 'language-sh', 'language-shell', 'language-text');
+              header.classList.add('language-benchstat');
+            }
+          }
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          enhanceBenchstatBlocks();
+          setTimeout(enhanceBenchstatBlocks, 0);
+        });
+      } else {
+        enhanceBenchstatBlocks();
+        setTimeout(enhanceBenchstatBlocks, 0);
+      }
     })();
   </script>
   </body>
