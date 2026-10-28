@@ -356,31 +356,37 @@
 
         var currentMode = 'posts';
 
-        function applyPostsFilter(filterKey, titleText, descText) {
+        function applyPostsFilter(filterKey, readTier, titleText, descText, clickedBar) {
+            var rTier = readTier || 'all';
             var visible = 0;
             postCards.forEach(function(card) {
                 var groups = (card.getAttribute('data-fg-groups') || 'all').split(/\s+/);
-                var match = (filterKey === 'all') || (groups.indexOf(filterKey) !== -1);
+                var cardRead = card.getAttribute('data-read-tier') || 'quick';
+                var topicMatch = (filterKey === 'all') || (groups.indexOf(filterKey) !== -1);
+                var readMatch = (rTier === 'all') || (cardRead === rTier);
+                var match = topicMatch && readMatch;
                 card.style.display = match ? '' : 'none';
                 if (match) visible++;
             });
             postBars.forEach(function(bar) {
-                var bf = bar.getAttribute('data-fg-filter');
-                var active = (bf === filterKey);
-                bar.classList.toggle('active-frame', active);
-                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !active && bf !== 'all');
+                var bf = bar.getAttribute('data-fg-filter') || 'all';
+                var br = bar.getAttribute('data-fg-read') || 'all';
+                var isClicked = clickedBar ? (bar === clickedBar) : (bf === filterKey && br === rTier);
+                var inStack = (filterKey === 'all') || (bf === filterKey && (rTier === 'all' || br === 'all' || br === rTier));
+                bar.classList.toggle('active-frame', isClicked);
+                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !inStack && bf !== 'all');
             });
             if (detailsTitle) detailsTitle.textContent = titleText || 'All Blog Posts (22 articles)';
             if (detailsDesc) detailsDesc.textContent = descText || '';
-            if (resetBtn) resetBtn.hidden = (filterKey === 'all');
+            if (resetBtn) resetBtn.hidden = (filterKey === 'all' && rTier === 'all');
             if (postsCountEl) {
-                postsCountEl.textContent = filterKey === 'all'
+                postsCountEl.textContent = (filterKey === 'all' && rTier === 'all')
                     ? '(' + visible + ' articles)'
                     : '(' + visible + ' filtered articles)';
             }
         }
 
-        function applyTalksFilter(filterKey, titleText, descText) {
+        function applyTalksFilter(filterKey, titleText, descText, clickedBar) {
             var visible = 0;
             talkCards.forEach(function(card) {
                 var cats = (card.getAttribute('data-talk-cat') || '').split(/\s+/);
@@ -390,9 +396,10 @@
             });
             talkBars.forEach(function(bar) {
                 var tf = bar.getAttribute('data-talk-filter');
-                var active = (tf === filterKey);
-                bar.classList.toggle('active-frame', active);
-                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !active && tf !== 'all');
+                var isClicked = clickedBar ? (bar === clickedBar) : (tf === filterKey);
+                var inStack = (filterKey === 'all') || (tf === filterKey);
+                bar.classList.toggle('active-frame', isClicked);
+                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !inStack && tf !== 'all');
             });
             if (detailsTitle) detailsTitle.textContent = titleText || 'All Public Talks (36 talks)';
             if (detailsDesc) detailsDesc.textContent = descText || '';
@@ -426,15 +433,18 @@
                 var rootPostBar = postBars[0];
                 applyPostsFilter(
                     'all',
+                    'all',
                     rootPostBar ? rootPostBar.getAttribute('data-fg-title') : 'All Blog Posts (22 articles)',
-                    rootPostBar ? rootPostBar.getAttribute('data-fg-desc') : ''
+                    rootPostBar ? rootPostBar.getAttribute('data-fg-desc') : '',
+                    rootPostBar
                 );
             } else {
                 var rootTalkBar = talkBars[0];
                 applyTalksFilter(
                     'all',
                     rootTalkBar ? rootTalkBar.getAttribute('data-talk-title') : 'All Public Talks (36 talks)',
-                    rootTalkBar ? rootTalkBar.getAttribute('data-talk-desc') : ''
+                    rootTalkBar ? rootTalkBar.getAttribute('data-talk-desc') : '',
+                    rootTalkBar
                 );
             }
         }
@@ -466,8 +476,10 @@
             bar.addEventListener('click', function() {
                 applyPostsFilter(
                     bar.getAttribute('data-fg-filter') || 'all',
+                    bar.getAttribute('data-fg-read') || 'all',
                     bar.getAttribute('data-fg-title'),
-                    bar.getAttribute('data-fg-desc')
+                    bar.getAttribute('data-fg-desc'),
+                    bar
                 );
                 scrollToExplorerAndCards();
             });
@@ -478,7 +490,8 @@
                 applyTalksFilter(
                     bar.getAttribute('data-talk-filter') || 'all',
                     bar.getAttribute('data-talk-title'),
-                    bar.getAttribute('data-talk-desc')
+                    bar.getAttribute('data-talk-desc'),
+                    bar
                 );
                 scrollToExplorerAndCards();
             });

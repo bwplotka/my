@@ -48,7 +48,12 @@
     {{- end -}}
 {{- end -}}
 
-<article class="single summary post-3d-card" data-fg-groups="{{ $fgGroups }}" itemscope itemtype="http://schema.org/Article">
+{{- $readTier := "quick" -}}
+{{- if ge .ReadingTime 11 -}}
+    {{- $readTier = "deep" -}}
+{{- end -}}
+
+<article class="single summary post-3d-card" data-fg-groups="{{ $fgGroups }}" data-read-tier="{{ $readTier }}" itemscope itemtype="http://schema.org/Article">
     <a href="{{ .RelPermalink }}" class="card-3d-media" tabindex="-1" aria-hidden="true">
         <img src="{{ $image }}" alt="{{ .Title }}" class="card-3d-img" loading="lazy" />
         <span class="card-stack-badge">{{ $stackBadge }}</span>
