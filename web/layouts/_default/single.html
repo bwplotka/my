@@ -55,37 +55,167 @@
             }
         }
 
-        // 2. Interactive Public Talks filter bar
+        // 2. Interactive pprof Icicle Flamegraph for Public Talks on /about/
         var talksHeading = document.getElementById('public-talks');
         if (!talksHeading) return;
 
-        var bar = document.createElement('div');
-        bar.className = 'talks-table-filter-bar';
-        bar.innerHTML =
-            '<div class="ttf-chips">' +
-                '<button type="button" class="ttf-chip active" data-q="">All Talks (36)</button>' +
-                '<button type="button" class="ttf-chip" data-q="prometheus|promql|remote write|counter">Prometheus &amp; PromQL</button>' +
-                '<button type="button" class="ttf-chip" data-q="thanos|cortex">Thanos &amp; Multi-Cluster</button>' +
-                '<button type="button" class="ttf-chip" data-q="go |benchmark|efficiency|clouds">Go &amp; Benchmarking</button>' +
-                '<button type="button" class="ttf-chip" data-q="tag|sig|sustainable|contribfest">CNCF TAG &amp; OSS</button>' +
-            '</div>' +
-            '<input type="search" class="ttf-search" placeholder="Filter talks by title, event (KubeCon, PromCon), or city..." aria-label="Search talks" />';
+        var pprofWrap = document.createElement('div');
+        pprofWrap.className = 'pprof-explorer-wrap about-pprof-wrap';
+        pprofWrap.innerHTML =
+            '<div class="pprof-panel">' +
+                '<div class="pprof-bar">' +
+                    '<div class="pprof-bar-left">' +
+                        '<span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>' +
+                        '<span class="pprof-cmd">pprof // <span class="pprof-cmd-target">bwplotka.dev/about#public-talks</span></span>' +
+                    '</div>' +
+                    '<div class="pprof-bar-right">' +
+                        '<input type="search" class="ttf-search" placeholder="Search talks by title, event (KubeCon, PromCon), or city..." aria-label="Search talks" />' +
+                    '</div>' +
+                '</div>' +
+                '<div class="fg-canvas">' +
+                    '<div class="fg-row">' +
+                        '<button type="button" class="f-bar f-root active-frame" style="width: 100%;"' +
+                            ' data-q=""' +
+                            ' data-talk-title="All Public Talks &amp; Keynotes (36 talks · 2018–2024)"' +
+                            ' data-talk-desc="Showing all 36 conference keynotes, deep dives, and lightning talks across KubeCon, PromCon, GopherCon, and FOSDEM.">' +
+                            '<span class="f-name">All Public Talks — click any topic or talk-duration icicle below to filter tables</span>' +
+                            '<span class="f-pct">100% (36)</span>' +
+                        '</button>' +
+                    '</div>' +
+                    '<div class="fg-icicle-columns fg-cols-talks">' +
+                        '<div class="fg-icicle-col">' +
+                            '<button type="button" class="f-bar f-tone-1" style="width: 100%;"' +
+                                ' data-q="prometheus|promql|remote write|counter"' +
+                                ' data-talk-title="Prometheus, Remote Write 2.0 &amp; TSDB (13 talks · 36%)"' +
+                                ' data-talk-desc="Talks covering Prometheus 3.0, Remote Write 2.0 cost savings, Counter Created Timestamps, PromQL redesign, and Google Cloud Managed Prometheus.">' +
+                                '<span class="f-name">Prometheus, Remote Write &amp; TSDB</span>' +
+                                '<span class="f-pct">36% (13)</span>' +
+                            '</button>' +
+                            '<div class="fg-sub-row">' +
+                                '<button type="button" class="f-bar f-sub f-tone-1-sub" style="width: 62%;"' +
+                                    ' data-q="remote write|created timestamps|promql|prometheus 2|prometheus metrics|operator"' +
+                                    ' data-talk-title="Prometheus · Full Conference Deep Dives (8 talks · 22%)"' +
+                                    ' data-talk-desc="Full-length KubeCon &amp; PromCon sessions on Remote Write 2.0, Created Timestamps, and PromQL.">' +
+                                    '<span class="f-name">🎤 35–45m Deep Dives</span>' +
+                                    '<span class="f-pct">22% (8)</span>' +
+                                '</button>' +
+                                '<button type="button" class="f-bar f-sub f-tone-1-sub" style="width: 38%;"' +
+                                    ' data-q="prometheus 3\\.0|contribfest|lightweight prometheus|deep dive: prometheus|autoscaling"' +
+                                    ' data-talk-title="Prometheus · Keynotes &amp; ContribFest (5 talks · 14%)"' +
+                                    ' data-talk-desc="Prometheus 3.0 celebration, ContribFest, and hands-on scaling sessions.">' +
+                                    '<span class="f-name">⚡ 20–30m</span>' +
+                                    '<span class="f-pct">14% (5)</span>' +
+                                '</button>' +
+                            '</div>' +
+                            '<div class="fg-sub-row">' +
+                                '<button type="button" class="f-bar f-tip f-tone-1-tip" style="width: 52%;"' +
+                                    ' data-q="remote write 2\\.0|prometheus 3\\.0|created timestamps"' +
+                                    ' data-talk-title="Remote Write 2.0 &amp; Prometheus 3.0 (4 talks · 11%)"' +
+                                    ' data-talk-desc="Latest 2024 KubeCon NA and PromCon protocol &amp; architecture sessions.">' +
+                                    '<span class="f-name">RW 2.0 &amp; Prom 3.0</span>' +
+                                    '<span class="f-pct">11% (4)</span>' +
+                                '</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="fg-icicle-col">' +
+                            '<button type="button" class="f-bar f-tone-2" style="width: 100%;"' +
+                                ' data-q="thanos|cortex|global|multi-cluster|correlating|exemplars"' +
+                                ' data-talk-title="Thanos, Cortex &amp; Global Monitoring (12 talks · 33%)"' +
+                                ' data-talk-desc="Deep dives into Thanos distributed architecture, multi-cluster telemetry, exemplar correlations, and collaboration between Thanos and Cortex.">' +
+                                '<span class="f-name">Thanos &amp; Global Monitoring</span>' +
+                                '<span class="f-pct">33% (12)</span>' +
+                            '</button>' +
+                            '<div class="fg-sub-row">' +
+                                '<button type="button" class="f-bar f-sub f-tone-2-sub" style="width: 58%;"' +
+                                    ' data-q="thanos: global|deep dive|scaling|cortex|unlimited|observability"' +
+                                    ' data-talk-title="Thanos · Architecture Deep Dives (7 talks · 19%)"' +
+                                    ' data-talk-desc="Multi-cluster metric federation, Cortex/Thanos convergence, and global scale architecture.">' +
+                                    '<span class="f-name">🎤 35–45m Arch</span>' +
+                                    '<span class="f-pct">19% (7)</span>' +
+                                '</button>' +
+                                '<button type="button" class="f-bar f-sub f-tone-2-sub" style="width: 42%;"' +
+                                    ' data-q="7 steps|intro:|welcome|cheap"' +
+                                    ' data-talk-title="Thanos · Live Demos &amp; ThanosCon (5 talks · 14%)"' +
+                                    ' data-talk-desc="7-step live demos and ThanosCon project retrospectives.">' +
+                                    '<span class="f-name">⚡ 25m Demos</span>' +
+                                    '<span class="f-pct">14% (5)</span>' +
+                                '</button>' +
+                            '</div>' +
+                            '<div class="fg-sub-row">' +
+                                '<button type="button" class="f-bar f-tip f-tone-2-tip" style="width: 52%;"' +
+                                    ' data-q="correlating|correlations|exemplars|tracing"' +
+                                    ' data-talk-title="Global Scale &amp; Signal Correlations (4 talks · 11%)"' +
+                                    ' data-talk-desc="Connecting metrics, traces, and continuous profiles across clusters.">' +
+                                    '<span class="f-name">Correlations &amp; Scale</span>' +
+                                    '<span class="f-pct">11% (4)</span>' +
+                                '</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="fg-icicle-col">' +
+                            '<button type="button" class="f-bar f-tone-3" style="width: 100%;"' +
+                                ' data-q="go |golang|benchmark|efficiency|clouds|metrics in go"' +
+                                ' data-talk-title="Go Efficiency, Runtime Metrics &amp; Benchmarking (7 talks · 19%)"' +
+                                ' data-talk-desc="Practical Go optimization talks: micro-benchmarking with benchstat, macro-benchmarking with observability, and key Go runtime metrics.">' +
+                                '<span class="f-name">Go Efficiency &amp; Benchmarking</span>' +
+                                '<span class="f-pct">19% (7)</span>' +
+                            '</button>' +
+                            '<div class="fg-sub-row">' +
+                                '<button type="button" class="f-bar f-sub f-tone-3-sub" style="width: 78%;"' +
+                                    ' data-q="micro-benchmarking|pragmatic|efficiency|metrics in go"' +
+                                    ' data-talk-title="Go Efficiency · 35–45m Conference Talks (5 talks · 14%)"' +
+                                    ' data-talk-desc="GopherConUK, FOSDEM, and OpenSourceDay sessions on runtime/metrics and benchmarking.">' +
+                                    '<span class="f-name">🎤 35–45m Profiling</span>' +
+                                    '<span class="f-pct">14% (5)</span>' +
+                                '</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="fg-icicle-col">' +
+                            '<button type="button" class="f-bar f-tone-4" style="width: 100%;"' +
+                                ' data-q="tag|sig|sustainable|contribfest|gen-ai"' +
+                                ' data-talk-title="CNCF TAG Observability &amp; Open Source Leadership (4 talks · 12%)"' +
+                                ' data-talk-desc="CNCF TAG Observability reviews, Gen-AI observability landscape, and lessons from 5+ years of leading sustainable open-source projects.">' +
+                                '<span class="f-name">CNCF &amp; Open Source Leadership</span>' +
+                                '<span class="f-pct">12% (4)</span>' +
+                            '</button>' +
+                            '<div class="fg-sub-row">' +
+                                '<button type="button" class="f-bar f-sub f-tone-4-sub" style="width: 82%;"' +
+                                    ' data-q="tag|sig|sustainable"' +
+                                    ' data-talk-title="CNCF TAG &amp; OSS Sustainability (3 talks · 8%)"' +
+                                    ' data-talk-desc="KubeCon EU and State of Open Con talks on maintainer sustainability and Gen-AI observability.">' +
+                                    '<span class="f-name">🎤 35m Keynotes</span>' +
+                                    '<span class="f-pct">8% (3)</span>' +
+                                '</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="fg-details-bar">' +
+                    '<div class="fg-details-text">' +
+                        '<strong class="fg-details-title" id="about-fg-title">All Public Talks &amp; Keynotes (36 talks · 2018–2024)</strong>' +
+                        '<span class="fg-details-desc" id="about-fg-desc">Showing all 36 conference keynotes, deep dives, and lightning talks across KubeCon, PromCon, GopherCon, and FOSDEM.</span>' +
+                    '</div>' +
+                    '<button type="button" class="pprof-reset-btn" id="about-fg-reset" hidden>Reset Filter (Show All)</button>' +
+                '</div>' +
+            '</div>';
 
         var nextEl = talksHeading.nextElementSibling;
         if (nextEl && nextEl.tagName === 'P') {
-            nextEl.parentNode.insertBefore(bar, nextEl.nextSibling);
+            nextEl.parentNode.insertBefore(pprofWrap, nextEl.nextSibling);
         } else {
-            talksHeading.parentNode.insertBefore(bar, nextEl);
+            talksHeading.parentNode.insertBefore(pprofWrap, nextEl);
         }
 
         var content = document.getElementById('content');
         var tables = Array.prototype.slice.call(content.querySelectorAll('table'));
-        var chips = Array.prototype.slice.call(bar.querySelectorAll('.ttf-chip'));
-        var searchInput = bar.querySelector('.ttf-search');
+        var bars = Array.prototype.slice.call(pprofWrap.querySelectorAll('.f-bar'));
+        var searchInput = pprofWrap.querySelector('.ttf-search');
+        var titleEl = document.getElementById('about-fg-title');
+        var descEl = document.getElementById('about-fg-desc');
+        var resetBtn = document.getElementById('about-fg-reset');
         var activePattern = '';
 
         function filterTables() {
-            var q = (searchInput.value || '').trim().toLowerCase();
+            var q = (searchInput && searchInput.value ? searchInput.value : '').trim().toLowerCase();
             var re = activePattern ? new RegExp(activePattern, 'i') : null;
 
             tables.forEach(function(tbl) {
@@ -106,15 +236,32 @@
                     prev.style.display = visibleCount > 0 ? '' : 'none';
                 }
             });
+            if (resetBtn) {
+                resetBtn.hidden = (!activePattern && !q);
+            }
         }
 
-        chips.forEach(function(chip) {
-            chip.addEventListener('click', function() {
-                chips.forEach(function(c) { c.classList.toggle('active', c === chip); });
-                activePattern = chip.getAttribute('data-q') || '';
+        bars.forEach(function(b) {
+            b.addEventListener('click', function() {
+                bars.forEach(function(other) {
+                    var isRoot = other.classList.contains('f-root');
+                    var isClicked = other === b;
+                    other.classList.toggle('active-frame', isClicked);
+                    other.classList.toggle('dimmed-frame', (b.getAttribute('data-q') !== '') && !isClicked && !isRoot);
+                });
+                activePattern = b.getAttribute('data-q') || '';
+                if (titleEl) titleEl.textContent = b.getAttribute('data-talk-title') || '';
+                if (descEl) descEl.textContent = b.getAttribute('data-talk-desc') || '';
                 filterTables();
             });
         });
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                if (searchInput) searchInput.value = '';
+                if (bars[0]) bars[0].click();
+            });
+        }
         if (searchInput) {
             searchInput.addEventListener('input', filterTables);
         }

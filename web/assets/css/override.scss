@@ -960,8 +960,13 @@ body[theme=dark] {
   scroll-margin-top: 4.5rem;
 }
 
+.about-pprof-wrap {
+  margin: 1rem 0 1.75rem;
+}
+
 .cards-section-anchor {
   scroll-margin-top: 4.5rem;
+  min-height: 80vh;
 }
 
 .pprof-panel {
@@ -1819,7 +1824,7 @@ body[theme=dark] {
         &:first-child {
           font-weight: 600;
           color: var(--text-primary);
-          white-space: nowrap;
+          min-width: 140px;
         }
 
         a {

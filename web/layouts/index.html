@@ -454,24 +454,31 @@
 
         var explorerSection = document.getElementById('explorer-section');
 
-        function scrollToExplorerAndCards() {
+        function scrollToExplorerAndCards(forceScroll) {
             if (!explorerSection) return;
-            explorerSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            var rect = explorerSection.getBoundingClientRect();
+            // Never scroll up when clicking inside pprof; only scroll down if still in the hero view (or when clicking a top nav link).
+            if (forceScroll || rect.top > 220) {
+                var targetY = window.pageYOffset + rect.top - 72;
+                if (targetY > window.pageYOffset || forceScroll) {
+                    window.scrollTo({
+                        top: Math.max(0, targetY),
+                        behavior: 'smooth'
+                    });
+                }
+            }
         }
 
         if (tabPosts) {
             tabPosts.addEventListener('click', function() {
                 switchMode('posts');
-                scrollToExplorerAndCards();
+                scrollToExplorerAndCards(false);
             });
         }
         if (tabTalks) {
             tabTalks.addEventListener('click', function() {
                 switchMode('talks');
-                scrollToExplorerAndCards();
+                scrollToExplorerAndCards(false);
             });
         }
 
@@ -484,7 +491,7 @@
                     bar.getAttribute('data-fg-desc'),
                     bar
                 );
-                scrollToExplorerAndCards();
+                scrollToExplorerAndCards(false);
             });
         });
 
@@ -496,7 +503,7 @@
                     bar.getAttribute('data-talk-desc'),
                     bar
                 );
-                scrollToExplorerAndCards();
+                scrollToExplorerAndCards(false);
             });
         });
 
@@ -511,7 +518,7 @@
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 switchMode('posts');
-                scrollToExplorerAndCards();
+                scrollToExplorerAndCards(true);
                 if (history.replaceState) {
                     history.replaceState(null, '', '#explorer-section');
                 }
@@ -520,7 +527,7 @@
 
         if (window.location.hash === '#explorer-section' || window.location.hash === '#blog' || window.location.hash === '#posts') {
             switchMode('posts');
-            setTimeout(scrollToExplorerAndCards, 60);
+            setTimeout(function() { scrollToExplorerAndCards(true); }, 60);
         }
     })();
     </script>
