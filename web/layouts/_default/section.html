@@ -1,0 +1,10 @@
+{{- define "title" }}{{ .Site.Title }}{{ end -}}
+
+{{- define "content" -}}
+    <script type="text/javascript">
+        window.location.replace({{ "/#explorer-section" | relLangURL }});
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url={{ "/#explorer-section" | relLangURL }}" />
+    </noscript>
+{{- end -}}

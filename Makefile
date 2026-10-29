@@ -1,4 +1,13 @@
+ifeq ($(GOPATH),)
+override GOPATH := $(shell go env GOPATH)
+endif
 include .bingo/Variables.mk
+
+ifeq ($(origin HUGO),command line)
+HUGO_DEP :=
+else
+HUGO_DEP := $(HUGO)
+endif
 
 WEB_DIR           ?= web
 WEBSITE_BASE_URL  ?= https://bwplotka.dev
@@ -10,11 +19,11 @@ ME				  ?= $(shell whoami)
 all: web
 
 .PHONY: web
-web: $(HUGO)
+web: $(HUGO_DEP)
 	@echo ">> building documentation website"
 	# TODO(bwplotka): Make it --gc
 	@cd $(WEB_DIR) && HUGO_ENV=production $(HUGO) --minify -v --config config.yaml -b $(WEBSITE_BASE_URL)
 
-web-serve: $(HUGO)
+web-serve: $(HUGO_DEP)
 	@echo ">> serving documentation website"
 	@cd $(WEB_DIR) && $(HUGO) --config config.yaml -v server

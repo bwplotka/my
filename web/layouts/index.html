@@ -1,0 +1,534 @@
+{{- define "content" -}}
+    {{- $params := .Scratch.Get "params" -}}
+    {{- $profile := .Site.Params.home.profile -}}
+    {{- $posts := .Site.Params.home.posts -}}
+
+    <div class="page home"{{ if ne $posts.enable false }} data-home="posts"{{ end }}>
+        {{- /* 1. Full-Viewport Hero + Interactive 3D Book Stage + Scroll-Down Cue */ -}}
+        {{- if ne $profile.enable false -}}
+            {{- partial "home/profile.html" . -}}
+        {{- end -}}
+
+        {{- /* 2. Unified pprof Flamegraph Explorer (Controls Blog Posts & Public Talks) */ -}}
+        {{- partial "home/flamegraph.html" . -}}
+
+        {{- /* Optional Homepage Markdown Content */ -}}
+        {{- if .Content -}}
+            <div class="single">
+                <div class="content" id="content">
+                    {{- dict "Content" .Content "Ruby" $params.ruby "Fraction" $params.fraction "Fontawesome" $params.fontawesome | partial "function/content.html" | safeHTML -}}
+                </div>
+            </div>
+        {{- end -}}
+
+        {{- /* 3. Isometric Blog Post Cards Grid (Controlled by the Flamegraph above) */ -}}
+        {{- if ne $posts.enable false | and .Site.RegularPages -}}
+            {{- $pages := where .Site.RegularPages "Type" "posts" -}}
+            {{- if .Site.Params.page.hiddenFromHomePage -}}
+                {{- $pages = where $pages "Params.hiddenfromhomepage" false -}}
+            {{- else -}}
+                {{- $pages = where $pages "Params.hiddenfromhomepage" "!=" true -}}
+            {{- end -}}
+            {{- with $posts.paginate | default .Site.Params.paginate -}}
+                {{- $pages = $.Paginate $pages . -}}
+            {{- else -}}
+                {{- $pages = .Paginate $pages -}}
+            {{- end -}}
+
+            <section class="home-posts-section" id="home-posts-section" aria-label="Engineering Blog Posts">
+                <div class="section-bar">
+                    <h2 class="section-bar-title">
+                        Blog Posts <span class="section-count" id="posts-visible-count">({{ len $pages.Pages }} articles)</span>
+                    </h2>
+                </div>
+
+                <div class="cards-3d-grid" id="home-posts-grid">
+                    {{- range $pages.Pages -}}
+                        {{- .Render "summary" -}}
+                    {{- end -}}
+                </div>
+
+                {{- partial "paginator.html" . -}}
+            </section>
+        {{- end -}}
+    </div>
+
+    <script type="text/javascript">
+    (function() {
+        // ====================================================================
+        // 1. 3D Book Mouse-Drag Rotation with Velocity Inertia & Easter Egg
+        // ====================================================================
+        var bookStage = document.getElementById('book-stage');
+        var bookTrigger = document.getElementById('book-3d-trigger');
+        var book3d = document.getElementById('book-3d');
+        var sandBtn = document.getElementById('trigger-book-sand-btn');
+
+        var rotY = 26;
+        var rotX = 8;
+        var velY = 0;
+        var velX = 0;
+        var isDragging = false;
+        var dragDist = 0;
+        var lastX = 0;
+        var lastY = 0;
+        var inertiaRaf = null;
+        var wasBackVisible = false;
+        var lastEggTime = -10000;
+
+        function applyBookRotation() {
+            if (!book3d) return;
+            var normY = ((rotY % 360) + 360) % 360;
+            var backVisible = (normY > 90 && normY < 270);
+            book3d.classList.toggle('is-back-visible', backVisible);
+            book3d.classList.toggle('is-flipped', backVisible);
+            book3d.style.transform = 'rotateY(' + rotY.toFixed(2) + 'deg) rotateX(' + rotX.toFixed(2) + 'deg)';
+
+            if (backVisible && !wasBackVisible) {
+                var now = performance.now();
+                if (now - lastEggTime > 2200) {
+                    lastEggTime = now;
+                    startBookSandShower();
+                }
+            }
+            wasBackVisible = backVisible;
+        }
+
+        function stepInertia() {
+            if (isDragging) {
+                inertiaRaf = null;
+                return;
+            }
+            rotY += velY;
+            rotX = Math.max(-42, Math.min(42, rotX + velX));
+            velY *= 0.945;
+            velX *= 0.90;
+            rotX += (8 - rotX) * 0.06;
+            applyBookRotation();
+
+            if (Math.abs(velY) > 0.08 || Math.abs(velX) > 0.08 || Math.abs(rotX - 8) > 0.25) {
+                inertiaRaf = requestAnimationFrame(stepInertia);
+            } else {
+                inertiaRaf = null;
+            }
+        }
+
+        function startInertia() {
+            if (!inertiaRaf) {
+                inertiaRaf = requestAnimationFrame(stepInertia);
+            }
+        }
+
+        if (bookTrigger) {
+            bookTrigger.addEventListener('pointerdown', function(e) {
+                if (e.target && (e.target.tagName === 'A' || e.target.id === 'trigger-book-sand-btn')) return;
+                isDragging = true;
+                dragDist = 0;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                velY = 0;
+                velX = 0;
+                bookTrigger.classList.add('is-dragging');
+                if (bookTrigger.setPointerCapture) {
+                    try { bookTrigger.setPointerCapture(e.pointerId); } catch (_) {}
+                }
+            });
+
+            bookTrigger.addEventListener('pointermove', function(e) {
+                if (!isDragging) return;
+                var dx = e.clientX - lastX;
+                var dy = e.clientY - lastY;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                dragDist += Math.hypot(dx, dy);
+
+                var deltaY = dx * 0.78;
+                var deltaX = -dy * 0.45;
+                rotY += deltaY;
+                rotX = Math.max(-42, Math.min(42, rotX + deltaX));
+                velY = deltaY;
+                velX = deltaX * 0.6;
+                applyBookRotation();
+            });
+
+            function endPointerDrag(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                bookTrigger.classList.remove('is-dragging');
+                if (dragDist < 6) {
+                    // Quick click without dragging: give a smooth angular velocity spin to flip sides.
+                    velY = 14.5;
+                }
+                startInertia();
+            }
+
+            bookTrigger.addEventListener('pointerup', endPointerDrag);
+            bookTrigger.addEventListener('pointercancel', endPointerDrag);
+
+            bookTrigger.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    velY = 14.5;
+                    startInertia();
+                } else if (e.key === 'ArrowRight') {
+                    velY += 6;
+                    startInertia();
+                } else if (e.key === 'ArrowLeft') {
+                    velY -= 6;
+                    startInertia();
+                }
+            });
+        }
+
+        if (sandBtn) {
+            sandBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                startBookSandShower();
+            });
+        }
+
+        window._setBookAngle = function(ry, rx) {
+            rotY = ry;
+            rotX = (typeof rx === 'number') ? rx : 6;
+            applyBookRotation();
+        };
+
+        // ====================================================================
+        // 2. Falling Mini-Books Sand Shower Easter Egg
+        // ====================================================================
+        var sandCanvas = document.getElementById('book-sand-canvas');
+        var coverImg = new Image();
+        coverImg.src = '/images/cover.png';
+        var sandAnimId = null;
+
+        function startBookSandShower() {
+            if (!sandCanvas) return;
+            var ctx = sandCanvas.getContext('2d');
+            var W = window.innerWidth;
+            var H = window.innerHeight;
+            sandCanvas.width = W;
+            sandCanvas.height = H;
+            sandCanvas.style.display = 'block';
+            sandCanvas.style.opacity = '1';
+
+            if (sandAnimId) cancelAnimationFrame(sandAnimId);
+
+            // Heightmap columns across screen bottom so mini-books stack like sand!
+            var cols = Math.max(20, Math.floor(W / 24));
+            var colWidth = W / cols;
+            var pileHeight = new Array(cols).fill(0);
+
+            var count = 180;
+            var particles = [];
+            for (var i = 0; i < count; i++) {
+                var bw = 20 + Math.random() * 12;
+                var bh = bw * 1.32;
+                particles.push({
+                    x: Math.random() * (W - bw),
+                    y: -25 - (i / count) * 900 - Math.random() * 80,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: 2.6 + Math.random() * 3.2,
+                    w: bw,
+                    h: bh,
+                    rot: (Math.random() - 0.5) * 0.45,
+                    vrot: (Math.random() - 0.5) * 0.04,
+                    settled: false
+                });
+            }
+
+            var startTime = performance.now();
+            var duration = 7500;
+
+            function simulateTick() {
+                for (var i = 0; i < particles.length; i++) {
+                    var p = particles[i];
+                    if (!p.settled) {
+                        p.vy += 0.22;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.rot += p.vrot;
+
+                        var col = Math.min(cols - 1, Math.max(0, Math.floor((p.x + p.w * 0.5) / colWidth)));
+                        var floorY = H - p.h - pileHeight[col];
+                        if (p.y >= floorY) {
+                            // Angle-of-repose relaxation so mini-books tumble into smooth sand dunes.
+                            for (var s = 0; s < 4; s++) {
+                                var leftH = col > 0 ? pileHeight[col - 1] : Infinity;
+                                var rightH = col < cols - 1 ? pileHeight[col + 1] : Infinity;
+                                var curH = pileHeight[col];
+                                if (leftH + 8 < curH || rightH + 8 < curH) {
+                                    if (leftH < rightH) {
+                                        col--;
+                                    } else if (rightH < leftH) {
+                                        col++;
+                                    } else {
+                                        col += (Math.random() < 0.5 ? -1 : 1);
+                                    }
+                                    p.x = col * colWidth + (Math.random() - 0.5) * 6;
+                                } else {
+                                    break;
+                                }
+                            }
+                            p.y = H - p.h - pileHeight[col];
+                            p.settled = true;
+                            p.rot = (Math.random() - 0.5) * 0.26;
+                            pileHeight[col] += p.h * 0.26;
+                            if (col > 0) pileHeight[col - 1] += p.h * 0.1;
+                            if (col < cols - 1) pileHeight[col + 1] += p.h * 0.1;
+                        }
+                    }
+                }
+            }
+
+            function drawParticles(fadeAlpha) {
+                var domCoverImg = document.querySelector('.book-front img');
+                var imgSource = (domCoverImg && domCoverImg.complete && domCoverImg.naturalWidth > 0) ? domCoverImg : coverImg;
+                ctx.clearRect(0, 0, W, H);
+                ctx.globalAlpha = fadeAlpha;
+                for (var i = 0; i < particles.length; i++) {
+                    var p = particles[i];
+                    ctx.save();
+                    ctx.translate(p.x + p.w * 0.5, p.y + p.h * 0.5);
+                    ctx.rotate(p.rot);
+
+                    ctx.fillStyle = '#0f172a';
+                    ctx.fillRect(-p.w * 0.5 - 3, -p.h * 0.5 + 2, p.w + 3, p.h);
+
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.fillRect(-p.w * 0.5 - 3, -p.h * 0.5, 3, p.h);
+                    ctx.fillStyle = '#b91c1c';
+                    ctx.fillRect(-p.w * 0.5 - 3, -p.h * 0.5 + 2, 3, 3);
+                    ctx.fillRect(-p.w * 0.5 - 3, p.h * 0.5 - 5, 3, 3);
+
+                    if (imgSource && imgSource.complete && imgSource.naturalWidth > 0) {
+                        ctx.drawImage(imgSource, -p.w * 0.5, -p.h * 0.5, p.w, p.h);
+                    } else {
+                        ctx.fillStyle = '#f8fafc';
+                        ctx.fillRect(-p.w * 0.5, -p.h * 0.5, p.w, p.h);
+                    }
+                    ctx.strokeStyle = 'rgba(15, 23, 42, 0.35)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(-p.w * 0.5, -p.h * 0.5, p.w, p.h);
+                    ctx.restore();
+                }
+            }
+
+            window._advanceBookSandFrames = function(frames) {
+                for (var f = 0; f < frames; f++) simulateTick();
+                drawParticles(1);
+            };
+
+            function step(now) {
+                var elapsed = now - startTime;
+                var fadeAlpha = elapsed > (duration - 1400)
+                    ? Math.max(0, 1 - (elapsed - (duration - 1400)) / 1400)
+                    : 1;
+                simulateTick();
+                drawParticles(fadeAlpha);
+
+                if (elapsed < duration) {
+                    sandAnimId = requestAnimationFrame(step);
+                } else {
+                    ctx.clearRect(0, 0, W, H);
+                    sandCanvas.style.display = 'none';
+                }
+            }
+
+            sandAnimId = requestAnimationFrame(step);
+        }
+
+        // ====================================================================
+        // 3. Unified pprof Flamegraph Controller (Blog Posts & Public Talks)
+        // ====================================================================
+        var tabPosts = document.getElementById('tab-btn-posts');
+        var tabTalks = document.getElementById('tab-btn-talks');
+        var canvasPosts = document.getElementById('fg-canvas-posts');
+        var canvasTalks = document.getElementById('fg-canvas-talks');
+        var talksPanel = document.getElementById('home-talks-panel');
+        var postsSection = document.getElementById('home-posts-section');
+        var targetLabel = document.getElementById('pprof-target-label');
+        var detailsTitle = document.getElementById('fg-details-title');
+        var detailsDesc = document.getElementById('fg-details-desc');
+        var resetBtn = document.getElementById('fg-reset-btn');
+        var postsCountEl = document.getElementById('posts-visible-count');
+        var talksCountEl = document.getElementById('talks-visible-count');
+
+        var postCards = Array.prototype.slice.call(document.querySelectorAll('#home-posts-grid .post-3d-card'));
+        var talkCards = Array.prototype.slice.call(document.querySelectorAll('#home-talks-grid .talk-card'));
+        var postBars = Array.prototype.slice.call(document.querySelectorAll('#fg-canvas-posts .f-bar'));
+        var talkBars = Array.prototype.slice.call(document.querySelectorAll('#fg-canvas-talks .f-bar'));
+
+        var currentMode = 'posts';
+
+        function applyPostsFilter(filterKey, readTier, titleText, descText, clickedBar) {
+            var rTier = readTier || 'all';
+            var visible = 0;
+            postCards.forEach(function(card) {
+                var groups = (card.getAttribute('data-fg-groups') || 'all').split(/\s+/);
+                var cardRead = card.getAttribute('data-read-tier') || 'quick';
+                var topicMatch = (filterKey === 'all') || (groups.indexOf(filterKey) !== -1);
+                var readMatch = (rTier === 'all') || (cardRead === rTier);
+                var match = topicMatch && readMatch;
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            postBars.forEach(function(bar) {
+                var bf = bar.getAttribute('data-fg-filter') || 'all';
+                var br = bar.getAttribute('data-fg-read') || 'all';
+                var isClicked = clickedBar ? (bar === clickedBar) : (bf === filterKey && br === rTier);
+                var inStack = (filterKey === 'all') || (bf === filterKey && (rTier === 'all' || br === 'all' || br === rTier));
+                bar.classList.toggle('active-frame', isClicked);
+                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !inStack && bf !== 'all');
+            });
+            if (detailsTitle) detailsTitle.textContent = titleText || 'All Blog Posts (22 articles)';
+            if (detailsDesc) detailsDesc.textContent = descText || '';
+            if (resetBtn) resetBtn.hidden = (filterKey === 'all' && rTier === 'all');
+            if (postsCountEl) {
+                postsCountEl.textContent = (filterKey === 'all' && rTier === 'all')
+                    ? '(' + visible + ' articles)'
+                    : '(' + visible + ' filtered articles)';
+            }
+        }
+
+        function applyTalksFilter(filterKey, titleText, descText, clickedBar) {
+            var visible = 0;
+            talkCards.forEach(function(card) {
+                var cats = (card.getAttribute('data-talk-cat') || '').split(/\s+/);
+                var match = (filterKey === 'all') || (cats.indexOf(filterKey) !== -1);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            talkBars.forEach(function(bar) {
+                var tf = bar.getAttribute('data-talk-filter');
+                var isClicked = clickedBar ? (bar === clickedBar) : (tf === filterKey);
+                var inStack = (filterKey === 'all') || (tf === filterKey);
+                bar.classList.toggle('active-frame', isClicked);
+                bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !inStack && tf !== 'all');
+            });
+            if (detailsTitle) detailsTitle.textContent = titleText || 'All Public Talks (36 talks)';
+            if (detailsDesc) detailsDesc.textContent = descText || '';
+            if (resetBtn) resetBtn.hidden = (filterKey === 'all');
+            if (talksCountEl) {
+                talksCountEl.textContent = filterKey === 'all'
+                    ? '(' + visible + ' featured talks · 36 total)'
+                    : '(' + visible + ' matching talks)';
+            }
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            var isPosts = (mode === 'posts');
+            if (tabPosts) {
+                tabPosts.classList.toggle('active', isPosts);
+                tabPosts.setAttribute('aria-selected', isPosts ? 'true' : 'false');
+            }
+            if (tabTalks) {
+                tabTalks.classList.toggle('active', !isPosts);
+                tabTalks.setAttribute('aria-selected', !isPosts ? 'true' : 'false');
+            }
+            if (canvasPosts) canvasPosts.hidden = !isPosts;
+            if (canvasTalks) canvasTalks.hidden = isPosts;
+            if (postsSection) postsSection.hidden = !isPosts;
+            if (talksPanel) talksPanel.hidden = isPosts;
+            if (targetLabel) {
+                targetLabel.textContent = isPosts ? 'bwplotka.dev/posts' : 'bwplotka.dev/talks';
+            }
+            if (isPosts) {
+                var rootPostBar = postBars[0];
+                applyPostsFilter(
+                    'all',
+                    'all',
+                    rootPostBar ? rootPostBar.getAttribute('data-fg-title') : 'All Blog Posts (22 articles)',
+                    rootPostBar ? rootPostBar.getAttribute('data-fg-desc') : '',
+                    rootPostBar
+                );
+            } else {
+                var rootTalkBar = talkBars[0];
+                applyTalksFilter(
+                    'all',
+                    rootTalkBar ? rootTalkBar.getAttribute('data-talk-title') : 'All Public Talks (36 talks)',
+                    rootTalkBar ? rootTalkBar.getAttribute('data-talk-desc') : '',
+                    rootTalkBar
+                );
+            }
+        }
+
+        var explorerSection = document.getElementById('explorer-section');
+
+        function scrollToExplorerAndCards(forceScroll) {
+            if (!explorerSection) return;
+            var rect = explorerSection.getBoundingClientRect();
+            // Never scroll up when clicking inside pprof; only scroll down if still in the hero view (or when clicking a top nav link).
+            if (forceScroll || rect.top > 220) {
+                var targetY = window.pageYOffset + rect.top - 72;
+                if (targetY > window.pageYOffset || forceScroll) {
+                    window.scrollTo({
+                        top: Math.max(0, targetY),
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }
+
+        if (tabPosts) {
+            tabPosts.addEventListener('click', function() {
+                switchMode('posts');
+                scrollToExplorerAndCards(false);
+            });
+        }
+        if (tabTalks) {
+            tabTalks.addEventListener('click', function() {
+                switchMode('talks');
+                scrollToExplorerAndCards(false);
+            });
+        }
+
+        postBars.forEach(function(bar) {
+            bar.addEventListener('click', function() {
+                applyPostsFilter(
+                    bar.getAttribute('data-fg-filter') || 'all',
+                    bar.getAttribute('data-fg-read') || 'all',
+                    bar.getAttribute('data-fg-title'),
+                    bar.getAttribute('data-fg-desc'),
+                    bar
+                );
+                scrollToExplorerAndCards(false);
+            });
+        });
+
+        talkBars.forEach(function(bar) {
+            bar.addEventListener('click', function() {
+                applyTalksFilter(
+                    bar.getAttribute('data-talk-filter') || 'all',
+                    bar.getAttribute('data-talk-title'),
+                    bar.getAttribute('data-talk-desc'),
+                    bar
+                );
+                scrollToExplorerAndCards(false);
+            });
+        });
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                switchMode(currentMode);
+            });
+        }
+
+        // Intercept header "Blog" links (/ #explorer-section) so clicking "Blog" on home switches to posts mode & scrolls
+        Array.prototype.slice.call(document.querySelectorAll('a[href$="#explorer-section"]')).forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                switchMode('posts');
+                scrollToExplorerAndCards(true);
+                if (history.replaceState) {
+                    history.replaceState(null, '', '#explorer-section');
+                }
+            });
+        });
+
+        if (window.location.hash === '#explorer-section' || window.location.hash === '#blog' || window.location.hash === '#posts') {
+            switchMode('posts');
+            setTimeout(function() { scrollToExplorerAndCards(true); }, 60);
+        }
+    })();
+    </script>
+{{- end -}}
