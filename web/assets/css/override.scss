@@ -234,12 +234,10 @@ body[theme=dark] {
 // 5. Full-Viewport First Screen: Minimal Hero + 3D Flip Book + Down Arrow
 // ============================================================================
 .hero-viewport {
-  min-height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1.1rem;
-  padding: 1.25rem 0 1rem;
+  gap: 1.25rem;
+  padding: 1.25rem 0 0.75rem;
   box-sizing: border-box;
 }
 
@@ -248,7 +246,6 @@ body[theme=dark] {
   grid-template-columns: 1.25fr 0.85fr;
   gap: 2.2rem;
   align-items: center;
-  margin: auto 0;
 }
 
 .hero-3d-bio {
@@ -966,7 +963,12 @@ body[theme=dark] {
 
 .cards-section-anchor {
   scroll-margin-top: 4.5rem;
-  min-height: 80vh;
+}
+
+.home-posts-section:not([hidden]),
+.talks-explorer-panel:not([hidden]) {
+  margin-top: 0.75rem;
+  min-height: 75vh;
 }
 
 .pprof-panel {
@@ -1686,9 +1688,9 @@ body[theme=dark] {
     .code-header {
       background: var(--bg-elevated);
       border-bottom: none;
-      padding: 0.38rem 0.9rem;
+      padding: 0.3rem 0.85rem;
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-secondary);
       user-select: none;
     }
@@ -1721,12 +1723,15 @@ body[theme=dark] {
 
     pre {
       font-family: var(--font-mono);
-      font-size: 0.84rem;
-      line-height: 1.56;
-      padding: 0.75rem 1rem;
+      font-size: 0.75rem !important;
+      line-height: 1.48 !important;
+      padding: 0.68rem 0.95rem;
     }
 
     pre code {
+      font-family: var(--font-mono);
+      font-size: 0.75rem !important;
+      line-height: 1.48 !important;
       color: #e2e8f0;
       line-break: normal !important;
       word-break: normal !important;
@@ -1741,8 +1746,8 @@ body[theme=dark] {
     background: rgba(15, 23, 42, 0.58);
     border: 1px solid rgba(148, 163, 184, 0.2);
     border-radius: 5px;
-    padding: 0.08rem 0.38rem;
-    font-size: 0.85em;
+    padding: 0.05rem 0.34rem;
+    font-size: 0.78em !important;
     color: #fdba74;
   }
 
