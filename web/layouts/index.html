@@ -404,12 +404,12 @@
                 bar.classList.toggle('active-frame', isClicked);
                 bar.classList.toggle('dimmed-frame', filterKey !== 'all' && !inStack && tf !== 'all');
             });
-            if (detailsTitle) detailsTitle.textContent = titleText || 'All Public Talks (36 talks)';
+            if (detailsTitle) detailsTitle.textContent = titleText || 'All Public Talks (66 talks)';
             if (detailsDesc) detailsDesc.textContent = descText || '';
             if (resetBtn) resetBtn.hidden = (filterKey === 'all');
             if (talksCountEl) {
                 talksCountEl.textContent = filterKey === 'all'
-                    ? '(' + visible + ' featured talks · 36 total)'
+                    ? '(' + visible + ' featured talks · 66 total)'
                     : '(' + visible + ' matching talks)';
             }
         }
@@ -445,7 +445,7 @@
                 var rootTalkBar = talkBars[0];
                 applyTalksFilter(
                     'all',
-                    rootTalkBar ? rootTalkBar.getAttribute('data-talk-title') : 'All Public Talks (36 talks)',
+                    rootTalkBar ? rootTalkBar.getAttribute('data-talk-title') : 'All Public Talks (66 talks)',
                     rootTalkBar ? rootTalkBar.getAttribute('data-talk-desc') : '',
                     rootTalkBar
                 );
