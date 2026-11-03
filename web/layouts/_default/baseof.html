@@ -82,7 +82,10 @@
         return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       }
 
-      function highlightBenchstatLine(line) {
+      var benchUnitDetectRe = /\b(sec\/op|ns\/op|B\/op|allocs\/op|bytes\/message|B\/s|MB\/s|MiB\/s|ops\/s|items\/s|msgs\/s|req\/s|samples\/s)\b/;
+      var throughputUnitRe = /\b(B\/s|MB\/s|MiB\/s|ops\/s|items\/s|msgs\/s|req\/s|samples\/s)\b/;
+
+      function highlightBenchstatLine(line, state) {
         if (!line.trim()) return escHtml(line);
 
         // 1. Command line: "$ benchstat ..." or "benchstat -col ..."
@@ -110,14 +113,23 @@
 
         // 3. Table header / column divider line containing box-drawing characters (│, ┼, ─)
         if (line.indexOf('│') !== -1 || line.indexOf('┼') !== -1) {
+          // Throughput units (such as B/s and ops/s) improve when deltas are positive (+),
+          // whereas latency and memory units (sec/op, B/op, allocs/op) improve when negative (-).
+          if (state) {
+            if (throughputUnitRe.test(line)) {
+              state.higherIsBetter = true;
+            } else if (benchUnitDetectRe.test(line)) {
+              state.higherIsBetter = false;
+            }
+          }
           var parts = line.split(/([│┼─]+)/);
           return parts.map(function(part) {
             if (/^[│┼─]+$/.test(part)) {
               return '<span class="bs-pipe">' + escHtml(part) + '</span>';
             }
-            if (/\b(sec\/op|B\/op|allocs\/op|bytes\/message|B\/s|ops\/s|vs base)\b/.test(part)) {
+            if (benchUnitDetectRe.test(part) || /\bvs base\b/.test(part)) {
               return escHtml(part)
-                .replace(/\b(sec\/op|B\/op|allocs\/op|bytes\/message|B\/s|ops\/s)\b/g, '<span class="bs-unit">$1</span>')
+                .replace(/\b(sec\/op|ns\/op|B\/op|allocs\/op|bytes\/message|B\/s|MB\/s|MiB\/s|ops\/s|items\/s|msgs\/s|req\/s|samples\/s)\b/g, '<span class="bs-unit">$1</span>')
                 .replace(/\bvs base\b/g, '<span class="bs-vs">vs base</span>');
             }
             if (part.trim()) {
@@ -127,8 +139,8 @@
           }).join('');
         }
 
-        // 4. Data row or geomean row
-        var rowMatch = line.match(/^(\S.*?)(\s{2,}(?=\d).*)$/);
+        // 4. Data row or geomean row (including geomean rows with footnote superscripts before the delta).
+        var rowMatch = line.match(/^(\S.*?)(\s{2,}(?=\d|[+-]\d|~(?:\s|$)|[\u00b9\u00b2\u00b3\u2070-\u2079]).*)$/);
         if (rowMatch) {
           var benchName = rowMatch[1];
           var metricsPart = rowMatch[2];
@@ -140,7 +152,9 @@
               if (pval) return '<span class="bs-pval">' + pval + '</span>';
               if (variance) return '<span class="bs-var">' + variance + '</span>';
               if (delta) {
-                var cls = delta.charAt(0) === '-' ? 'bs-delta-good' : 'bs-delta-bad';
+                var isNegative = delta.charAt(0) === '-';
+                var isGood = (state && state.higherIsBetter) ? !isNegative : isNegative;
+                var cls = isGood ? 'bs-delta-good' : 'bs-delta-bad';
                 return '<span class="' + cls + '">' + delta + '</span>';
               }
               if (tilde) return '<span class="bs-tilde">' + tilde + '</span>';
@@ -159,15 +173,20 @@
         for (var i = 0; i < codes.length; i++) {
           var codeEl = codes[i];
           var txt = codeEl.textContent || '';
-          var isBenchstat = codeEl.getAttribute('data-benchstat-done') === '1' || (/(^|\n)\s*\$?\s*benchstat\b/.test(txt) || (txt.indexOf('goos:') !== -1 && (txt.indexOf('sec/op') !== -1 || txt.indexOf('vs base') !== -1)));
+          var isBenchstat = codeEl.getAttribute('data-benchstat-done') === '1' ||
+            /(^|\n)\s*\$?\s*benchstat\b/.test(txt) ||
+            ((txt.indexOf('goos:') !== -1 || txt.indexOf('│') !== -1) && (txt.indexOf('sec/op') !== -1 || txt.indexOf('vs base') !== -1));
           if (!isBenchstat) continue;
 
           if (codeEl.getAttribute('data-benchstat-done') !== '1') {
             codeEl.setAttribute('data-benchstat-done', '1');
             codeEl.className = 'language-benchstat';
             codeEl.setAttribute('data-lang', 'benchstat');
+            var state = { higherIsBetter: false };
             var lines = txt.split('\n');
-            codeEl.innerHTML = lines.map(highlightBenchstatLine).join('\n');
+            codeEl.innerHTML = lines.map(function(line) {
+              return highlightBenchstatLine(line, state);
+            }).join('\n');
           }
 
           var chromaBox = codeEl.closest('.chroma');
