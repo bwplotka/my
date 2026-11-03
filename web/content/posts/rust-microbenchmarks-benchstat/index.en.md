@@ -1,5 +1,5 @@
 ---
-title: "benchfmt.rs, Bringing Go's Benchmarking and benchstat Workflow to Rust"
+title: "benchfmt.rs: Bringing Go's Benchmarking and benchstat Workflow to Rust"
 date: "2026-11-03"
 weight: 1
 categories:
@@ -9,10 +9,7 @@ categories:
 featuredImage: "/og-images/benchfmt-rs.png"
 ---
 
-> **TL;DR:** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner and [`Criterion`](https://crates.io/crates/criterion) converter for Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat). It adds `/key=value` projections, heap tracking for allocated bytes (`B/op`) and objects (`allocs/op`) per op, and `pprof` profiling. To show it, I benchmarked `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust, which surfaced three fun lessons:
-> * **In Rust, given no GC, large allocation churn (e.g. `B/op`) does not mean high RSS.** For example, allocating `2.00 GiB` across `1,000` Rust decodes peaked at only `4.21 MiB` RSS because the allocator recycled freed chunks each iteration. For Go, that's a different story.
-> * **In Go, wall-clock `ns/op` hides GC overhead.** Under `/usr/bin/time -v`, Go's concurrent garbage collector burned extra CPU and memory on background threads. In total process resources, Rust used **`1.9x` to `3.2x` less CPU core-time** and **`3.8x` to `4.4x` less RAM** per request.
-> * **Rust won on speed, Go won on allocated bytes (`B/op`).** Rust decoded varints `42.6%` faster and Remote Write 2.0 `17.7%` faster with `14.6%` fewer allocations. Yet Rust requested **`31.0%` more heap bytes** because [`prost`](https://crates.io/crates/prost) repeatedly reallocates un-sized `Vec` buffers.
+> **TL;DR:** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner and [`Criterion`](https://crates.io/crates/criterion) converter for Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat). It adds `/key=value` projections, heap tracking for allocated bytes (`B/op`) and objects (`allocs/op`) per op, and `pprof` profiling. To show it, I benchmarked `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust, which surfaced some fun lessons!
 
 Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs), mostly because I think Rust has real potential in this AI era:
 * It has extreme [compile-time verification](https://doc.rust-lang.org/book/ch10-02-traits.html), including strict [ownership and memory safety checks](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html), which is ideal when AI generates code.
@@ -27,9 +24,16 @@ What I don't understand... is how Rust can claim to be more "performance-oriente
 * A standard format for case comparison projections.
 * Standard heap allocation measurements.
 * Standard `pprof` support.
-* Mann-Whitney U p-value reliability scores.
+Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching about it in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until I wanted to run **A/B microbenchmarks**. 
 
-So I asked myself: what if we could get `benchstat`-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
+Perhaps I was spoiled by the Go benchmarking ecosystem, with the `go tool -bench` and [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) ecosystem ([see my previous post](/2024/go-microbenchmarks-benchstat/)), but to me, Rust was standard benchmarking tools lacked:
+
+* A standard format for case comparison projections.
+* Standard heap allocation measurements.
+* Standard `pprof` support.
+* Simple to understand reliability scoring.
+
+So I asked myself: what if we could get [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
 
 **Here we are!** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner with a thread-local heap allocation counter, `pprof` profiler integration, and the same CLI flags as `go test -bench`. For those who don't trust a new benchmarking runtime (you shouldn't from the start!), it also ships a [`Criterion`](https://crates.io/crates/criterion) and `libtest` converter that emits Go's [`benchfmt`](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md) format directly.
 
