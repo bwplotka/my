@@ -9,10 +9,10 @@ categories:
 featuredImage: "/og-images/benchfmt-rs.png"
 ---
 
-> **TL;DR:** I built [`benchfmt-rs`](https://github.com/bwplotka/benchfmt-rs) to bring Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) workflow to Rust, with `/key=value` projections, zero-dependency `B/op` and `allocs/op` heap tracking, `pprof` profiles, and a [`Criterion`](https://crates.io/crates/criterion) converter. Benchmarking `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust surfaced three practical lessons:
-> * **Rust won on speed, Go won on `B/op`.** Rust decoded varints `42.6%` faster and Remote Write 2.0 `17.7%` faster with `14.6%` fewer allocations, yet requested **`31.0%` more heap bytes** because [`prost`](https://crates.io/crates/prost) repeatedly reallocates un-sized `Vec` buffers (`88.4%` of allocated bytes in `go tool pprof`).
+> **TL;DR:** I built [`benchfmt-rs`](https://github.com/bwplotka/benchfmt-rs) to bring Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) workflow to Rust, with `/key=value` projections, zero-dependency, allocated bytes per ops (`B/op`) and allocated objects per ops (`allocs/op`) heap tracking, `pprof` profiles, and a [`Criterion`](https://crates.io/crates/criterion) converter. Benchmarking `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust surfaced three practical lessons:
 > * **`B/op` measures allocator churn, not RSS.** Allocating `2.00 GiB` across `1,000` Rust decodes peaked at just `4.21 MiB` RSS because freed chunks were recycled every iteration, compared to `1.29 MiB` per batch when retained in memory.
 > * **Wall-clock `ns/op` hides GC overhead.** Under `/usr/bin/time -v`, Go's concurrent garbage collector burned extra CPU and memory on background threads, meaning Rust used **`1.9x` to `3.2x` less total CPU core-time** and **`3.8x` to `4.4x` less RAM** per request.
+> * **Rust won on speed, Go won on allocated bytes (`B/op`).** Rust decoded varints `42.6%` faster and Remote Write 2.0 `17.7%` faster with `14.6%` fewer allocations, yet requested **`31.0%` more heap bytes** because [`prost`](https://crates.io/crates/prost) repeatedly reallocates un-sized `Vec` buffers (`88.4%` of allocated bytes in `go tool pprof`).
 
 Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs), mostly because I think Rust has real potential in this AI era:
 * It has extreme [compile-time verification](https://doc.rust-lang.org/book/ch10-02-traits.html), including strict [ownership and memory safety checks](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html), which is ideal when AI generates code.
@@ -22,7 +22,7 @@ Recently, I've been working on a few Rust projects across Google and [open sourc
 
 I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and more. I even wrote the ["Efficient Go" book](/book) teaching those practices. For me, much of Rust's performance story is really good, until... you want to run **A/B microbenchmarks**. Perhaps I was spoiled by the Go benchmarking ecosystem, where [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) sits at the center of everyone's workflow (see why in my [previous post](/2024/go-microbenchmarks-benchstat/)).
 
-How can Rust claim to be more "performance-oriented" when its official benchmarking tooling misses:
+What I don't understand... is how can Rust claim to be more "performance-oriented" when its official benchmarking tooling misses:
 * a standard format for case comparison projections,
 * standard heap allocation measurements,
 * standard `pprof` support,
@@ -30,11 +30,11 @@ How can Rust claim to be more "performance-oriented" when its official benchmark
 
 So I asked myself: what if we could get `benchstat`-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
 
-Here we are. I built [`benchfmt-rs`](https://github.com/bwplotka/benchfmt-rs), a zero-dependency Rust benchmark runner with a thread-local heap allocation counter, `pprof` profiler integration, and the same CLI flags as `go test -bench`. For those who don't trust a new benchmarking runtime (you shouldn't from the start!), it also ships a [`Criterion`](https://crates.io/crates/criterion) and `libtest` converter that emits Go's [`benchfmt`](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md) format directly.
+**Here we are!** I built [`benchfmt-rs`](https://github.com/bwplotka/benchfmt-rs), a zero-dependency Rust benchmark runner with a thread-local heap allocation counter, `pprof` profiler integration, and the same CLI flags as `go test -bench`. For those who don't trust a new benchmarking runtime (you shouldn't from the start!), it also ships a [`Criterion`](https://crates.io/crates/criterion) and `libtest` converter that emits Go's [`benchfmt`](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md) format directly.
 
 In this blog post, let's implement the same pieces of code in Go and Rust, benchmark them across different Rust frameworks, and compare the results. We might learn something new along the way (I did when building this!). Enjoy! All benchmark code and raw outputs live in [`bwplotka/benchmarks/benchmarks/rust-go-decode`](https://github.com/bwplotka/benchmarks/tree/main/benchmarks/rust-go-decode).
 
-## Benchmarking two workloads, varints and decoding Prometheus Remote Write 2 proto
+## Benchmarking two workloads
 
 Let's pick two workloads to implement and benchmark in both Go and Rust. I am particularly curious about protobuf decoding performance, which, funny enough, is one of the main costs of running distributed systems these days. Let's decode our [Prometheus Remote Write 2.0 protocol](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/). Because protobuf code generators have different maturity and trade-offs across languages, let's also measure something simpler alongside it, a standalone `varint` decoder:
 
