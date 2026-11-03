@@ -11,19 +11,6 @@ featuredImage: "/og-images/benchfmt-rs.png"
 
 > **TL;DR:** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner and [`Criterion`](https://crates.io/crates/criterion) converter for Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat). It adds `/key=value` projections, heap tracking for allocated bytes (`B/op`) and objects (`allocs/op`) per op, and `pprof` profiling. To show it, I benchmarked `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust, which surfaced some fun lessons!
 
-Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs), mostly because I think Rust has real potential in this AI era:
-* It has extreme [compile-time verification](https://doc.rust-lang.org/book/ch10-02-traits.html), including strict [ownership and memory safety checks](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html), which is ideal when AI generates code.
-* It takes ages and can be annoying to program in by hand (sorry!), but AI writes a lot of code nowadays. Code mostly has to be readable for reviews, and Rust is good enough at that.
-* It has a strong columnar storage ecosystem around crates like [`arrow-rs`](https://github.com/apache/arrow-rs).
-* It has no garbage collector, gives more control over memory allocations, and is generally faster!
-
-I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and more. I even wrote the ["Efficient Go" book](/book) teaching those practices. For me, much of Rust's performance story is really good, until... you want to run **A/B microbenchmarks**. Perhaps I was spoiled by the Go benchmarking ecosystem, where [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) sits at the center of everyone's workflow (see why in my [previous post](/2024/go-microbenchmarks-benchstat/)).
-
-What I don't understand... is how Rust can claim to be more "performance-oriented" when its standard benchmarking tooling lacks:
-
-* A standard format for case comparison projections.
-* Standard heap allocation measurements.
-* Standard `pprof` support.
 Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching about it in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until I wanted to run **A/B microbenchmarks**. 
 
 Perhaps I was spoiled by the Go benchmarking ecosystem, with the `go tool -bench` and [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) ecosystem ([see my previous post](/2024/go-microbenchmarks-benchstat/)), but to me, Rust was standard benchmarking tools lacked:
