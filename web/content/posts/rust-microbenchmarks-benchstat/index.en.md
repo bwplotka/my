@@ -9,7 +9,7 @@ categories:
 featuredImage: "/og-images/benchfmt-rs.png"
 ---
 
-> **TL;DR:** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner and [`Criterion`](https://crates.io/crates/criterion) converter for Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat). It adds `/key=value` projections, heap tracking for allocated bytes (`B/op`) and objects (`allocs/op`) per op, and `pprof` profiling. To show it, I benchmarked `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust which surfaced fun lesson:
+> **TL;DR:** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner and [`Criterion`](https://crates.io/crates/criterion) converter for Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat). It adds `/key=value` projections, heap tracking for allocated bytes (`B/op`) and objects (`allocs/op`) per op, and `pprof` profiling. To show it, I benchmarked `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust, which surfaced three fun lessons:
 > * **In Rust, given no GC, large allocation churn (e.g. `B/op`) does not mean high RSS.** For example, allocating `2.00 GiB` across `1,000` Rust decodes peaked at only `4.21 MiB` RSS because the allocator recycled freed chunks each iteration. For Go that's a different story.
 > * **In Go, wall-clock `ns/op` hides GC overhead.** Under `/usr/bin/time -v`, Go's concurrent garbage collector burned extra CPU and memory on background threads. In total process resources, Rust used **`1.9x` to `3.2x` less CPU core-time** and **`3.8x` to `4.4x` less RAM** per request.
 > * **Rust won on speed, Go won on allocated bytes (`B/op`).** Rust decoded varints `42.6%` faster and Remote Write 2.0 `17.7%` faster with `14.6%` fewer allocations. Yet Rust requested **`31.0%` more heap bytes** because [`prost`](https://crates.io/crates/prost) repeatedly reallocates un-sized `Vec` buffers.
@@ -25,8 +25,8 @@ I came to Rust after years of writing performance-sensitive Go in [Prometheus](h
 What I don't understand... is how Rust can claim to be more "performance-oriented" when its standard benchmarking tooling lacks:
 
 * A standard format for case comparison projections.
-* standard heap allocation measurements.
-* standard `pprof` support.
+* Standard heap allocation measurements.
+* Standard `pprof` support.
 * Mann-Whitney U p-value reliability scores.
 
 So I asked myself: what if we could get `benchstat`-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
@@ -87,7 +87,7 @@ func DecodeVarints(src []byte, dst []uint64) (int, error) {
 }
 ```
 
-Second, for `DecodeRemoteWrite2` in `remotewrite.go`, we tune the Go implementation the way Prometheus runs in production rather than benchmarking slow reflection-based unmarshaling. We pair [`github.com/golang/snappy`](https://github.com/golang/snappy), which uses x86-64 assembly on `linux/amd64`, with [`vtprotobuf`](https://github.com/planetscale/vtprotobuf) and its generated, optimized, `UnmarshalVT` decoder:
+Second, for `DecodeRemoteWrite2` in `remotewrite.go`, we tune the Go implementation the way Prometheus runs in production rather than benchmarking slow reflection-based unmarshaling. We pair [`github.com/golang/snappy`](https://github.com/golang/snappy), which uses x86-64 assembly on `linux/amd64`, with [`vtprotobuf`](https://github.com/planetscale/vtprotobuf) and its generated, optimized `UnmarshalVT` decoder:
 
 ```go
 func DecodeRemoteWrite2(compressed []byte) (*writev2.Request, error) {
@@ -103,16 +103,11 @@ func DecodeRemoteWrite2(compressed []byte) (*writev2.Request, error) {
 }
 ```
 
-Now let's measure efficiency of our new Go code!
+Now let's measure the efficiency of our Go code!
 
-Notice Go's `/key=value` sub-benchmark names (`samples=2000/lang=go`), which let's an official Go tool, [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) to pivot across `/lang` or `/samples` later, along with `b.SetBytes`, `b.ReportAllocs`, and `for b.Loop()`:
+Notice Go's `/key=value` sub-benchmark names (`samples=2000/lang=go`), which let Go's official [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) tool pivot across `/lang` or `/samples` later, along with `b.SetBytes`, `b.ReportAllocs`, and `for b.Loop()`:
 
 ```go
-var (
-	sinkUint64 uint64
-	sinkRW2    *writev2.Request
-)
-
 func BenchmarkDecodeVarints(b *testing.B) {
 	manifest := ensureFixtures(b)
 	raw, err := os.ReadFile(filepath.Join("testdata", "varints_2000.bin"))
@@ -121,16 +116,17 @@ func BenchmarkDecodeVarints(b *testing.B) {
 	}
 	dst := make([]uint64, manifest.VarintsCount)
 
+	// Encode dimensions as /key=value so benchstat can pivot across /samples or /lang.
 	b.Run("samples=2000/lang=go", func(b *testing.B) {
 		b.SetBytes(int64(len(raw)))
 		b.ReportAllocs()
-		b.ResetTimer()
+		// NOTE: b.Loop() resets the timer on its first call, stops it on exit, and keeps
+		// call arguments and results alive without package-level sink variables.
 		for b.Loop() {
 			n, err := DecodeVarints(raw, dst)
 			if err != nil || n != manifest.VarintsCount {
 				b.Fatalf("unexpected decode result: n=%d err=%v", n, err)
 			}
-			sinkUint64 = dst[n-1]
 		}
 	})
 }
@@ -149,20 +145,18 @@ func BenchmarkDecodeRemoteWrite2(b *testing.B) {
 		b.Run(name, func(b *testing.B) {
 			b.SetBytes(int64(len(compressed)))
 			b.ReportAllocs()
-			b.ResetTimer()
 			for b.Loop() {
 				req, err := DecodeRemoteWrite2(compressed)
 				if err != nil || len(req.Timeseries) != samples {
 					b.Fatalf("unexpected v2 decode: err=%v", err)
 				}
-				sinkRW2 = req
 			}
 		})
 	}
 }
 ```
 
-Finally, let's run `6` benchmark runs ("epoch") for `2s` each at `-cpu 2` on a 24-core Intel Xeon 2.20GHz Linux workstation (Go 1.26.8, Rust 1.99.1):
+Finally, let's run `6` benchmark runs ("epochs") for `2s` each at `-cpu 2` on a 24-core Intel Xeon 2.20GHz Linux workstation (Go 1.26.8, Rust 1.99.1):
 
 ```bash
 go test -run '^$' -bench '^BenchmarkDecode' \
@@ -236,20 +230,28 @@ pub fn decode_remote_write2(compressed: &[u8]) -> Result<proto::v2::Request, Str
 }
 ```
 
-Now, it's Rust, so let's write both benchmarks using [`Criterion`](https://crates.io/crates/criterion), the default choice for stable-Rust microbenchmarking. In `benches/criterion_decode.rs`, we keep the same `/key=value` benchmark IDs and configure `Throughput::Bytes`:
+Now, it's Rust, so let's write both benchmarks using [`Criterion`](https://crates.io/crates/criterion), the default choice for stable-Rust microbenchmarking. In `benches/criterion_decode.rs`, we keep the same `/key=value` benchmark IDs and configure `Throughput::BytesDecimal` to match Go's decimal `MB/s`:
 
 ```rust
 fn bench_varints(c: &mut Criterion) {
+    // Resolve testdata/ from the crate directory baked in at compile time.
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("testdata");
     let raw = fs::read(root.join("varints_2000.bin")).unwrap();
+    // Preallocate the output buffer outside the timed loop so each op does 0 heap allocs.
     let mut dst = vec![0u64; 2000];
 
+    // Group + function ID join into "DecodeVarints/samples=2000/lang=rust" to match Go's b.Run.
     let mut group = c.benchmark_group("DecodeVarints");
-    group.throughput(Throughput::Bytes(raw.len() as u64));
+    // Report decimal MB/s (1e6 B/s) to match Go's b.SetBytes; Throughput::Bytes prints MiB/s.
+    group.throughput(Throughput::BytesDecimal(raw.len() as u64));
     group.bench_function("samples=2000/lang=rust", |b| {
+        // b.iter runs the closure across Criterion's warmup and 100 linear-ramp samples.
         b.iter(|| {
+            // std::hint::black_box is an LLVM optimization barrier: Unlike Go's b.Loop(), Rust
+            // would constant-fold known inputs or delete unused work without black_box hints.
             let n = decode_varints(black_box(&raw), black_box(&mut dst)).unwrap();
             assert_eq!(n, 2000);
+            // Observe the written buffer so LLVM cannot optimize away stores into dst.
             black_box(dst[n - 1]);
         });
     });
@@ -264,12 +266,13 @@ fn bench_remote_write2(c: &mut Criterion) {
         let file = format!("rw2_{samples}.snappy");
         let compressed = fs::read(root.join(file)).unwrap();
 
-        group.throughput(Throughput::Bytes(compressed.len() as u64));
+        group.throughput(Throughput::BytesDecimal(compressed.len() as u64));
         let id = format!("samples={samples}/lang=rust");
         group.bench_function(&id, |b| {
             b.iter(|| {
                 let req = decode_remote_write2(black_box(&compressed)).unwrap();
                 assert_eq!(req.timeseries.len(), samples);
+                // Force req to materialize before dropping at the end of the iteration.
                 black_box(req);
             });
         });
@@ -277,6 +280,7 @@ fn bench_remote_write2(c: &mut Criterion) {
     group.finish();
 }
 
+// Generate the benchmark group runner and custom main() required by harness = false in Cargo.toml.
 criterion_group!(benches, bench_varints, bench_remote_write2);
 criterion_main!(benches);
 ```
@@ -290,30 +294,29 @@ cargo bench --bench criterion_decode
 ```text
 DecodeVarints/samples=2000/lang=rust
                         time:   [5.2789 µs 5.3369 µs 5.4014 µs]
-                        thrpt:  [847.14 MiB/s 857.38 MiB/s 866.80 MiB/s]
+                        thrpt:  [888.29 MB/s 899.02 MB/s 908.90 MB/s]
 
 DecodeRemoteWrite2/samples=200/lang=rust
                         time:   [237.09 µs 238.48 µs 239.95 µs]
-                        thrpt:  [33.017 MiB/s 33.220 MiB/s 33.414 MiB/s]
+                        thrpt:  [34.620 MB/s 34.833 MB/s 35.037 MB/s]
 
 DecodeRemoteWrite2/samples=2000/lang=rust
                         time:   [2.0712 ms 2.0831 ms 2.0968 ms]
-                        thrpt:  [26.546 MiB/s 26.720 MiB/s 26.874 MiB/s]
+                        thrpt:  [27.835 MB/s 28.018 MB/s 28.179 MB/s]
 ```
 
 ### Spotting the gaps in Criterion
 
-Criterion is a solid library, and its linear regression slope estimator works well for standalone Rust runs. However, once you want Go-style `benchstat` tables or cross-language comparisons, five differences get in the way:
+Criterion is a solid library, and its linear regression slope estimator works well for standalone Rust runs. However, once you want Go-style `benchstat` tables or cross-language comparisons, four differences get in the way:
 
 1. **Compile weight.** Pulling in `criterion` with `default-features = false` still compiles `clap`, `regex-automata`, `ciborium`, `oorandom`, `itertools`, `tinytemplate`, and `anes`. That adds 42 transitive crates and ~19s to a cold `cargo bench` build.
-2. **Binary `MiB/s` vs decimal `MB/s`.** Criterion formats `Throughput::Bytes` as binary `MiB/s` (`1,048,576` B/s), while Go's `testing.B.SetBytes` prints decimal `MB/s` (`1,000,000` B/s). Comparing `857.38 MiB/s` against Go's `563.52 MB/s` by eye introduces a silent `4.86%` unit mismatch unless you switch to `Throughput::BytesDecimal` or recompute from raw nanoseconds.
-3. **Linear-ramp sampling vs steady-state epochs.** Go's `testing.B` calibrates an iteration count `N` until one run hits `-benchtime 2s`, then executes `-count 6` equal steady-state runs at that fixed `N` for `benchstat`'s Mann-Whitney U test. Criterion defaults to `Linear` sampling: after a 3-second warmup, it collects 100 batches of `[1d, 2d, ..., 100d]` iterations into `sample.json` and fits a slope through the origin. Comparing those two models directly introduces two measurable distortions. First, grouping Criterion's 100 ramp samples into 6 epochs gives epoch 1 `11.5x` fewer iterations than epoch 6 (`24,888` vs `286,212` on `DecodeVarints`), mixing noisy short bursts with long runs and inflating variance to `± 5%` vs `± 1-2%` in steady-state epochs. Second, timing 100 separate closure batches adds `+8.6%` overhead on microsecond loops (`5.36 µs` vs `4.90 µs`, `p=0.002`) and skews early allocating samples with cold allocator caches (`+2.3%` on `DecodeRemoteWrite2`).
-4. **No heap allocation tracking.** Criterion reports wall-clock time and throughput only. On `DecodeVarints` at `0 allocs/op`, that is fine. On `DecodeRemoteWrite2`, we cannot tell whether `prost` made 500 heap allocations or 500,000, or whether a refactor doubled heap churn.
-5. **Pairwise baseline folders vs multi-dimensional tables.** Criterion compares `target/criterion/<id>/base` against `new`. You cannot feed a single run file into a table that pivots `-col /samples` or `-col /lang` across Go and Rust.
+2. **Linear-ramp sampling vs steady-state epochs.** Go's `testing.B` calibrates an iteration count `N` until one run hits `-benchtime 2s`, then executes `-count 6` equal steady-state runs at that fixed `N` for `benchstat`'s Mann-Whitney U test. Criterion defaults to `Linear` sampling: after a 3-second warmup, it collects 100 batches of `[1d, 2d, ..., 100d]` iterations into `sample.json` and fits a slope through the origin. Comparing those two models directly introduces two measurable distortions. First, grouping Criterion's 100 ramp samples into 6 epochs gives epoch 1 `11.5x` fewer iterations than epoch 6 (`24,888` vs `286,212` on `DecodeVarints`), mixing noisy short bursts with long runs and inflating variance to `± 5%` vs `± 1-2%` in steady-state epochs. Second, timing 100 separate closure batches adds `+8.6%` overhead on microsecond loops (`5.36 µs` vs `4.90 µs`, `p=0.002`) and skews early allocating samples with cold allocator caches (`+2.3%` on `DecodeRemoteWrite2`).
+3. **No heap allocation tracking.** Criterion reports wall-clock time and throughput only. On `DecodeVarints` at `0 allocs/op`, that is fine. On `DecodeRemoteWrite2`, we cannot tell whether `prost` made 500 heap allocations or 500,000, or whether a refactor doubled heap churn.
+4. **Pairwise baseline folders vs multi-dimensional tables.** Criterion compares `target/criterion/<id>/base` against `new`. You cannot feed a single run file into a table that pivots `-col /samples` or `-col /lang` across Go and Rust.
 
 ## Converting Criterion output with the `benchfmt` CLI
 
-If a Rust codebase already uses Criterion, rewriting benchmarks just to get a `benchstat` table is not ideal. That is why `benchfmt.rs` includes a standalone `benchfmt` CLI binary. It reads `benchmark.json` and `sample.json` directly from `target/criterion`, converts `Throughput::Bytes` into decimal `MB/s`, and groups Criterion's 100 samples into `6` contiguous epochs via `--epochs 6`:
+If a Rust codebase already uses Criterion, rewriting benchmarks just to get a `benchstat` table is not ideal. That is why `benchfmt.rs` includes a standalone `benchfmt` CLI binary. It reads `benchmark.json` and `sample.json` directly from `target/criterion`, extracts `Throughput::BytesDecimal` (or `Throughput::Bytes`) as decimal `MB/s`, and groups Criterion's 100 samples into `6` contiguous epochs via `--epochs 6`:
 
 ```bash
 cargo install --git https://github.com/bwplotka/benchfmt.rs
@@ -364,15 +367,17 @@ geomean                                         ¹
 ¹ summaries must be >0 to compute geomean
 ```
 
-Now, with this view we have finally a readable, standard `benchstat` output Go developers love. It clearly shows the Go vs Rust efficiency for our example functions. Rust is `37.16%` faster on `DecodeVarints` (`5.36 µs` vs `8.54 µs`) and `13.37%` to `15.72%` faster on `DecodeRemoteWrite2`.
+Now, with this view we finally have a readable, standard `benchstat` output Go developers love. It clearly shows the Go vs Rust efficiency for our example functions. Rust is `37.16%` faster on `DecodeVarints` (`5.36 µs` vs `8.54 µs`) and `13.37%` to `15.72%` faster on `DecodeRemoteWrite2`.
 
-Unfortunately, the `B/op` and `allocs/op` tables only have a `go` column because Criterion never recorded allocations. And in `results/rust_criterion.txt`, bucket 1 of `DecodeVarints` summed `24,888` iterations while bucket 6 summed `286,212` iterations due to Criterion's linear ramp, leaving `± 5%` variance on a deterministic pure-CPU loop.
+Unfortunately, the `B/op` and `allocs/op` tables only have a `go` column because Criterion never recorded allocations, and Criterion's linear-ramp epochs still leave `± 5%` variance on `DecodeVarints`.
 
 ## Native `benchfmt` runs with `benchfmt::Suite` and `CountingAlloc`
 
 For new Rust benchmarks, we can skip Criterion and use `benchfmt::Suite` in `benches/suite_decode.rs` with `harness = false` in `Cargo.toml`. Registering `CountingAlloc` as `#[global_allocator]` tracks every `alloc`, `alloc_zeroed`, and `realloc` in a `thread_local!` `Cell<(u64, u64)>` with zero atomic contention and zero external dependencies:
 
 ```rust
+// Wrap Rust's System allocator globally so every heap alloc/realloc on the benchmark thread
+// increments thread-local (allocs, bytes) counters for B/op and allocs/op.
 #[global_allocator]
 static ALLOC: CountingAlloc = CountingAlloc::new();
 
@@ -383,11 +388,18 @@ fn main() {
     let rw2_2000 = fs::read(root.join("rw2_2000.snappy")).unwrap();
     let mut dst = vec![0u64; 2000];
 
+    // Parse go-test-compatible CLI flags (-bench, -benchtime, -count, -cpu, -benchmem,
+    // -cpuprofile, -memprofile) from std::env::args() and set the default "pkg:" header.
+    // Using the same pkg path as Go's go.mod lets `benchstat -col /lang` join Go and Rust rows.
     Suite::from_env("github.com/bwplotka/benchmarks/benchmarks/rust-go-decode")
+        // Attach ALLOC so each benchmark snapshots thread-local allocation deltas per epoch.
         .with_alloc(&ALLOC)
+        // Suite prepends "Benchmark" in benchfmt output, matching Go's BenchmarkDecodeVarints.
         .bench("DecodeVarints/samples=2000/lang=rust", |b| {
             b.set_bytes(raw_varints.len() as u64);
             b.report_allocs();
+            // Go b.Loop() equivalent: starts timing, alloc snapshots, and any pprof capture on the
+            // first call, runs the calibrated N steady-state iterations, then stops all three.
             while b.keep_running() {
                 let n = decode_varints(black_box(&raw_varints), black_box(&mut dst)).unwrap();
                 assert_eq!(n, 2000);
@@ -418,7 +430,7 @@ fn main() {
 
 > **Note on Tokio and custom allocators (`jemalloc`, `mimalloc`):** `CountingAlloc` records cumulative `(allocs, bytes)` per OS thread in `thread_local!` storage, and `Bencher` snapshots only the benchmark runner thread. Async benchmarks driven on Tokio's single-threaded runtime (`Builder::new_current_thread().build()?.block_on(...)`) run on that thread and capture 100% of allocations with zero atomic contention. Tasks spawned onto multi-threaded worker pools (`rt-multi-thread` with `tokio::spawn`, `rayon`, or `std::thread::spawn`) allocate on worker threads instead, so their allocations are omitted unless you attach a process-wide atomic [`AllocTracker`](https://github.com/bwplotka/benchfmt.rs/blob/main/src/alloc.rs) via `Suite::with_alloc`. `CountingAlloc<A>` is also generic over any `GlobalAlloc` (`CountingAlloc::with_allocator(Jemalloc)`), counting the exact `Layout::size()` bytes requested by Rust code before internal size-class rounding.
 
-`Suite::from_env` accepts the same flags as `go test`:
+`Suite::from_env` reads `std::env::args()`, auto-detects `goos`, `goarch`, and `cpu`, and writes the passed string as the `pkg:` metadata line (matching Go's module path so `benchstat` joins Go and Rust rows into one table). Passing flags after `--` mirrors `go test`:
 
 ```bash
 cargo bench --bench suite_decode -- \
@@ -515,10 +527,10 @@ Opening the source view in `pprof` shows where each compiler spends its cycles:
 
 ![Rust decode_varints CPU source profile](pprof_rust_varints_cpu.png "Rust <code>decode_varints</code> CPU source profile. Explore the <a href='https://pprof.me/ff159d82dab52a12795ed08c8bf93240' target='_blank' rel='noopener'>interactive profile on pprof.me</a>.")
 
-Both languages spend over `99%` of CPU inside the varint loop, yet Go burns **`1.74s` (`32.3%`)** on `x |= uint64(b&0x7f) << shift` alone and **`1.24s` (`23.0%`)** on the outer `for i < len(src)` and `if n >= len(dst)` checks. Inspecting `go tool objdump` shows two codegen differences behind the `42.56%` gap:
+Both languages spend over `99%` of CPU inside the varint loop, yet Go burns **`1.74s` (`32.3%`)** on `x |= uint64(b&0x7f) << shift` alone and **`1.24s` (`23.0%`)** on the outer `for i < len(src)` and `if n >= len(dst)` checks. Inspecting `go tool objdump` and `objdump -d` shows two codegen differences behind the `42.56%` gap:
 
-1. **64-bit variable shift masking.** Go defines `x << shift` as `0` when `shift >= 64`, whereas x86 `SHLQ` masks the shift count modulo 64. Because `if shift >= 64` runs *after* the shift, the Go compiler emits `CMPQ $64`, `SBBQ`, and `ANDQ` on every continuation byte. Rust's release-mode `<<` compiles to a single `SHLQ`.
-2. **Signed `int` vs unsigned `usize` indices.** Go's `i` and `n` are signed `int`, so `i < len(src)` and `n >= len(dst)` do not prove `i >= 0` or `n >= 0` to the bounds-check eliminator. Go keeps extra `CMPQ`/`JBE` slice bounds checks on `src[i]` and `dst[n]`, while LLVM removes every inner bounds check on Rust's unsigned `usize` indices and inlines `decode_varints` into `while b.keep_running()`.
+1. **Loop unrolling and 64-bit shift masking.** Because `shift` steps by `7` up to `64` (at most 9 bytes), LLVM unrolls Rust's inner continuation loop and turns every variable `<< shift` into a constant immediate shift (`shl $0x7`, `shl $0xe`, `shl $0x15`, ...) with no `shift` counter or `shift >= 64` check. Go keeps the inner loop rolled and defines `x << shift` as `0` when `shift >= 64` (whereas x86 `SHLQ CL` masks modulo 64), emitting `SHLQ CL`, `CMPQ $64`, `SBBQ`, and `ANDQ` on every continuation byte.
+2. **Signed `int` vs unsigned `usize` indices.** Go's `i` and `n` are signed `int`, so `i < len(src)` and `n >= len(dst)` do not prove `i >= 0` or `n >= 0` across the loop back-edge. Go emits duplicate unsigned `CMPQ`/`JBE` slice bounds checks before `src[i]` and `dst[n]`, while LLVM removes the inner checks on Rust's unsigned `usize` indices and inlines `decode_varints` into `while b.keep_running()`.
 
 ### CPU and heap profiling `DecodeRemoteWrite2`
 
@@ -587,6 +599,14 @@ Cross-checking microbenchmarks against `/usr/bin/time -v` confirmed three things
 1. **`CountingAlloc` did not distort latency.** On `rw2_2000`, `benchfmt::Suite` measured `2.03 ms/op` while counting `16,490` heap allocations per iteration (over 8 million `malloc` calls per second). The standalone `System`-allocator binary ran at `2.22 ms/op` across `1,000` cold-start iterations. Updating a thread-local `Cell<(u64, u64)>` adds negligible overhead next to `glibc` `malloc`.
 2. **`B/op` measures cumulative allocator churn, not live memory.** Over `1,000` iterations of `rw2_2000`, Rust requested `2.00 GiB` from the allocator, yet peak RSS with `retain=0` stayed flat at **`4.21 MiB`**. Each `Request` drops at the end of the loop body, so `glibc` recycles the freed thread-cache chunks on the next iteration without asking Linux for new pages. Keeping all `1,000` batches alive with `--retain 1000` raised RSS to `1,292.4 MiB`, or **`1.29 MiB` per retained message**. That drop from `2.05 MiB` (`B/op`) to `1.29 MiB` (live RSS) comes from freeing the `244.9 KiB` temporary Snappy buffer and `~0.77 MiB` of intermediate `Vec` doubling buffers during `realloc`, offset by `~0.25 MiB` of `glibc` chunk headers and spare capacity. Faulting in `1.29 GiB` of fresh pages also added `1.06s` of kernel `sys` time across `330,378` minor page faults, raising wall latency from `2.22 ms` to `2.75 ms`.
 3. **Wall-clock `ns/op` hides Go's background GC CPU and RAM cost.** In `benchstat`, Rust looked `17.68%` faster than Go on `rw2_2000` (`2.03 ms` vs `2.47 ms`). Under `/usr/bin/time -v` at `GOMAXPROCS=2`, Rust used `99%` of one core (`2.22 ms` of CPU time per op) and `4.21 MiB` RSS. Go hit **`144%` CPU**, burning **`4.28 ms` of CPU core-time per op** with `8,444` voluntary context switches and **`15.98 MiB` RSS**. Leaving `GOMAXPROCS` unrestricted on all 24 cores pushed Go to **`220%` CPU** (`7.13 ms` of CPU core-time per op) and `18.53 MiB` RSS as concurrent GC swept `19,297` heap objects per request on background threads. In total CPU core-seconds and memory per request, Rust used **1.9x less CPU and 3.8x less RAM** at `GOMAXPROCS=2`, and **3.2x less CPU and 4.4x less RAM** unrestricted.
+
+## Why Rust was faster than Go (and where it lost)
+
+Stepping back across `benchstat`, `pprof`, `objdump`, and `/usr/bin/time -v`, the latency and memory gaps between Go and Rust came from completely different places on our two workloads:
+
+* **On pure-CPU loops (`DecodeVarints`, `42.6%` faster in Rust), compiler codegen (`gc` vs LLVM) decided everything.** Both implementations ran the same zero-allocation algorithm, yet LLVM unrolled the bounded 9-byte continuation loop into constant immediate shifts (`shl $0x7`, `shl $0xe`, ...), eliminated inner slice bounds checks on unsigned `usize` indices, and inlined the function into the benchmark loop. Go `1.26` kept the inner loop rolled, paid 4 instructions per byte for safe `shift >= 64` zero-masking (`32.3%` of Go CPU), and kept duplicate signed/unsigned bounds checks on `int` indices (`23.0%` of Go CPU).
+* **On allocation-heavy decoding (`DecodeRemoteWrite2`, `17.7%` faster wall-clock and `1.9x` to `3.2x` less CPU in Rust), Go's managed heap was the bottleneck, not wire parsing.** Go's x86-assembly `snappy.Decode` (`~0.12 ms/op`) actually beat pure-Rust `snap` (`~0.18 ms/op`), and `vtprotobuf`'s own wire-parsing instructions took only `~0.95 ms/op`. Go lost because **`54.1%` (`~1.34 ms/op`) of its on-CPU time sat inside `runtime.mallocgc` and GC assist**: zeroing blocks, writing pointer bitmaps, and scanning `19,297` pointer-slice (`[]*TimeSeries`, `[]*Sample`) heap objects per request. Rust stored structs inline inside `Vec<T>` (`16,490` allocations), paid zero GC barriers or pointer scans, and recycled freed chunks in user space through `glibc`'s thread-local `tcache`.
+* **Fewer allocations did not mean fewer allocated bytes (`+31.0%` `B/op` in Rust).** Without `B/op` and `-memprofile`, we would never have noticed that `prost` spends `88.4%` of allocated bytes and `18.7%` of Rust CPU (`~0.38 ms/op`) inside `RawVecInner::grow_amortized` growing un-sized `Vec` buffers. Even with that reallocation waste, Rust's `tcache` churn still cost `~3.5x` less CPU than Go's `mallocgc` and GC assist, while pointing straight to an easy pre-sizing win in Rust.
 
 ## When to reach for what
 
