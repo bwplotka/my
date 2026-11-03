@@ -83,6 +83,58 @@ func DecodeVarints(src []byte, dst []uint64) (int, error) {
 }
 ```
 
+## Benchmarking two workloads, varints and decoding Prometheus Remote Write 2 proto
+
+Let's pick two example workloads we want to implement and benchmark in both Go and Rust. I am particularly curious about protobuf decoding performance, which. funny enough, is one of the main cost of running distributed systems these days, so let's try to decode our [new Remote Write 2 protocol](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/). However, protobuf generators have different maturity and trade-offs across languages, so let's also measure something simpler e.g. an example `varint` implementation:
+
+1. **`DecodeVarints`.** A 36-line unsigned LEB128 varint stream decoder. Our fixture `varints_2000.bin` is `4,798` bytes and packs `2,000` `uint64` values mixing 1-byte symbol indices, 2-byte bucket offsets, 4-byte deltas, and 6-byte millisecond Unix timestamps. The function writes into a preallocated `2,000`-element slice with zero heap allocations.
+2. **`DecodeRemoteWrite`.** A full HTTP request body decoder for [Remote Write 2.0](https://prometheus.io/docs/concepts/remote_write_spec_2_0/) `io.prometheus.write.v2.Request`. Each operation takes a Snappy-block-compressed payload and unmarshals the full protobuf tree for batches of `200` and `2,000` series, where `2,000` matches Prometheus's default `max_samples_per_send`. Each `2,000`-series batch mixes `500` counters, `400` gauges, `100` classic 8-bucket histograms totaling `1,000` series, `100` native exponential histograms, `1,000` trace exemplars, and metric metadata. Remote Write 2.0 interns all strings into a single `repeated string symbols` table at the top of the message and stores packed varint `labels_refs` indices per series, which shrinks the payload to `244.9 KiB` uncompressed and `57.0 KiB` Snappy-compressed.
+
+To keep the comparison honest, a deterministic Go generator writes the binary fixtures once into `testdata/` alongside a `manifest.json` file. That manifest records uncompressed byte sizes, series counts, sample counts, and an XOR checksum of all IEEE-754 sample bits, `56757976630294132` for the `2,000`-series batch. Unit tests in both Go and Rust assert that every decoder produces the exact manifest counts and checksums before we time anything.
+
+## Implementing and running the Go benchmark
+
+On the Go side, `DecodeVarints` writes straight into a caller-provided slice, with a fast path for single-byte values below `0x80`:
+
+```go
+func DecodeVarints(src []byte, dst []uint64) (int, error) {
+	n := 0
+	i := 0
+	for i < len(src) {
+		if n >= len(dst) {
+			return n, ErrDstTooSmall
+		}
+		b := src[i]
+		i++
+		if b < 0x80 {
+			dst[n] = uint64(b)
+			n++
+			continue
+		}
+		x := uint64(b & 0x7f)
+		shift := uint(7)
+		for {
+			if i >= len(src) {
+				return n, ErrUnexpectedEOF
+			}
+			b = src[i]
+			i++
+			x |= uint64(b&0x7f) << shift
+			if b < 0x80 {
+				break
+			}
+			shift += 7
+			if shift >= 64 {
+				return n, ErrOverflow
+			}
+		}
+		dst[n] = x
+		n++
+	}
+	return n, nil
+}
+```
+
 For `DecodeRemoteWrite`, we tune Go the way Prometheus runs in production rather than benchmarking slow `protoreflect` unmarshaling. We pair `github.com/golang/snappy`, which uses x86-64 assembly on `linux/amd64`, with [`vtprotobuf`](https://github.com/planetscale/vtprotobuf) and its generated `UnmarshalVT` decoder:
 
 ```go
