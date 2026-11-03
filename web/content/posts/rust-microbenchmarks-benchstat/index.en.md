@@ -6,7 +6,7 @@ categories:
 - rust
 - go
 - efficiency
-featuredImage: "/og-images/gophermetrics.png"
+featuredImage: "/og-images/benchfmt-rs.png"
 ---
 
 I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and my ["Efficient Go" book](/book). Lately I have been writing more Rust, including Prometheus exposition parsers in [`expfmt-rs`](https://github.com/prometheus/expfmt-rs) and Arrow pipelines in `otel-arrow`. Much of Rust's performance story is a joy, right up until you want to run an A/B benchmark across commits or compare a Rust decoder directly against an existing Go implementation on the same machine.
