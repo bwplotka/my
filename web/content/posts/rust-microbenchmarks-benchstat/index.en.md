@@ -416,6 +416,8 @@ fn main() {
 }
 ```
 
+> **Note on Tokio and custom allocators (`jemalloc`, `mimalloc`):** `CountingAlloc` records cumulative `(allocs, bytes)` per OS thread in `thread_local!` storage, and `Bencher` snapshots only the benchmark runner thread. Async benchmarks driven on Tokio's single-threaded runtime (`Builder::new_current_thread().build()?.block_on(...)`) run on that thread and capture 100% of allocations with zero atomic contention. Tasks spawned onto multi-threaded worker pools (`rt-multi-thread` with `tokio::spawn`, `rayon`, or `std::thread::spawn`) allocate on worker threads instead, so their allocations are omitted unless you attach a process-wide atomic [`AllocTracker`](https://github.com/bwplotka/benchfmt.rs/blob/main/src/alloc.rs) via `Suite::with_alloc`. `CountingAlloc<A>` is also generic over any `GlobalAlloc` (`CountingAlloc::with_allocator(Jemalloc)`), counting the exact `Layout::size()` bytes requested by Rust code before internal size-class rounding.
+
 `Suite::from_env` accepts the same flags as `go test`:
 
 ```bash
