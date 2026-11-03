@@ -26,6 +26,11 @@ html {
   --card-hover-shadow: 10px 10px 0 var(--iso-extrude-hover), 0 22px 44px -10px rgba(15, 23, 42, 0.16);
   --grid-line: rgba(15, 23, 42, 0.06);
   --grid-accent: rgba(234, 88, 12, 0.08);
+  --content-link: #0284c7;
+  --content-link-hover: #0369a1;
+  --content-link-underline: rgba(2, 132, 199, 0.42);
+  --content-link-code-bg: rgba(2, 132, 199, 0.09);
+  --content-link-code-border: rgba(2, 132, 199, 0.36);
   --font-sans: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
@@ -50,6 +55,11 @@ body[theme=dark] {
   --card-hover-shadow: 11px 11px 0 var(--iso-extrude-hover), 0 26px 52px -12px rgba(4, 8, 18, 0.8);
   --grid-line: rgba(148, 163, 184, 0.085);
   --grid-accent: rgba(251, 146, 60, 0.11);
+  --content-link: #38bdf8;
+  --content-link-hover: #7dd3fc;
+  --content-link-underline: rgba(56, 189, 248, 0.45);
+  --content-link-code-bg: rgba(56, 189, 248, 0.13);
+  --content-link-code-border: rgba(56, 189, 248, 0.42);
   background: radial-gradient(ellipse 95% 65% at 50% 0%, #222e47 0%, #151c2c 58%, #101623 100%) fixed !important;
 }
 
@@ -1838,6 +1848,42 @@ body[theme=dark] {
     padding: 0.05rem 0.34rem;
     font-size: 0.78em !important;
     color: #fdba74;
+  }
+
+  // Distinct link color across prose, blockquotes (> ...), and backticked code links ([`foo`](url)).
+  a:not(.header-mark):not(.lightgallery):not(.oss-project-pill):not(.btn-3d):not(.talk-link) {
+    color: var(--content-link) !important;
+    text-decoration: underline;
+    text-decoration-color: var(--content-link-underline);
+    text-underline-offset: 3px;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+
+    b, strong {
+      color: inherit !important;
+    }
+
+    &:hover {
+      color: var(--content-link-hover) !important;
+      text-decoration-color: var(--content-link-hover);
+    }
+
+    &:has(> code) {
+      text-decoration: none;
+    }
+
+    > code {
+      color: var(--content-link) !important;
+      background: var(--content-link-code-bg);
+      border-color: var(--content-link-code-border);
+      text-decoration: none;
+      transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    &:hover > code {
+      color: var(--content-link-hover) !important;
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--content-link-hover);
+    }
   }
 
   // Modern Engineering Markdown Tables (excludes Chroma code tables)
