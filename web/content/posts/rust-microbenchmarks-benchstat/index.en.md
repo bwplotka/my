@@ -41,6 +41,23 @@ In this blog post, let's implement the same pieces of code in Go and Rust, bench
 
 ## Benchmarking two workloads
 
+Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching about it in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until I wanted to run **A/B microbenchmarks**. 
+
+Perhaps I was spoiled by the Go benchmarking ecosystem, with the `go tool -bench` and [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) ecosystem ([see my previous post](/2024/go-microbenchmarks-benchstat/)), but to me, Rust was standard benchmarking tools lacked:
+
+* A standard format for case comparison projections.
+* Standard heap allocation measurements.
+* Standard `pprof` support.
+* Simple to understand reliability scoring.
+
+So I asked myself: what if we could get [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
+
+**Here we are!** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner with a thread-local heap allocation counter, `pprof` profiler integration, and the same CLI flags as `go test -bench`. For those who don't trust a new benchmarking runtime (you shouldn't from the start!), it also ships a [`Criterion`](https://crates.io/crates/criterion) and `libtest` converter that emits Go's [`benchfmt`](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md) format directly.
+
+In this blog post, let's implement the same pieces of code in Go and Rust, benchmark them across different Rust frameworks, and compare the results. We might learn something new along the way (I did when building this!). Enjoy! All benchmark code and raw outputs live in [`bwplotka/benchmarks/benchmarks/rust-go-decode`](https://github.com/bwplotka/benchmarks/tree/c55bd342d9ac23e788d06327dc7973951a5eeb82/benchmarks/rust-go-decode).
+
+## Benchmarking two workloads
+
 Let's pick two workloads to implement and benchmark in both Go and Rust. I am particularly curious about protobuf decoding performance, which, funny enough, is one of the main costs of running distributed systems these days. Thus, let's decode our [Prometheus Remote Write 2.0 protocol](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/). Because protobuf code generators have different maturity and trade-offs across languages, let's also measure something simpler alongside it, a standalone `varint` decoder:
 
 1. **`DecodeVarints`.** A 36-line unsigned LEB128 varint stream decoder. Varints are the integer encoding underneath Protocol Buffers. Our fixture `varints_2000.bin` is `4,798` bytes and packs `2,000` `uint64` values mixing 1-byte symbol indices, 2-byte bucket offsets, 4-byte deltas, and 6-byte millisecond Unix timestamps. The function writes into a preallocated `2,000`-element slice with zero heap allocations.
