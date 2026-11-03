@@ -9,6 +9,11 @@ categories:
 featuredImage: "/og-images/benchfmt-rs.png"
 ---
 
+> **TL;DR:** I built [`benchfmt-rs`](https://github.com/bwplotka/benchfmt-rs) to bring Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) workflow to Rust, with `/key=value` projections, zero-dependency `B/op` and `allocs/op` heap tracking, `pprof` profiles, and a [`Criterion`](https://crates.io/crates/criterion) converter. Benchmarking `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust surfaced three practical lessons:
+> * **Rust won on speed, Go won on `B/op`.** Rust decoded varints `42.6%` faster and Remote Write 2.0 `17.7%` faster with `14.6%` fewer allocations, yet requested **`31.0%` more heap bytes** because [`prost`](https://crates.io/crates/prost) repeatedly reallocates un-sized `Vec` buffers (`88.4%` of allocated bytes in `go tool pprof`).
+> * **`B/op` measures allocator churn, not RSS.** Allocating `2.00 GiB` across `1,000` Rust decodes peaked at just `4.21 MiB` RSS because freed chunks were recycled every iteration, compared to `1.29 MiB` per batch when retained in memory.
+> * **Wall-clock `ns/op` hides GC overhead.** Under `/usr/bin/time -v`, Go's concurrent garbage collector burned extra CPU and memory on background threads, meaning Rust used **`1.9x` to `3.2x` less total CPU core-time** and **`3.8x` to `4.4x` less RAM** per request.
+
 Recently, I've been working on a few Rust projects in different areas at Google and [OSS](https://github.com/prometheus/expfmt-rs), mostly because I think Rust has a potential in this AI era:
 * It has an extreme amount of compile-time verification (TODO link) including extended memory safety checks (TODO link) -- ideal when you generate code.
 * It takes ages and is frustrarting to program in (sorry!) -- AI writes codes nowadays, so it doesn't matter -- it just has to be readable for reviews and it's good enough at that.
