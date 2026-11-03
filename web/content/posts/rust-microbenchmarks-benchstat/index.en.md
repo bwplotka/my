@@ -9,13 +9,25 @@ categories:
 featuredImage: "/og-images/benchfmt-rs.png"
 ---
 
-I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and my ["Efficient Go" book](/book). Lately I have been writing more Rust, including Prometheus exposition parsers in [`expfmt-rs`](https://github.com/prometheus/expfmt-rs) and Arrow pipelines in `otel-arrow`. Much of Rust's performance story is a joy, right up until you want to run an A/B benchmark across commits or compare a Rust decoder directly against an existing Go implementation on the same machine.
+Recently, I've been working on a few Rust projects in different areas at Google and [OSS](https://github.com/prometheus/expfmt-rs), mostly because I think Rust has a potential in this AI era:
+* It has an extreme amount of compile-time verification (TODO link) including extended memory safety checks (TODO link) -- ideal when you generate code.
+* It takes ages and is frustrarting to program in (sorry!) -- AI writes codes nowadays, so it doesn't matter -- it just has to be readable for reviews and it's good enough at that.
+* It has greate columnar storage library ecosystem
+* It does not have GC, gives more flexibility on memory allocations and it's generally faster!
 
-In Go, [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) sits at the center of my workflow. Two years ago I wrote about [how `benchstat` projections turn `/key=value` benchmark names into local OLAP tables](/2024/go-microbenchmarks-benchstat/). You run `go test -bench`, pipe the plain-text [`benchfmt`](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md) lines to a file, and slice `sec/op`, `B/s`, `B/op`, and `allocs/op` by any dimension with Mann-Whitney U p-values.
+I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/) and more. I even wrote a ["Efficient Go" book](/book) teaching about those.  For me, much of Rust's performance story is a really good, until... you want to run an **A/B micro-benchmarks**. Perhaps I was spoiled by the Go benchmarking ecosystem with a standard [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) sitting at the center of everyone's Go workflow (see why it's amazing in my previous [post](/2024/go-microbenchmarks-benchstat/).
 
-In Rust, I kept hitting friction when trying to answer the same questions. So I built [`benchfmt-rs`](https://github.com/bwplotka/benchfmt-rs), a zero-dependency Rust benchmark runner, thread-local heap allocation counter, `pprof` profiler integration, and `Criterion` or `libtest` converter that emits Go's `benchfmt` format directly.
+Like, how Rust can claim to be more "performance" oriented, yet it's official Rust benchmarking misses:
+* standard for case comparsion projections
+* standard heap allocation measurements
+* standard pprof supports
+* Mann-Whitney U p-values reliability scores.
 
-Rather than pitch `benchfmt-rs` in the abstract, let's build a real cross-language benchmark from scratch. We will run it in Go, run it in Rust with `Criterion`, convert it with the `benchfmt` CLI, re-run it with `benchfmt::Suite`, and finally compile standalone release binaries under `/usr/bin/time -v` to see if our microbenchmarks tell the truth about CPU time and memory. All code and raw outputs live in [`bwplotka/benchmarks/benchmarks/rust-go-decode`](https://github.com/bwplotka/benchmarks/tree/main/benchmarks/rust-go-decode).
+So I asked myself what if we could have a `benchstat` like output for Rust microbenchmarks. Wouldn't it be better? and allow those fun Go vs Rust benchmarks and learnings?
+
+Here we are -- I built [`benchfmt-rs`](https://github.com/bwplotka/benchfmt-rs) a zero-dependency Rust benchmark runner, with the thread-local heap allocation counter, `pprof` profiler integration and the same CLI surface as `go test -bench`. For those who don't trust new benchmarking runtime (you shouldn't from the start!), there's also a `Criterion` and `libtest` converter that emits Go's `benchfmt` format directly.
+
+In this blog post I want to do a fun exercise -- we will do a microbenchmarking exercise on the same pieces of code in Go and Rust and compare those, using different benchmarking frameworks in Rust. We might learn something new on the way (I did when building this!). Enjoy!
 
 ## Picking two workloads, varints and Prometheus Remote Write
 
