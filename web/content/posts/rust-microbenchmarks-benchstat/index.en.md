@@ -346,18 +346,120 @@ Look closely at the `B/op` and `allocs/op` tables. That is the kind of surprise 
 * Rust makes **14.55% fewer heap allocations** at `2,000` series (`16,490` vs Go's `19,297 allocs/op`). In Go, `protoc-gen-go` generates pointer slices such as `[]*TimeSeries` and `[]*Sample`, allocating every nested struct separately on the heap. In Rust, `prost` stores `Vec<TimeSeries>` and `Vec<Sample>` inline by value.
 * Yet Rust requests **30.98% more heap bytes** at `2,000` series (`2.05 MiB` vs Go's `1.57 MiB`) and **42.59% more** at `200` series (`271.9 KiB` vs `190.7 KiB`)!
 
-Why would inline structs allocate *more* bytes? Because `benchfmt-rs` also supports `-cpuprofile` and `-memprofile` via its optional `pprof` feature, we do not have to guess:
+## Profiling both benchmarks in Go and Rust with `go tool pprof`
+
+`benchstat` tells us *what* changed (`-42.56%` `sec/op` on `DecodeVarints`, `-17.68%` `sec/op` yet `+30.98%` `B/op` on `DecodeRemoteWrite2`), while [`pprof`](https://github.com/google/pprof) tells us *why*. Because `benchfmt::Suite` supports the same `-cpuprofile`, `-memprofile`, and `-memprofilerate` flags as `go test` via `--features pprof`, we can profile both benchmarks in both languages and inspect every `.pb.gz` file with `go tool pprof`.
+
+### CPU profiling `DecodeVarints`
+
+`DecodeVarints` does zero heap allocations in both languages, yet Rust finishes in `4.90 µs` while Go takes `8.54 µs` for the same loop. Let's capture a 3-second single-threaded CPU profile from each runner and inspect source-line samples with `go tool pprof -list`:
 
 ```bash
-cargo bench --bench suite_decode -- \
-    -bench 'DecodeRemoteWrite2/samples=2000' -benchtime 50x -count 1 \
-    -memprofile /tmp/rw2_mem.pb.gz -memprofilerate 1
+go test -run '^$' -bench '^BenchmarkDecodeVarints$' -benchtime 3s -count 1 -cpu 1 \
+    -cpuprofile /tmp/go_varints_cpu.pb.gz
 
-go tool pprof -top -alloc_space /tmp/rw2_mem.pb.gz
+cargo bench --bench suite_decode -- \
+    -bench '^BenchmarkDecodeVarints/' -benchtime 3s -count 1 -cpu 1 \
+    -cpuprofile /tmp/rust_varints_cpu.pb.gz
+
+go tool pprof -list DecodeVarints /tmp/go_varints_cpu.pb.gz
+go tool pprof -list decode_varints /tmp/rust_varints_cpu.pb.gz
 ```
 
+Here is the annotated Go loop next to Rust's `decode_varints`:
+
 ```text
-Duration: 5.78s, Total samples = 102.67MB
+ROUTINE ======================== DecodeVarints in varints.go
+     3.66s      3.71s (flat, cum) 99.73% of Total
+     540ms      540ms     31:	for i < len(src) {
+     230ms      230ms     32:		if n >= len(dst) { ... }
+      10ms       10ms     36:		b := src[i]
+     150ms      160ms     37:		i++
+         .          .     38:		if b < 0x80 {
+         .          .     39:			dst[n] = uint64(b)
+      40ms       40ms     40:			n++
+         .          .     41:			continue
+         .          .     42:		}
+     200ms      200ms     43:		x := uint64(b & 0x7f)
+     250ms      250ms     45:		for {
+     200ms      200ms     46:			if i >= len(src) { ... }
+      30ms       30ms     49:			b := src[i]
+     300ms      310ms     50:			i++
+     1.22s      1.24s     51:			x |= uint64(b&0x7f) << shift
+     220ms      230ms     52:			if b < 0x80 { break }
+      50ms       50ms     55:			shift += 7
+      10ms       10ms     56:			if shift >= 64 { ... }
+         .          .     59:		}
+     210ms      210ms     61:		n++
+         .          .     62:	}
+
+ROUTINE ======================== rust_go_decode::varints::decode_varints in src/varints.rs
+     3.30s      3.30s (flat, cum) 99.70% of Total
+         .          .     50:            b = src[i];
+         .          .     51:            i += 1;
+         .          .     52:            x |= u64::from(b & 0x7f) << shift;
+     3.30s      3.30s     53:            if b < 0x80 { break; }
+```
+
+Both languages spend over `99.7%` of CPU inside the varint loop, yet Go burns **`1.24s` (`33.4%`)** on `x |= uint64(b&0x7f) << shift` alone and another **`770ms` (`20.8%`)** on the loop guards. Checking `go tool objdump` shows two codegen differences behind the `42.56%` gap:
+
+1. **64-bit variable shift masking.** Go defines `x << shift` to evaluate to `0` when `shift >= 64`, whereas x86 `SHLQ` masks the shift count modulo 64. Because `if shift >= 64` runs *after* the shift, the Go compiler inserts `CMPQ $64`, `SBBQ`, and `ANDQ` on every continuation byte. Rust's release-mode `<<` maps to a bare `SHLQ`.
+2. **Signed `int` vs unsigned `usize` indices.** Go's `i` and `n` are signed `int`, so `i < len(src)` and `n >= len(dst)` do not prove `i >= 0` or `n >= 0` to the bounds-check eliminator, leaving extra unsigned `CMPQ`/`JBE` slice bounds checks on `src[i]` and `dst[n]`. Rust's `i` and `n` are unsigned `usize`, so LLVM removes every inner bounds check and inlines `decode_varints` directly into `while b.keep_running()`.
+
+### CPU and heap profiling `DecodeRemoteWrite2`
+
+Next, let's collect both `-cpuprofile` and `-memprofile` on the `2,000`-series Remote Write 2.0 benchmark in Go and Rust:
+
+```bash
+# CPU profiles (3s at -cpu 1)
+go test -run '^$' -bench '^BenchmarkDecodeRemoteWrite2/samples=2000/' -benchtime 3s -count 1 -cpu 1 \
+    -cpuprofile /tmp/go_rw2_cpu.pb.gz
+cargo bench --bench suite_decode -- \
+    -bench 'DecodeRemoteWrite2/samples=2000' -benchtime 3s -count 1 -cpu 1 \
+    -cpuprofile /tmp/rust_rw2_cpu.pb.gz
+
+# Exact heap profiles (50 iterations with every allocation sampled)
+go test -run '^$' -bench '^BenchmarkDecodeRemoteWrite2/samples=2000/' -benchtime 50x -count 1 -cpu 1 \
+    -memprofile /tmp/go_rw2_mem.pb.gz -memprofilerate 1
+cargo bench --bench suite_decode -- \
+    -bench 'DecodeRemoteWrite2/samples=2000' -benchtime 50x -count 1 -cpu 1 \
+    -memprofile /tmp/rust_rw2_mem.pb.gz -memprofilerate 1
+```
+
+Inspecting the two CPU profiles first with `go tool pprof -top -cum /tmp/go_rw2_cpu.pb.gz` and `go tool pprof -top /tmp/rust_rw2_cpu.pb.gz` shows completely different bottlenecks:
+
+```text
+# Go CPU profile (Duration: 3.75s, Total samples = 3.68s)
+      flat  flat%   sum%        cum   cum%
+     0.11s  2.99%  2.99%      3.12s 84.78%  io/prometheus/write/v2.(*Request).UnmarshalVT
+     0.41s 11.14% 14.13%      2.25s 61.14%  io/prometheus/write/v2.(*TimeSeries).UnmarshalVT
+     0.18s  4.89% 19.02%      2.07s 56.25%  runtime.mallocgc
+     0.03s  0.82% 19.84%      1.17s 31.79%  runtime.newobject
+     0.09s  2.45% 26.09%      0.55s 14.95%  io/prometheus/write/v2.(*Histogram).UnmarshalVT
+         0     0% 26.36%      0.53s 14.40%  runtime.gcAssistAlloc
+
+# Rust CPU profile (Duration: 3.75s, Total samples = 2.27s)
+      flat  flat%   sum%        cum   cum%
+     0.31s 13.78% 13.78%      0.52s 22.67%  prost::encoding::varint::decode_varint::<&mut &[u8]>
+     0.21s  9.33% 23.11%      0.71s 31.11%  prost::encoding::merge_loop::<Vec<u32>, ...>
+     0.20s  8.89% 32.00%      0.20s  8.89%  <snap::decompress::Decompress>::read_copy (inline)
+     0.14s  6.22% 38.22%      1.62s 71.11%  <v2::TimeSeries as prost::Message>::merge_field
+     0.05s  2.22% 64.00%      0.42s 18.67%  <alloc::raw_vec::RawVecInner>::grow_amortized (inline)
+```
+
+In Go, `UnmarshalVT` accounts for `84.78%` of cumulative time, **yet `runtime.mallocgc` alone consumes `56.25%` (`2.07s`) of on-CPU time**, including `14.40%` inside `runtime.gcAssistAlloc`! Over half of Go's `2.47 ms/op` is spent allocating and GC-scanning `19,297` heap objects rather than parsing wire bytes. In Rust, there is zero GC work: `71.11%` cum sits in `prost` field decoding (`22.67%` in `decode_varint` and `31.11%` in `merge_loop` on packed `u32` `labels_refs`), `8.89%` flat in `snap` decompression, and **`18.67%` cum inside `RawVecInner::grow_amortized`**.
+
+Why is `RawVecInner::grow_amortized` eating nearly `19%` of Rust's CPU time *and* pushing Rust's `B/op` `30.98%` higher than Go? Comparing both heap profiles with `go tool pprof -top -alloc_space` answers that immediately:
+
+```text
+# Go heap profile (50 iterations, Total samples = 80.51MB)
+      flat  flat%   sum%        cum   cum%
+   28.18MB 35.00% 35.00%    67.87MB 84.29%  io/prometheus/write/v2.(*Request).UnmarshalVT
+   28.05MB 34.84% 69.84%    39.69MB 49.29%  io/prometheus/write/v2.(*TimeSeries).UnmarshalVT
+   12.40MB 15.40% 85.24%    12.40MB 15.40%  github.com/golang/snappy.Decode
+   11.25MB 13.97% 99.21%    11.25MB 13.97%  io/prometheus/write/v2.(*Histogram).UnmarshalVT
+
+# Rust heap profile (50 iterations, Total samples = 102.67MB)
       flat  flat%   sum%        cum   cum%
    90.72MB 88.36% 88.36%    90.72MB 88.36%  <alloc::raw_vec::RawVecInner>::grow_amortized (inline)
    11.96MB 11.64%   100%   102.67MB   100%  rust_go_decode::decode_remote_write2
@@ -366,7 +468,7 @@ Duration: 5.78s, Total samples = 102.67MB
          0     0%   100%     8.70MB  8.47%  <alloc::raw_vec::RawVec<rust_go_decode::proto::v2::Sample>>::grow_one
 ```
 
-`50` iterations times `2,153,196 B/op` equals `102.67 MiB`, and `88.36%` of it comes from `RawVecInner::grow_amortized`:
+Go allocates `80.51 MB` (`50 * 1.57 MiB`) mostly as exact-sized `*TimeSeries`, `*Sample`, `*Histogram`, and symbol `string` objects in `UnmarshalVT` plus `12.40 MB` for Snappy decompression, wasting very little spare slice capacity. Rust allocates `102.67 MB` (`50 * 2.05 MiB`), and **`88.36%` (`90.72 MB`) comes from `RawVec` doubling reallocations**:
 
 1. `prost` decodes packed `repeated uint32 labels_refs` by pushing one `u32` at a time without pre-sizing from the wire byte length. Each 22- to 24-element series `Vec<u32>` grows through capacities `4 -> 8 -> 16 -> 32`. Together with 2-element exemplar `labels_refs`, this accounts for `23.04%` of all allocated bytes.
 2. Growing `Vec<v2::TimeSeries>` from `0` to `2,048` reallocates inline 112-byte structs at every power of two (`21.28%` of allocated bytes), whereas Go only doubles an 8-byte `[]*TimeSeries` pointer slice.
