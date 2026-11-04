@@ -610,4 +610,6 @@ In terms of benchmarking, having both `benchfmt` tools in Rust lets me match the
 * Use **`benchfmt::Suite` and `CountingAlloc`** with `features = ["pprof"]` for new Rust microbenchmarks to get fast `std`-only compiles, steady-state epochs, `B/op` and `allocs/op` tracking, and `pprof` profiles.
 * When a microbenchmark drives an architectural decision, run the loop in a standalone release binary under `/usr/bin/time -v` to check true RSS, page faults, and background GC or allocator threads.
 
+How does `benchfmt.rs` compare to tools like [`hotpath.rs`](https://hotpath.rs/)? `hotpath.rs` is an application profiler and telemetry toolkit where you annotate functions with `#[hotpath::measure]` to track timings, allocations, async tasks, channels, and I/O in a live TUI or Prometheus. `benchfmt.rs` stays focused on isolated, Go-style microbenchmarks without touching library code, emitting standard `benchfmt` lines for `benchstat` A/B tables and `pprof` profiles for `go tool pprof` or [`pprof.me`](https://pprof.me).
+
 Give [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs) a spin and let me know on GitHub what breaks or what is missing!
