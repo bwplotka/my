@@ -1910,16 +1910,16 @@ body[theme=dark] {
       }
 
       th {
-        text-align: left !important;
+        text-align: left;
         vertical-align: middle !important;
         background: transparent !important;
         color: var(--text-primary);
         font-family: var(--font-sans);
-        font-size: 0.76rem;
+        font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        padding: 0.85rem 1.05rem !important;
+        letter-spacing: 0.04em;
+        padding: 0.65rem 0.65rem !important;
         border: none !important;
         border-bottom: 1px solid var(--border-highlight) !important;
         white-space: nowrap;
@@ -1928,12 +1928,12 @@ body[theme=dark] {
           text-transform: none !important;
           letter-spacing: 0 !important;
           font-family: var(--font-mono);
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 600;
           background: rgba(249, 115, 22, 0.14) !important;
           color: var(--accent-amber-bright) !important;
           border: 1px solid rgba(251, 146, 60, 0.32);
-          padding: 0.1rem 0.45rem;
+          padding: 0.08rem 0.4rem;
           border-radius: 5px;
           white-space: nowrap !important;
           line-break: normal !important;
@@ -1954,17 +1954,23 @@ body[theme=dark] {
       }
 
       td {
-        vertical-align: top !important;
+        vertical-align: middle !important;
         text-align: left;
-        padding: 0.85rem 1.05rem !important;
+        padding: 0.6rem 0.65rem !important;
         border: none !important;
         border-top: 1px solid rgba(148, 163, 184, 0.14) !important;
         color: var(--text-secondary);
+        font-variant-numeric: tabular-nums;
 
         &:first-child {
           font-weight: 600;
           color: var(--text-primary);
-          min-width: 140px;
+        }
+
+        code {
+          white-space: nowrap !important;
+          line-break: normal !important;
+          display: inline;
         }
 
         a {
