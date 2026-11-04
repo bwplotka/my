@@ -6,6 +6,8 @@ categories:
 - go
 - grpc
 - efficiency
+images:
+- "/og-images/gophermetrics.png"
 featuredImage: "/og-images/gophermetrics.png"
 authors:
 - name: "Bartek Płotka @bwplotka"

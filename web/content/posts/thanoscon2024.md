@@ -6,6 +6,8 @@ categories:
 - thanos
 - community
 - open-source
+images:
+- "/og-images/thanoscon1.jpg"
 featuredImage: "/og-images/thanoscon1.jpg"
 ---
 

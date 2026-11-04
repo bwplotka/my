@@ -10,6 +10,8 @@ readingTime: 10
 weight: 10
 categories:
 - infra
+images:
+- "/images/kedge.webp"
 featuredImage: "/images/kedge.webp"
 ---
 
