@@ -15,7 +15,7 @@ featuredImage: "/og-images/benchfmt-rs.png"
 
 Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching Go in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until.... **I wanted to run A/B microbenchmarks**. 
 
-Perhaps I was spoiled by the Go benchmarking ecosystem, with the `go tool -bench` and [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) ecosystem ([see my previous post](/2024/go-microbenchmarks-benchstat/)), but to me, Rust was standard benchmarking tools lacked:
+Perhaps I was spoiled by the Go benchmarking ecosystem, with [the `go tool -bench` and `benchstat`](/2024/go-microbenchmarks-benchstat/) in the center. To me, Rust standard benchmarking tools are lacking:
 
 * A standard format for case comparison projections.
 * Standard heap allocation measurements.
