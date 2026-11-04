@@ -527,17 +527,17 @@ Both languages spend over `99%` of CPU inside the varint loop. Go, however, burn
 
 ### CPU and heap profiling `DecodeRemoteWrite2`
 
-Next, let's collect both `-cpuprofile` and exact `-memprofile` (`-memprofilerate 1`) captures on the `2,000`-series Remote Write 2.0 benchmark:
+Next, let's collect `-cpuprofile` and exact `-memprofile` captures on the `2,000`-series Remote Write 2.0 benchmark:
 
 ```bash
-# CPU profiles (3s at -cpu 1)
+# CPU profiles: 3s at -cpu 1.
 go test -run '^$' -bench '^BenchmarkDecodeRemoteWrite2/samples=2000/' -benchtime 3s -count 1 -cpu 1 \
     -cpuprofile /tmp/go_rw2_cpu.pb.gz
 cargo bench --bench suite_decode -- \
     -bench 'DecodeRemoteWrite2/samples=2000' -benchtime 3s -count 1 -cpu 1 \
     -cpuprofile /tmp/rust_rw2_cpu.pb.gz
 
-# Exact heap profiles (50 iterations with every allocation sampled)
+# Exact heap profiles: 50 iterations with every allocation sampled.
 go test -run '^$' -bench '^BenchmarkDecodeRemoteWrite2/samples=2000/' -benchtime 50x -count 1 -cpu 1 \
     -memprofile /tmp/go_rw2_mem.pb.gz -memprofilerate 1
 cargo bench --bench suite_decode -- \
@@ -545,31 +545,33 @@ cargo bench --bench suite_decode -- \
     -memprofile /tmp/rust_rw2_mem.pb.gz -memprofilerate 1
 ```
 
-Comparing the two CPU flamegraphs shows completely different bottlenecks:
+The two CPU flamegraphs show very different bottlenecks:
 
 ![Go DecodeRemoteWrite2 CPU flamegraph](pprof_go_rw2_cpu.png "Go <code>DecodeRemoteWrite2</code> CPU flamegraph (<code>samples=2000</code>). Explore the <a href='https://pprof.me/7af23a8fbe6409728965b2db5072fb87' target='_blank' rel='noopener'>interactive profile on pprof.me</a>.")
 
 ![Rust DecodeRemoteWrite2 CPU flamegraph](pprof_rust_rw2_cpu.png "Rust <code>DecodeRemoteWrite2</code> CPU flamegraph (<code>samples=2000</code>). Explore the <a href='https://pprof.me/9041b44c87f5861a25f8cc5a280c47a3' target='_blank' rel='noopener'>interactive profile on pprof.me</a>.")
 
-In Go, `(*Request).UnmarshalVT` spans `87.9%` of samples, **yet `runtime.mallocgc` and GC assist towers sit underneath `54.1%` (`1.79s`) of all on-CPU time**! Over half of Go's `2.47 ms/op` goes into allocating and GC-scanning `19,297` heap objects rather than parsing wire bytes. In Rust, there is zero GC work: `71.1%` sits in `prost` field decoding, `8.9%` in `snap` decompression on the right, and **`18.7%` inside `RawVecInner::grow_amortized`** underneath `Vec::push` and `Vec::reserve`.
+Go's x86-assembly `snappy.Decode` at `~0.12 ms/op` actually beats pure-Rust `snap` at `~0.18 ms/op`, and `vtprotobuf`'s own wire parsing takes only `~0.95 ms/op`. Go still loses overall because `runtime.mallocgc` and GC assist take `54.1%` of all on-CPU time, or `~1.34 ms/op`, allocating and scanning `19,297` heap objects.
 
-Why does `RawVecInner::grow_amortized` take nearly `19%` of Rust's CPU time *and* push Rust's `B/op` `30.98%` higher than Go? The `alloc_space` heap flamegraphs answer that right away:
+In Rust, `71.1%` of CPU time goes to `prost` field decoding, `8.9%` to `snap` decompression, and `18.7%` to `RawVecInner::grow_amortized` under `Vec::push` and `Vec::reserve`. The `alloc_space` heap profiles show why `RawVecInner::grow_amortized` is so busy and why Rust allocates `30.98%` more `B/op` than Go:
 
 ![Go DecodeRemoteWrite2 heap alloc_space flamegraph](pprof_go_rw2_mem.png "Go <code>DecodeRemoteWrite2</code> heap <code>alloc_space</code> flamegraph (<code>50x</code>). Explore the <a href='https://pprof.me/60e14eabe540995ce6cc1cabd0d6f0e2' target='_blank' rel='noopener'>interactive profile on pprof.me</a>.")
 
 ![Rust DecodeRemoteWrite2 heap alloc_space flamegraph](pprof_rust_rw2_mem.png "Rust <code>DecodeRemoteWrite2</code> heap <code>alloc_space</code> flamegraph (<code>50x</code>). Explore the <a href='https://pprof.me/1fb6663440810f6deb67f24c7829a079' target='_blank' rel='noopener'>interactive profile on pprof.me</a>.")
 
-Across 50 iterations, Go allocates `78.63 MiB` (`1.57 MiB/op`) in exact-sized structs and strings inside `UnmarshalVT` (`84.3%`) plus `snappy.Decode` (`15.4%`), wasting minimal slice capacity. Rust allocates `102.67 MB` (`2.05 MiB/op`), and **`88.36%` (`90.72 MB`) comes from `RawVec` doubling reallocations**:
+Go's `UnmarshalVT` preallocates slices and structs close to their final size, totaling `1.57 MiB/op`. Rust allocates `2.05 MiB/op`, and `88.4%` of those bytes come from `RawVec` capacity doubling inside `prost`:
 
-1. `prost` decodes packed `repeated uint32 labels_refs` by pushing one `u32` at a time without pre-sizing from the wire byte length. Each 22- to 24-element `Vec<u32>` grows through capacities `4 -> 8 -> 16 -> 32`. Together with 2-element exemplar `labels_refs`, this accounts for `23.0%` of all allocated bytes.
-2. Growing `Vec<v2::TimeSeries>` from `0` to `2,048` reallocates inline 112-byte structs at every power of two (`21.3%` of allocated bytes), whereas Go only doubles an 8-byte `[]*TimeSeries` pointer slice.
-3. Rust's `RawVec::MIN_NON_ZERO_CAP` jumps straight to capacity `4` (`96` bytes) when pushing a single 24-byte `Sample` into an empty `Vec<Sample>`. Across `1,900` series, that accounts for another `8.5%` of allocated bytes.
+* `prost` decodes packed `repeated uint32 labels_refs` one `u32` at a time with `Vec::push` instead of pre-sizing from the wire byte length. Every series grows its `Vec<u32>` through capacities `4 -> 8 -> 16 -> 32`, accounting for `23.0%` of all allocated bytes.
+* Growing `Vec<v2::TimeSeries>` from `0` to `2,048` copies inline 112-byte structs at each power of two, which is `21.3%` of allocated bytes. Go only grows an 8-byte `[]*TimeSeries` pointer slice.
+* Pushing one 24-byte `Sample` into an empty `Vec<Sample>` jumps straight to capacity `4` due to `RawVec::MIN_NON_ZERO_CAP`, adding another `8.5%` of allocated bytes across `1,900` series.
+
+Even with that extra `Vec` churn, `glibc` thread-cache reallocations in Rust cost `~3.5x` less CPU than Go's `mallocgc` and GC assist, and `-memprofile` points straight to a `Vec::with_capacity` fix.
 
 ## Checking our microbenchmarks with a standalone binary and `/usr/bin/time -v`
 
 Ok, those microbenchmarks are great, but let's verify our efficiency numbers against the real program! Microbenchmarks run inside an artificial loop with a hot instruction cache, a warm allocator, and a custom `#[global_allocator]` wrapper in `suite_decode`. Do those `ns/op` and `B/op` numbers hold up in an unmodified release binary?
 
-To check, I wrote two standalone CLI binaries: `src/bin/verify_decode.rs` using Rust's default `System` allocator with no benchmark library, and `cmd/verify_decode/main.go` in Go. Each binary runs `N` iterations, accumulates a checksum to prevent dead-code elimination, and optionally keeps `K` decoded messages alive via `--retain K` to simulate an ingestion queue. I ran both under GNU `/usr/bin/time -v`, setting `GOMAXPROCS=2` on Go to match `-cpu 2`:
+To check, I wrote two standalone CLI binaries, `src/bin/verify_decode.rs` using Rust's default `System` allocator with no benchmark library, and `cmd/verify_decode/main.go` in Go. Each binary runs `N` iterations, accumulates a checksum, and optionally keeps `K` decoded messages alive via `--retain K` to simulate an ingestion queue. I ran both under GNU `/usr/bin/time -v` with `GOMAXPROCS=2` on Go to match `-cpu 2`:
 
 ```bash
 cargo build --release --bin verify_decode
@@ -587,19 +589,11 @@ Here is what `/usr/bin/time -v` reported across all runs:
 | Go `rw2_2000` (`1,000` iters, `GOMAXPROCS=2`) | `2.47 ms` | `2.97 ms` | `4.28s` (`4.28 ms/op`) | `144%` | `15.98 MiB` |
 | Rust `rw2_2000` (`1,000` iters, **`retain=1000`**) | `2.03 ms` | `2.75 ms` | `3.18s` (`2.12s` user + `1.06s` sys) | `99%` | `1,292.4 MiB` |
 
-Cross-checking microbenchmarks against `/usr/bin/time -v` confirmed three things:
+The process-level numbers show a few important details:
 
-1. **`CountingAlloc` did not distort latency.** On `rw2_2000`, `benchfmt::Suite` measured `2.03 ms/op` while counting `16,490` heap allocations per iteration (over 8 million `malloc` calls per second). The standalone `System`-allocator binary ran at `2.22 ms/op` across `1,000` cold-start iterations. Updating a thread-local `Cell<(u64, u64)>` adds negligible overhead next to `glibc` `malloc`.
-2. **`B/op` measures cumulative allocator churn, not live memory.** Over `1,000` iterations of `rw2_2000`, Rust requested `2.00 GiB` from the allocator, yet peak RSS with `retain=0` stayed flat at **`4.21 MiB`**. Each `Request` drops at the end of the loop body, so `glibc` recycles the freed thread-cache chunks on the next iteration without asking Linux for new pages. Keeping all `1,000` batches alive with `--retain 1000` raised RSS to `1,292.4 MiB`, or **`1.29 MiB` per retained message**. That drop from `2.05 MiB` (`B/op`) to `1.29 MiB` (live RSS) comes from freeing the `244.9 KiB` Snappy scratch buffer and `~0.77 MiB` of intermediate `Vec` doubling buffers. `glibc` chunk headers and spare `Vec` capacity add `~0.25 MiB` back per retained batch. Faulting in `1.29 GiB` of fresh pages also added `1.06s` of kernel `sys` time across `330,378` minor page faults, raising wall latency from `2.22 ms` to `2.75 ms`.
-3. **Wall-clock `ns/op` hides Go's background GC CPU and RAM cost.** In `benchstat`, Rust looked `17.68%` faster than Go on `rw2_2000` (`2.03 ms` vs `2.47 ms`). Under `/usr/bin/time -v` at `GOMAXPROCS=2`, Rust used `99%` of one core (`2.22 ms` of CPU time per op) and `4.21 MiB` RSS. Go hit **`144%` CPU**, burning **`4.28 ms` of CPU core-time per op** with `8,444` voluntary context switches and **`15.98 MiB` RSS**. Leaving `GOMAXPROCS` unrestricted on all 24 cores pushed Go to **`220%` CPU** (`7.13 ms` of CPU core-time per op) and `18.53 MiB` RSS. Background GC threads spent those extra cores sweeping `19,297` heap objects per request. In total CPU core-seconds and memory per request, Rust used **1.9x less CPU and 3.8x less RAM** at `GOMAXPROCS=2`, and **3.2x less CPU and 4.4x less RAM** unrestricted.
-
-## Why Rust was faster than Go (and where it lost)
-
-Stepping back across `benchstat`, `pprof`, `objdump`, and `/usr/bin/time -v`, the Go vs Rust gap came from two distinct places:
-
-* **Pure-CPU loops (`DecodeVarints`, `42.6%` faster in Rust) came down to compiler codegen.** Even on identical zero-allocation loops, LLVM unrolled the bounded inner loop into constant shifts, dropped inner bounds checks on unsigned indices, and inlined the decoder. Go `1.26` kept the inner loop rolled and paid per-byte bounds and shift-masking checks.
-* **Allocation-heavy decoding (`DecodeRemoteWrite2`, `17.7%` faster wall-clock and `1.9x` to `3.2x` less CPU in Rust) came down to Go's managed heap, not wire parsing.** Go's x86-assembly `snappy.Decode` (`~0.12 ms/op`) actually beat pure-Rust `snap` (`~0.18 ms/op`), and `vtprotobuf`'s own parsing instructions took only `~0.95 ms/op`. Go lost because `runtime.mallocgc` and GC assist consumed another `~1.34 ms/op` managing `19,297` pointer-heavy heap objects, whereas Rust stored structs inline inside `Vec<T>` and recycled freed chunks in user space via `glibc`'s `tcache`.
-* **Fewer allocations still hid `+31.0%` higher `B/op` churn in Rust.** Without `B/op` and `-memprofile`, we would have missed `prost` spending `~0.38 ms/op` repeatedly doubling un-sized `Vec` buffers. Even with that waste, `tcache` reallocations cost `~3.5x` less CPU than Go's `mallocgc` and GC assist, while pointing straight to an easy `Vec::with_capacity` fix in Rust.
+* **`CountingAlloc` did not distort latency.** The standalone Rust binary ran `rw2_2000` at `2.22 ms/op` across `1,000` cold-start iterations, close to `2.03 ms/op` in `benchfmt::Suite` while counting `16,490` allocations per iteration.
+* **`B/op` measures allocator churn, not live memory.** Over `1,000` iterations of `rw2_2000`, Rust requested `2.00 GiB` from the allocator, yet peak RSS with `retain=0` stayed at `4.21 MiB`. Dropping each `Request` at the end of the loop lets `glibc` reuse the freed thread-cache chunks on the next iteration without asking Linux for new pages. Keeping all `1,000` batches alive with `--retain 1000` raised RSS to `1,292.4 MiB`, or `1.29 MiB` per retained message after temporary Snappy and `Vec`-doubling buffers were freed.
+* **Wall-clock `ns/op` hides Go's background GC cost.** In `benchstat`, Rust was `17.68%` faster than Go on `rw2_2000`. Under `/usr/bin/time -v` at `GOMAXPROCS=2`, Rust used `99%` of one core and `4.21 MiB` RSS, while Go hit `144%` CPU, `4.28 ms` of CPU time per op, and `15.98 MiB` RSS. Leaving `GOMAXPROCS` unrestricted on all 24 cores pushed Go to `220%` CPU, or `7.13 ms` of CPU time per op, and `18.53 MiB` RSS as background GC threads swept heap objects. Across the whole process, Rust used **1.9x to 3.2x less CPU** and **3.8x to 4.4x less RAM** per request.
 
 ## Summary
 
@@ -611,9 +605,9 @@ In general I think Rust has real potential in this AI era:
 
 In terms of benchmarking, having both `benchfmt` tools in Rust lets me match the workflow to the job:
 
-* Keep **standalone Criterion** when you want self-contained HTML violin plots or async executor adapters without installing Go's `benchstat`.
-* Run **`benchfmt criterion target/criterion`** on existing Criterion suites when you want `benchstat` A/B tables across commits or cross-language comparisons without editing benchmark source files.
-* Reach for **`benchfmt::Suite` and `CountingAlloc`** (plus `features = ["pprof"]` when profiling) when writing new Rust microbenchmarks. You get fast `std`-only compiles, steady-state epochs for `benchstat`, deterministic `B/op` and `allocs/op` tracking, and `-cpuprofile` / `-memprofile` files ready for `go tool pprof` and `pprof.me`.
-* Whenever a microbenchmark drives an architectural decision, spend two extra minutes running the loop in a standalone release binary under `/usr/bin/time -v`. `benchstat` tells you what your code asked the CPU and allocator to do per operation. `/usr/bin/time -v` tells you what the runtime, allocator caches, garbage collector, and Linux kernel charged your process.
+* Keep **standalone Criterion** when you want self-contained HTML plots or async executor adapters without Go's `benchstat`.
+* Run **`benchfmt criterion target/criterion`** on existing Criterion suites when you want `benchstat` A/B tables across commits or languages without editing benchmark code.
+* Use **`benchfmt::Suite` and `CountingAlloc`** with `features = ["pprof"]` for new Rust microbenchmarks to get fast `std`-only compiles, steady-state epochs, `B/op` and `allocs/op` tracking, and `pprof` profiles.
+* When a microbenchmark drives an architectural decision, run the loop in a standalone release binary under `/usr/bin/time -v` to check true RSS, page faults, and background GC or allocator threads.
 
 Give [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs) a spin and let me know on GitHub what breaks or what is missing!
