@@ -11,7 +11,7 @@ featuredImage: "/og-images/benchfmt-rs.png"
 
 > **TL;DR:** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner and [`Criterion`](https://crates.io/crates/criterion) converter for Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat). It adds `/key=value` projections, heap tracking for allocated bytes (`B/op`) and objects (`allocs/op`) per op, and `pprof` profiling. 
 > 
-> In this post, I am benchmarking `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust to showcase the benefits of `benchstat`-like flow in Rust. I'm also sharing some fun learnings on the way (e.g., yes [Rust is faster](#summary)).
+> In this post, I am benchmarking `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust to showcase the benefits of `benchstat`-like flow in Rust. I'm also sharing some fun learnings on the way (e.g., yes [Rust is faster](#comparing-go-vs-rust)).
 
 Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching Go in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until.... **I wanted to run A/B microbenchmarks**. 
 
@@ -377,7 +377,7 @@ Unfortunately, there are some gaps:
 
 ## Native `benchfmt` runs with `benchfmt::Suite` and `CountingAlloc`
 
-For new Rust benchmarks, we can skip Criterion and use `benchfmt::Suite`` with `harness = false` in `Cargo.toml`. Registering `CountingAlloc` as `#[global_allocator]` tracks every `alloc`, `alloc_zeroed`, and `realloc` in a `thread_local!` `Cell<(u64, u64)>` with zero atomic contention and zero external dependencies:
+For new Rust benchmarks, we can skip Criterion and use `benchfmt::Suite` with `harness = false` in `Cargo.toml`. Registering `CountingAlloc` as `#[global_allocator]` tracks every `alloc`, `alloc_zeroed`, and `realloc` in a `thread_local!` `Cell<(u64, u64)>` with zero atomic contention and zero external dependencies:
 
 ```rust
 // Wrap Rust's System allocator globally so every heap alloc/realloc on the benchmark thread
@@ -458,6 +458,8 @@ geomean                                       138.0µ        132.1µ       -4.21
 ```
 
 On `DecodeRemoteWrite2`, Criterion and `benchfmt::Suite` agree within `1.6%` to `2.3%`, while `Suite`'s steady-state `2s` epochs tighten worst-case variance from `± 4-5%` down to `± 1-2%`. On `DecodeVarints`, `while b.keep_running()` runs `490,000` back-to-back iterations in one tight loop instead of 100 short ramp batches, clocking `4.90 µs` vs `5.36 µs`.
+
+### Comparing Go vs Rust
 
 Now let's run the full Go vs Rust comparison with `results/rust_suite.txt`:
 
@@ -586,8 +588,8 @@ Microbenchmarks run inside an artificial loop with a hot instruction cache, a wa
 
 To check, I wrote two standalone CLI binaries:
 
-1. [One](TODO perma link) using Rust's default `System` allocator with no benchmark library
-2. [Second](TODO permalink) in Go.
+1. [One](https://github.com/bwplotka/benchmarks/blob/c55bd342d9ac23e788d06327dc7973951a5eeb82/benchmarks/rust-go-decode/src/bin/verify_decode.rs) using Rust's default `System` allocator with no benchmark library.
+2. [Second](https://github.com/bwplotka/benchmarks/blob/c55bd342d9ac23e788d06327dc7973951a5eeb82/benchmarks/rust-go-decode/cmd/verify_decode/main.go) in Go.
 
 Each binary runs `N` iterations, accumulates a checksum, and optionally keeps `K` decoded messages alive via `--retain K` to simulate an ingestion queue. I ran both under GNU `/usr/bin/time -v` with `GOMAXPROCS=2` on Go to match `-cpu 2`:
 
@@ -599,18 +601,18 @@ cargo build --release --bin verify_decode
 
 Here is what `/usr/bin/time -v` reported across all runs:
 
-| Run | Microbench `sec/op` | Binary wall `/op` | Total CPU (`user + sys`) | CPU % | Max RSS |
-| --- | --- | --- | --- | --- | --- |
-| Rust `varints` (`500,000` iters) | `4.90 µs` | `5.74 µs` | `2.89s` (`5.78 µs/op`) | `99%` | `2.44 MiB` |
-| Go `varints` (`500,000` iters, `GOMAXPROCS=2`) | `8.54 µs` | `8.64 µs` | `4.34s` (`8.68 µs/op`) | `100%` | `6.11 MiB` |
-| Rust `rw2_2000` (`1,000` iters, `retain=0`) | `2.03 ms` | `2.22 ms` | `2.22s` (`2.22 ms/op`) | `99%` | `4.21 MiB` |
-| Go `rw2_2000` (`1,000` iters, `GOMAXPROCS=2`) | `2.47 ms` | `2.97 ms` | `4.28s` (`4.28 ms/op`) | `144%` | `15.98 MiB` |
-| Rust `rw2_2000` (`1,000` iters, **`retain=1000`**) | `2.03 ms` | `2.75 ms` | `3.18s` (`2.12s` user + `1.06s` sys) | `99%` | `1,292.4 MiB` |
+| Run | Iters | Microbench | Binary wall | Total CPU | CPU % | Max RSS |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Rust `varints` | `500,000` | `4.90 µs` | `5.74 µs` | `2.89s (5.78 µs/op)` | `99%` | `2.44 MiB` |
+| Go `varints` | `500,000` | `8.54 µs` | `8.64 µs` | `4.34s (8.68 µs/op)` | `100%` | `6.11 MiB` |
+| Rust `rw2_2000` | `1,000` | `2.03 ms` | `2.22 ms` | `2.22s (2.22 ms/op)` | `99%` | `4.21 MiB` |
+| Go `rw2_2000` | `1,000` | `2.47 ms` | `2.97 ms` | `4.28s (4.28 ms/op)` | `144%` | `15.98 MiB` |
+| Rust `rw2_2000 --retain 1000` | `1,000` | `2.03 ms` | `2.75 ms` | `3.18s (3.18 ms/op)` | `99%` | `1,292.4 MiB` |
 
 The process-level numbers show a few important details:
 
 * **`CountingAlloc` did not distort latency.** The standalone Rust binary ran `rw2_2000` at `2.22 ms/op` across `1,000` cold-start iterations, close to `2.03 ms/op` in `benchfmt::Suite` while counting `16,490` allocations per iteration.
-* **`B/op` measures allocator churn, not live memory.** Over `1,000` iterations of `rw2_2000`, Rust requested `2.00 GiB` from the allocator, yet peak RSS with `retain=0` stayed at `4.21 MiB`. Dropping each `Request` at the end of the loop lets `glibc` reuse the freed thread-cache chunks on the next iteration without asking Linux for new pages. Keeping all `1,000` batches alive with `--retain 1000` raised RSS to `1,292.4 MiB`, or `1.29 MiB` per retained message after temporary Snappy and `Vec`-doubling buffers were freed.
+* **`B/op` measures allocator churn, not live memory.** Over `1,000` iterations of `rw2_2000`, Rust requested `2.00 GiB` from the allocator, yet peak RSS with `retain=0` stayed at `4.21 MiB`. Dropping each `Request` at the end of the loop lets `glibc` reuse the freed thread-cache chunks on the next iteration without asking Linux for new pages. Keeping all `1,000` batches alive with `--retain 1000` raised RSS to `1,292.4 MiB` (`1.29 MiB` per retained message after temporary Snappy and `Vec`-doubling buffers were freed) and split CPU into `2.12s` user + `1.06s` kernel `sys` time for page faults.
 * **Wall-clock `ns/op` hides Go's background GC cost.** In `benchstat`, Rust was `17.68%` faster than Go on `rw2_2000`. Under `/usr/bin/time -v` at `GOMAXPROCS=2`, Rust used `99%` of one core and `4.21 MiB` RSS, while Go hit `144%` CPU, `4.28 ms` of CPU time per op, and `15.98 MiB` RSS. Leaving `GOMAXPROCS` unrestricted on all 24 cores pushed Go to `220%` CPU, or `7.13 ms` of CPU time per op, and `18.53 MiB` RSS as background GC threads swept heap objects. Across the whole process, Rust used **1.9x to 3.2x less CPU** and **3.8x to 4.4x less RAM** per request.
 
 ## Summary
@@ -619,7 +621,7 @@ In general I think Rust has real potential in this AI era:
 * It has extreme [compile-time verification](https://doc.rust-lang.org/book/ch10-02-traits.html), including strict [ownership and memory safety checks](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html), which is ideal when AI generates code.
 * It takes ages and can be annoying to program in by hand (sorry!), but AI writes a lot of code nowadays. Code mostly has to be readable for reviews, and Rust is good enough at that.
 * It has a strong columnar storage ecosystem around crates like [`arrow-rs`](https://github.com/apache/arrow-rs).
-* It has no garbage collector, gives more control over memory allocations, and is clearly faster!
+* It has no garbage collector, gives more control over memory allocations, and is [clearly faster](#comparing-go-vs-rust)!
 
 In terms of benchmarking, having both `benchfmt` tools in Rust lets you match the workflow to the job:
 
