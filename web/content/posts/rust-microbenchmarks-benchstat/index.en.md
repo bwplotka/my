@@ -6,6 +6,8 @@ categories:
 - rust
 - go
 - efficiency
+images:
+- "/og-images/benchfmt-rs.png"
 featuredImage: "/og-images/benchfmt-rs.png"
 ---
 

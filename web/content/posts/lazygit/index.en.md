@@ -6,6 +6,8 @@ categories:
 - go
 - git
 - software
+images:
+- "/og-images/lazygit.png"
 featuredImage: "/og-images/lazygit.png"
 ---
 

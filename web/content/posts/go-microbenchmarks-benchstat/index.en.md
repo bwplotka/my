@@ -5,6 +5,8 @@ weight: 1
 categories:
 - go
 - efficiency
+images:
+- "/og-images/benchstat-projections.png"
 featuredImage: "/og-images/benchstat-projections.png"
 ---
 

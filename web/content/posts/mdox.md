@@ -8,6 +8,8 @@ authors:
   link: https://bwplotka.dev
 - name: "Saswata Mukherjee"
   link: https://github.com/saswatamcode
+images:
+- "/og-images/mdox_initial.gif"
 featuredImage: "/og-images/mdox_initial.gif"
 type:
 - post

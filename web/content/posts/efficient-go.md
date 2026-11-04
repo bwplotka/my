@@ -6,6 +6,8 @@ title: "Announcing Our Book with O'Reilly: Efficient Go!"
 date: 2021-09-07
 authors:
 - name: "Bartek Płotka"
+images:
+- "/og-images/efficient-go.png"
 featuredImage: "/og-images/efficient-go.png"
 type:
 - post

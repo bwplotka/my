@@ -7,6 +7,8 @@ categories:
 - books
 - efficient-go
 - efficiency
+images:
+- "/og-images/efficient-go.png"
 featuredImage: "/og-images/efficient-go.png"
 ---
 
