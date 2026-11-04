@@ -13,7 +13,7 @@ featuredImage: "/og-images/benchfmt-rs.png"
 > 
 > In this post, I benchmarked `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust using various benchmarking frameworks to explain the benefits of `benchstat` like flow. We also learn on the way (yes, [Rust is faster](#summary)).
 
-Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching about it in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until I wanted to run **A/B microbenchmarks**. 
+Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching Go in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until.... **I wanted to run A/B microbenchmarks**. 
 
 Perhaps I was spoiled by the Go benchmarking ecosystem, with the `go tool -bench` and [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) ecosystem ([see my previous post](/2024/go-microbenchmarks-benchstat/)), but to me, Rust was standard benchmarking tools lacked:
 
