@@ -5,7 +5,7 @@ weight: 1
 categories:
 - go
 - efficiency
-featuredImage: "/og-images/gophermetrics.png"
+featuredImage: "/og-images/benchstat-projections.png"
 ---
 
 [Go's built-in micro-benchmarking framework](https://pkg.go.dev/testing#hdr-Benchmarks) is extremely useful and widely known. Sill, not many developers are aware of the additional, yet essential, [`benchstat` tool](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) allowing clear comparisons of Go A/B benchmark results across multiple runs. In 2023, `benchstat` received a complete overhaul making it even more powerful: projections, filtering and groupings were introduced allowing robust comparisons across any dimension, defined by your sub-benchmarks (aka "cases"), if you follow [a certain naming format](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md#:~:text=We%20propose%20that%20sub%2Dbenchmarks%20adopt%20the%20convention%20of%20choosing%20names%20that%20are%20key%3Dvalue%20pairs%3B%20that%20slash%2Dprefixed%20key%3Dvalue%20pairs%20in%20the%20benchmark%20name%20are%20treated%20by%20benchmark%20data%20processors%20as%20per%2Dbenchmark%20configuration%20values).

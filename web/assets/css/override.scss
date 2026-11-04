@@ -26,6 +26,11 @@ html {
   --card-hover-shadow: 10px 10px 0 var(--iso-extrude-hover), 0 22px 44px -10px rgba(15, 23, 42, 0.16);
   --grid-line: rgba(15, 23, 42, 0.06);
   --grid-accent: rgba(234, 88, 12, 0.08);
+  --content-link: #0284c7;
+  --content-link-hover: #0369a1;
+  --content-link-underline: rgba(2, 132, 199, 0.42);
+  --content-link-code-bg: rgba(2, 132, 199, 0.09);
+  --content-link-code-border: rgba(2, 132, 199, 0.36);
   --font-sans: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
@@ -50,6 +55,11 @@ body[theme=dark] {
   --card-hover-shadow: 11px 11px 0 var(--iso-extrude-hover), 0 26px 52px -12px rgba(4, 8, 18, 0.8);
   --grid-line: rgba(148, 163, 184, 0.085);
   --grid-accent: rgba(251, 146, 60, 0.11);
+  --content-link: #38bdf8;
+  --content-link-hover: #7dd3fc;
+  --content-link-underline: rgba(56, 189, 248, 0.45);
+  --content-link-code-bg: rgba(56, 189, 248, 0.13);
+  --content-link-code-border: rgba(56, 189, 248, 0.42);
   background: radial-gradient(ellipse 95% 65% at 50% 0%, #222e47 0%, #151c2c 58%, #101623 100%) fixed !important;
 }
 
@@ -1840,6 +1850,42 @@ body[theme=dark] {
     color: #fdba74;
   }
 
+  // Distinct link color across prose, blockquotes (> ...), and backticked code links ([`foo`](url)).
+  a:not(.header-mark):not(.lightgallery):not(.oss-project-pill):not(.btn-3d):not(.talk-link) {
+    color: var(--content-link) !important;
+    text-decoration: underline;
+    text-decoration-color: var(--content-link-underline);
+    text-underline-offset: 3px;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+
+    b, strong {
+      color: inherit !important;
+    }
+
+    &:hover {
+      color: var(--content-link-hover) !important;
+      text-decoration-color: var(--content-link-hover);
+    }
+
+    &:has(> code) {
+      text-decoration: none;
+    }
+
+    > code {
+      color: var(--content-link) !important;
+      background: var(--content-link-code-bg);
+      border-color: var(--content-link-code-border);
+      text-decoration: none;
+      transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    &:hover > code {
+      color: var(--content-link-hover) !important;
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--content-link-hover);
+    }
+  }
+
   // Modern Engineering Markdown Tables (excludes Chroma code tables)
   > .table-wrapper,
   .table-wrapper:not(.chroma > .table-wrapper) {
@@ -1864,16 +1910,16 @@ body[theme=dark] {
       }
 
       th {
-        text-align: left !important;
+        text-align: left;
         vertical-align: middle !important;
         background: transparent !important;
         color: var(--text-primary);
         font-family: var(--font-sans);
-        font-size: 0.76rem;
+        font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        padding: 0.85rem 1.05rem !important;
+        letter-spacing: 0.04em;
+        padding: 0.65rem 0.65rem !important;
         border: none !important;
         border-bottom: 1px solid var(--border-highlight) !important;
         white-space: nowrap;
@@ -1882,12 +1928,12 @@ body[theme=dark] {
           text-transform: none !important;
           letter-spacing: 0 !important;
           font-family: var(--font-mono);
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 600;
           background: rgba(249, 115, 22, 0.14) !important;
           color: var(--accent-amber-bright) !important;
           border: 1px solid rgba(251, 146, 60, 0.32);
-          padding: 0.1rem 0.45rem;
+          padding: 0.08rem 0.4rem;
           border-radius: 5px;
           white-space: nowrap !important;
           line-break: normal !important;
@@ -1908,17 +1954,23 @@ body[theme=dark] {
       }
 
       td {
-        vertical-align: top !important;
+        vertical-align: middle !important;
         text-align: left;
-        padding: 0.85rem 1.05rem !important;
+        padding: 0.6rem 0.65rem !important;
         border: none !important;
         border-top: 1px solid rgba(148, 163, 184, 0.14) !important;
         color: var(--text-secondary);
+        font-variant-numeric: tabular-nums;
 
         &:first-child {
           font-weight: 600;
           color: var(--text-primary);
-          min-width: 140px;
+        }
+
+        code {
+          white-space: nowrap !important;
+          line-break: normal !important;
+          display: inline;
         }
 
         a {
