@@ -22,22 +22,7 @@ Perhaps I was spoiled by the Go benchmarking ecosystem, with [the `go tool -benc
 * Standard `pprof` support.
 * Simple to understand reliability scoring.
 
-So I asked myself: what if we could get [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
-
-**Here we are!** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner with a thread-local heap allocation counter, `pprof` profiler integration, and the same CLI flags as `go test -bench`. For those who don't trust a new benchmarking runtime (you shouldn't from the start!), it also ships a [`Criterion`](https://crates.io/crates/criterion) and `libtest` converter that emits Go's [`benchfmt`](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md) format directly.
-
-In this blog post, let's implement the same pieces of code in Go and Rust, benchmark them across different Rust frameworks, and compare the results. We might learn something new along the way (I did when building this!). Enjoy! All benchmark code and raw outputs live in [`bwplotka/benchmarks/benchmarks/rust-go-decode`](https://github.com/bwplotka/benchmarks/tree/c55bd342d9ac23e788d06327dc7973951a5eeb82/benchmarks/rust-go-decode).
-
-## Benchmarking two workloads
-
-Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching about it in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until I wanted to run **A/B microbenchmarks**. 
-
-Perhaps I was spoiled by the Go benchmarking ecosystem, with the `go tool -bench` and [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat) ecosystem ([see my previous post](/2024/go-microbenchmarks-benchstat/)), but to me, Rust was standard benchmarking tools lacked:
-
-* A standard format for case comparison projections.
-* Standard heap allocation measurements.
-* Standard `pprof` support.
-* Simple to understand reliability scoring.
+> NOTE: "standard" can be subjective! To me, it means something that every Rust dev would be familiar with, but also.. what I am familiar (what's in Go), so I'm biased!
 
 So I asked myself: what if we could get [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
 
