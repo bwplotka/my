@@ -11,32 +11,35 @@ featuredImage: "/og-images/benchfmt-rs.png"
 
 > **TL;DR:** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner and [`Criterion`](https://crates.io/crates/criterion) converter for Go's [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat). It adds `/key=value` projections, heap tracking for allocated bytes (`B/op`) and objects (`allocs/op`) per op, and `pprof` profiling. 
 > 
-> In this post, I benchmarked `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust using various benchmarking frameworks to explain the benefits of `benchstat` like flow. We also learn on the way (yes, [Rust is faster](#summary)).
+> In this post, I am benchmarking `varint` and [Prometheus Remote Write 2.0](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/) decoding across Go and Rust to showcase the benefits of `benchstat`-like flow in Rust. I'm also sharing some fun learnings on the way (e.g., yes [Rust is faster](#summary)).
 
 Recently, I've been working on a few Rust projects across Google and [open source](https://github.com/prometheus/expfmt-rs). I came to Rust after years of writing performance-sensitive Go in [Prometheus](https://prometheus.io/), [Thanos](https://thanos.io/), and teaching Go in the ["Efficient Go" book](/book). For me, much of Rust's performance story is really good, until.... **I wanted to run A/B microbenchmarks**. 
 
 Perhaps I was spoiled by the Go benchmarking ecosystem, with [the `go tool -bench` and `benchstat`](/2024/go-microbenchmarks-benchstat/) in the center. To me, Rust standard benchmarking tools are lacking:
 
-* A standard format for case comparison projections.
+* Standard format for case comparison projections.
 * Standard heap allocation measurements.
 * Standard `pprof` support.
 * Simple to understand reliability scoring.
 
-> NOTE: "standard" can be subjective! To me, it means something that every Rust dev would be familiar with, but also.. what I am familiar (what's in Go), so I'm biased!
+> **NOTE:** A `standard` can be subjective! To me, it means something that will be familiar to large number of developers, and I biased on Go experience for sure!
 
-So I asked myself: what if we could get [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
+As a result, I asked myself: can we get [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
 
 **Here we are!** I built [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs), a zero-dependency Rust benchmark runner with a thread-local heap allocation counter, `pprof` profiler integration, and the same CLI flags as `go test -bench`. For those who don't trust a new benchmarking runtime (you shouldn't from the start!), it also ships a [`Criterion`](https://crates.io/crates/criterion) and `libtest` converter that emits Go's [`benchfmt`](https://go.googlesource.com/proposal/+/master/design/14313-benchmark-format.md) format directly.
 
-In this blog post, let's implement the same pieces of code in Go and Rust, benchmark them across different Rust frameworks, and compare the results. We might learn something new along the way (I did when building this!). Enjoy! All benchmark code and raw outputs live in [`bwplotka/benchmarks/benchmarks/rust-go-decode`](https://github.com/bwplotka/benchmarks/tree/c55bd342d9ac23e788d06327dc7973951a5eeb82/benchmarks/rust-go-decode).
+In this blog post, we will implement the same pieces of code in Go and Rust, benchmark them across different Rust frameworks, and compare the results. We might learn something new along the way (I did when building this!). Enjoy! 
+
+All benchmark code and raw outputs live in [`bwplotka/benchmarks/benchmarks/rust-go-decode`](https://github.com/bwplotka/benchmarks/tree/c55bd342d9ac23e788d06327dc7973951a5eeb82/benchmarks/rust-go-decode).
 
 ## Benchmarking two workloads
 
-Let's pick two workloads to implement and benchmark in both Go and Rust. I am particularly curious about protobuf decoding performance, which, funny enough, is one of the main costs of running distributed systems these days. Thus, let's decode our [Prometheus Remote Write 2.0 protocol](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/). Because protobuf code generators have different maturity and trade-offs across languages, let's also measure something simpler alongside it, a standalone `varint` decoder:
+Let's pick two workloads to implement and benchmark in both Go and Rust. I am particularly curious about protobuf decoding performance, which, funny enough, is often one of the main costs of running distributed systems these days. Thus, let's decode our [Prometheus Remote Write 2.0 protocol](https://prometheus.io/docs/specs/prw/remote_write_spec_2_0/). Because protobuf code generators have different maturity and trade-offs across languages, let's also measure something simpler alongside it, a standalone `varint` decoder.
+
+### Workload details:
 
 1. **`DecodeVarints`.** A 36-line unsigned LEB128 varint stream decoder. Varints are the integer encoding underneath Protocol Buffers. Our fixture `varints_2000.bin` is `4,798` bytes and packs `2,000` `uint64` values mixing 1-byte symbol indices, 2-byte bucket offsets, 4-byte deltas, and 6-byte millisecond Unix timestamps. The function writes into a preallocated `2,000`-element slice with zero heap allocations.
 2. **`DecodeRemoteWrite2`.** A full HTTP request body decoder for Snappy-compressed Remote Write 2.0 (`io.prometheus.write.v2.Request`) payloads. We test batches of `200` and `2,000` series, where `2,000` matches Prometheus's default `max_samples_per_send`. The `2,000`-series fixture mixes counters, gauges, classic and native histograms, `1,000` trace exemplars, and metric metadata. Remote Write 2.0 interns all strings into a top-level `symbols` table and stores packed varint `labels_refs` per series. That shrinks the `2,000`-series batch to `244.9 KiB` uncompressed and `57.0 KiB` Snappy-compressed.
-
 
 ## Implementing and benchmarking in Go
 
@@ -278,7 +281,7 @@ criterion_group!(benches, bench_varints, bench_remote_write2);
 criterion_main!(benches);
 ```
 
-Fourth, let's run the Criterion benchmark suite:
+Finally, let's run the Criterion benchmark suite:
 
 ```bash
 cargo bench --bench criterion_decode
