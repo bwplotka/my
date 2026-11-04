@@ -22,7 +22,7 @@ Perhaps I was spoiled by the Go benchmarking ecosystem, with [the `go tool -benc
 * Standard `pprof` support.
 * Simple to understand reliability scoring.
 
-> **NOTE:** A `standard` can be subjective! To me, it means something that will be familiar to large number of developers, and I biased on Go experience for sure!
+> **DISCLAIMER:** A `standard` here means something that will be familiar to large number of developers, and I biased on Go experience for sure!
 
 As a result, I asked myself: can we get [`benchstat`](https://pkg.go.dev/golang.org/x/perf/cmd/benchstat)-compatible output for Rust microbenchmarks? Wouldn't that make A/B testing easier and unlock fun Go vs Rust comparisons?
 
@@ -306,9 +306,15 @@ DecodeRemoteWrite2/samples=2000/lang=rust
 Criterion is convenient when you want confidence intervals and HTML plots from a single `cargo bench` command without external tools. However, compared to `go test` and `benchstat`, four design choices get in the way:
 
 1. **Compile weight.** Pulling in `criterion` with `default-features = false` still compiles `clap`, `regex-automata`, `ciborium`, `oorandom`, `itertools`, `tinytemplate`, and `anes`. That adds 42 transitive crates and ~19s to a cold `cargo bench` build.
-2. **Linear-ramp sampling vs steady-state epochs.** Go's `testing.B` calibrates a fixed iteration count `N` for `-benchtime 2s` and runs `-count 6` equal steady-state epochs, which `benchstat` summarizes using the outlier-resistant median and Mann-Whitney U test. Criterion defaults to `Linear` sampling, running 100 batches of `[1d, 2d, ..., 100d]` iterations after a 3-second warmup and fitting a least-squares line `y = m * x` through the origin. Because the line is forced through zero, it does not subtract a fixed timer-overhead intercept. Instead, it computes a `k^2`-weighted average where batch 100 carries `10,000x` the weight of batch 1 and late OS spikes pull the slope up. Grouping those 100 ramp samples into 6 `benchstat` epochs also gives epoch 1 `11.5x` fewer iterations than epoch 6, inflating variance to `± 5%` vs `± 1-2%` in steady-state runs. Timing 100 separate closure batches adds `+8.6%` overhead on microsecond loops like `DecodeVarints` and skews early allocating samples with cold allocator caches.
+2. **Linear-ramp sampling vs steady-state epochs.**
+   * Go's `testing.B` calibrates a fixed iteration count `N` for `-benchtime 2s` and runs `-count 6` equal steady-state epochs, which `benchstat` summarizes using the outlier-resistant median and Mann-Whitney U test.
+   * Criterion defaults to `Linear` sampling: after a 3-second warmup, it collects 100 batches of `[1d, 2d, ..., 100d]` iterations and fits a least-squares line `y = m * x` through the origin. Because the line is forced through zero, it does not subtract a fixed timer-overhead intercept. Instead, it computes a `k^2`-weighted average where batch 100 carries `10,000x` the weight of batch 1 and late OS spikes pull the slope up.
+
+   Comparing those two models directly introduces two measurable distortions:
+   * First, grouping Criterion's 100 ramp samples into 6 `benchstat` epochs gives epoch 1 `11.5x` fewer iterations than epoch 6 (`24,888` vs `286,212` on `DecodeVarints`). Mixing short bursts with long runs inflates variance to `± 5%`, compared to `± 1-2%` in steady-state epochs.
+   * Second, timing 100 separate closure batches adds `+8.6%` overhead on microsecond loops (`5.36 µs` vs `4.90 µs`, `p=0.002`) and skews early allocating samples with cold allocator caches (`+2.3%` on `DecodeRemoteWrite2`).
 3. **No heap allocation tracking.** Criterion reports wall-clock time and throughput only. On `DecodeVarints` at `0 allocs/op`, that is fine. On `DecodeRemoteWrite2`, we cannot tell whether `prost` made 500 heap allocations or 500,000, or whether a refactor doubled heap churn.
-4. **Pairwise baseline folders vs multi-dimensional tables.** Criterion compares `target/criterion/<id>/base` against `new`. You cannot feed a single run file into a table that pivots `-col /samples` or `-col /lang` across Go and Rust.
+4. **Pairwise baseline folders vs multi-dimensional tables.** Criterion compares `target/criterion/<id>/base` against `new`. You cannot feed a single run file into a table that [pivots `-col /samples` or `-col /lang`](/2024/go-microbenchmarks-benchstat/) across Go and Rust.
 
 ## Converting Criterion output with the `benchfmt` CLI
 
@@ -365,11 +371,13 @@ geomean                                         ¹
 
 Now, with this view we finally have a readable, standard `benchstat` output Go developers love. It clearly shows the Go vs Rust efficiency for our example functions. Rust is `37.16%` faster on `DecodeVarints` (`5.36 µs` vs `8.54 µs`) and `13.37%` to `15.72%` faster on `DecodeRemoteWrite2`.
 
-Unfortunately, the `B/op` and `allocs/op` tables only have a `go` column because Criterion never recorded allocations, and Criterion's linear-ramp epochs still leave `± 5%` variance on `DecodeVarints`.
+Unfortunately, there are some gaps:
+1. The `B/op` and `allocs/op` tables only have a `go` column because Criterion never recorded allocations
+2. Criterion's linear-ramp epochs still leave `± 5%` variance on `DecodeVarints`.
 
 ## Native `benchfmt` runs with `benchfmt::Suite` and `CountingAlloc`
 
-For new Rust benchmarks, we can skip Criterion and use `benchfmt::Suite` in `benches/suite_decode.rs` with `harness = false` in `Cargo.toml`. Registering `CountingAlloc` as `#[global_allocator]` tracks every `alloc`, `alloc_zeroed`, and `realloc` in a `thread_local!` `Cell<(u64, u64)>` with zero atomic contention and zero external dependencies:
+For new Rust benchmarks, we can skip Criterion and use `benchfmt::Suite`` with `harness = false` in `Cargo.toml`. Registering `CountingAlloc` as `#[global_allocator]` tracks every `alloc`, `alloc_zeroed`, and `realloc` in a `thread_local!` `Cell<(u64, u64)>` with zero atomic contention and zero external dependencies:
 
 ```rust
 // Wrap Rust's System allocator globally so every heap alloc/realloc on the benchmark thread
@@ -568,13 +576,20 @@ Go's `UnmarshalVT` preallocates slices and structs close to their final size, to
 * Growing `Vec<v2::TimeSeries>` from `0` to `2,048` copies inline 112-byte structs at each power of two, which is `21.3%` of allocated bytes. Go only grows an 8-byte `[]*TimeSeries` pointer slice.
 * Pushing one 24-byte `Sample` into an empty `Vec<Sample>` jumps straight to capacity `4` due to `RawVec::MIN_NON_ZERO_CAP`, adding another `8.5%` of allocated bytes across `1,900` series.
 
-Even with that extra `Vec` churn, `glibc` thread-cache reallocations in Rust cost `~3.5x` less CPU than Go's `mallocgc` and GC assist, and `-memprofile` points straight to a `Vec::with_capacity` fix.
+However, **even with that extra `Vec` churn**, `glibc` thread-cache reallocations in Rust **cost `~3.5x` less CPU than Go's `mallocgc` and GC assist**, so `-memprofile` points straight to a `Vec::with_capacity` fix.
 
 ## Checking our microbenchmarks with a standalone binary and `/usr/bin/time -v`
 
-Ok, those microbenchmarks are great, but let's verify our efficiency numbers against the real program! Microbenchmarks run inside an artificial loop with a hot instruction cache, a warm allocator, and a custom `#[global_allocator]` wrapper in `suite_decode`. Do those `ns/op` and `B/op` numbers hold up in an unmodified release binary?
+Ok, those microbenchmarks are great, but let's verify our efficiency numbers against the real program! 
 
-To check, I wrote two standalone CLI binaries, `src/bin/verify_decode.rs` using Rust's default `System` allocator with no benchmark library, and `cmd/verify_decode/main.go` in Go. Each binary runs `N` iterations, accumulates a checksum, and optionally keeps `K` decoded messages alive via `--retain K` to simulate an ingestion queue. I ran both under GNU `/usr/bin/time -v` with `GOMAXPROCS=2` on Go to match `-cpu 2`:
+Microbenchmarks run inside an artificial loop with a hot instruction cache, a warm allocator, and a custom `#[global_allocator]` wrapper in `suite_decode`. Do those `ns/op` and `B/op` numbers hold up in an unmodified release binary?
+
+To check, I wrote two standalone CLI binaries:
+
+1. [One](TODO perma link) using Rust's default `System` allocator with no benchmark library
+2. [Second](TODO permalink) in Go.
+
+Each binary runs `N` iterations, accumulates a checksum, and optionally keeps `K` decoded messages alive via `--retain K` to simulate an ingestion queue. I ran both under GNU `/usr/bin/time -v` with `GOMAXPROCS=2` on Go to match `-cpu 2`:
 
 ```bash
 cargo build --release --bin verify_decode
@@ -606,13 +621,9 @@ In general I think Rust has real potential in this AI era:
 * It has a strong columnar storage ecosystem around crates like [`arrow-rs`](https://github.com/apache/arrow-rs).
 * It has no garbage collector, gives more control over memory allocations, and is clearly faster!
 
-In terms of benchmarking, having both `benchfmt` tools in Rust lets me match the workflow to the job:
+In terms of benchmarking, having both `benchfmt` tools in Rust lets you match the workflow to the job:
 
-* Keep **standalone Criterion** when you want self-contained HTML plots or async executor adapters without Go's `benchstat`.
-* Run **`benchfmt criterion target/criterion`** on existing Criterion suites when you want `benchstat` A/B tables across commits or languages without editing benchmark code.
-* Use **`benchfmt::Suite` and `CountingAlloc`** with `features = ["pprof"]` for new Rust microbenchmarks to get fast `std`-only compiles, steady-state epochs, `B/op` and `allocs/op` tracking, and `pprof` profiles.
-* When a microbenchmark drives an architectural decision, run the loop in a standalone release binary under `/usr/bin/time -v` to check true RSS, page faults, and background GC or allocator threads.
-
-How does `benchfmt.rs` compare to tools like [`hotpath.rs`](https://hotpath.rs/)? `hotpath.rs` is an application profiler and telemetry toolkit where you annotate functions with `#[hotpath::measure]` to track timings, allocations, async tasks, channels, and I/O in a live TUI or Prometheus. `benchfmt.rs` stays focused on isolated, Go-style microbenchmarks without touching library code, emitting standard `benchfmt` lines for `benchstat` A/B tables and `pprof` profiles for `go tool pprof` or [`pprof.me`](https://pprof.me).
+1. Run **`benchfmt criterion target/criterion`** on existing Criterion suites when you want `benchstat` A/B tables across commits or languages without editing benchmark code.
+2. Use **`benchfmt::Suite` and `CountingAlloc`** with `features = ["pprof"]` for new Rust microbenchmarks to get fast `std`-only compiles, steady-state epochs, `B/op` and `allocs/op` tracking, and `pprof` profiles.
 
 Give [`benchfmt.rs`](https://github.com/bwplotka/benchfmt.rs) a spin and let me know on GitHub what breaks or what is missing!
